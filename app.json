@@ -1,0 +1,61 @@
+{
+  "expo": {
+    "name": "LooP",
+    "slug": "loop-logistics",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.loop.logistics",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "LooP uses your location to find nearby trucks and loads.",
+        "NSLocationAlwaysUsageDescription": "LooP uses your location to find nearby trucks and loads.",
+        "NSPhotoLibraryUsageDescription": "LooP needs photo access to upload KYC documents.",
+        "NSCameraUsageDescription": "LooP needs camera access to capture KYC documents."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#000000"
+      },
+      "package": "com.loop.logistics",
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "themeColor": "#000000",
+      "backgroundColor": "#000000"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "LooP needs photo access to upload KYC documents.",
+          "cameraPermission": "LooP needs camera access to capture KYC documents."
+        }
+      ]
+    ],
+    "scheme": "loop",
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
