@@ -1389,6 +1389,31 @@
       border:1px solid var(--border); color:var(--text2); cursor:pointer; white-space:nowrap;
       background:var(--card2); transition:all .15s; }
     .similar-chip:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* ── Exercise demo hero ─────────────────────────────────── */
+    .demo-hero { background:var(--card2); border-bottom:1px solid var(--border); }
+    .demo-anim-row { display:flex; align-items:center; justify-content:center; gap:16px; padding:16px 20px 8px; }
+    .demo-anim-label { font-size:10px; color:var(--muted); text-align:center; text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+    .demo-frames-strip { display:flex; gap:8px; padding:8px 16px 14px; overflow-x:auto; }
+    .demo-frame-box { flex-shrink:0; background:var(--card); border:1px solid var(--border)66; border-radius:var(--r); padding:8px; text-align:center; }
+    .demo-frame-lbl { font-size:10px; color:var(--muted); margin-top:4px; }
+    @keyframes bcSync { 0%,100%{opacity:.45} 40%,60%{opacity:1} }
+    .bc-sync { animation:bcSync 1.6s ease-in-out infinite; }
+
+    /* ── Muscle sheet (bottom sheet from home diagram) ───────── */
+    .muscle-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0); z-index:299; pointer-events:none; transition:background .25s; }
+    .muscle-backdrop.open { background:rgba(0,0,0,.55); pointer-events:all; }
+    .muscle-sheet { position:fixed; bottom:-100%; left:0; right:0; background:var(--card);
+      border-radius:20px 20px 0 0; padding:20px; z-index:300; max-height:68vh; overflow-y:auto;
+      transition:bottom .3s cubic-bezier(.4,0,.2,1); }
+    .muscle-sheet.open { bottom:0; }
+    .muscle-sheet-handle { width:36px; height:4px; border-radius:2px; background:var(--border); margin:0 auto 16px; }
+    .muscle-sheet-ex { display:flex; align-items:center; gap:12px; padding:10px 0;
+      border-bottom:1px solid var(--border)44; cursor:pointer; }
+    .muscle-sheet-ex:last-child { border-bottom:none; }
+    .muscle-sheet-ex:active { opacity:.7; }
+    .m-path-tap { cursor:pointer; }
+    .m-path-tap:hover { opacity:.8; }
   </style>
 </head>
 <body>
@@ -1404,6 +1429,10 @@
     <!-- ── OVERLAYS ─────────────────────────────────────────── -->
     <div id="overlay-detail"  class="overlay" role="dialog" aria-modal="true" aria-label="Exercise detail"></div>
     <div id="overlay-workout" class="overlay" role="dialog" aria-modal="true" aria-label="Active workout"></div>
+
+    <!-- ── MUSCLE BOTTOM SHEET ───────────────────────────────── -->
+    <div id="muscle-backdrop" class="muscle-backdrop" onclick="closeMuscleSheet()"></div>
+    <div id="muscle-sheet" class="muscle-sheet" role="dialog" aria-modal="true" aria-label="Muscle exercises"></div>
 
     <!-- ── WEIGHT LOG MODAL ─────────────────────────────────── -->
     <div id="weight-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-label="Log weight">
@@ -3716,7 +3745,7 @@
       },
 
       /* ── Anatomical muscle diagram (MuscleWiki-style) ────── */
-      muscleDiagram(primary, secondary = [], idSuffix = '') {
+      muscleDiagram(primary, secondary = [], idSuffix = '', interactive = false) {
         const MC = {
           chest:'#ef4444', back:'#3b82f6', lats:'#2563eb', shoulders:'#a855f7',
           biceps:'#f97316', triceps:'#eab308', quads:'#22c55e',
@@ -3733,7 +3762,13 @@
         const mSW = m => isPri(m) ? 1.5 : isSec(m) ? 1 : 0.8;
         const mFilter = m => isPri(m) ? `drop-shadow(0 0 5px ${col(m)})` : 'none';
 
-        const P = (d, m) => `<path d="${d}" fill="${mFill(m)}" stroke="${mStroke(m)}" stroke-width="${mSW(m)}" style="filter:${mFilter(m)}" class="m-path" data-muscle="${m}"/>`;
+        const P = (d, m) => {
+          const xtra = interactive
+            ? ` onclick="openMuscleSheet('${m}')" style="filter:${mFilter(m)};cursor:pointer" class="m-path m-path-tap"`
+            : ` style="filter:${mFilter(m)}" class="m-path"`;
+          return `<path d="${d}" fill="${mFill(m)}" stroke="${mStroke(m)}" stroke-width="${mSW(m)}" data-muscle="${m}"${xtra}/>`;
+        };
+
 
         /* FRONT VIEW — viewBox 0 0 120 260 */
         const front = `<svg viewBox="0 0 120 260" width="100" height="217" xmlns="http://www.w3.org/2000/svg">
@@ -3941,6 +3976,370 @@
       'default':           'Exhale on the exertion (the hard part) → inhale on the return.',
     };
 
+    /* ── Exercise demo animations (SMIL, front-view figure) ──── */
+    const _DS = 'stroke:#2a3655;stroke-width:9;stroke-linecap:round;fill:none';
+    const _DA = 'stroke:#6366f1;stroke-width:9;stroke-linecap:round;fill:none';
+    const _figBase = (extra='') => `
+      <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+      <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
+      <line style="${_DS}" x1="75" y1="60" x2="125" y2="60"/>
+      <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
+      <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
+      <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
+      <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
+      <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
+      ${extra}`;
+
+    const DEMO_ANIMS = {
+      'Elbow Flexion': {
+        labels:['Start','Curl up','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DS}" x1="75" y1="60" x2="68" y2="98"/>
+          <line style="${_DS}" x1="68" y1="98" x2="64" y2="138"/>
+          <line style="${_DS}" x1="125" y1="60" x2="132" y2="98"/>
+          <line style="${_DA}" x1="132" y1="98">
+            <animate attributeName="x2" values="134;112;134" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="138;68;138" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="134" y2="138"/>`,lbl:'Start'},
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="112" y2="68"/>`,lbl:'Curl'},
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="134" y2="138"/>`,lbl:'Lower'},
+        ]
+      },
+      'Elbow Extension': {
+        labels:['Bent','Extend','Return'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DS}" x1="75" y1="60" x2="68" y2="98"/>
+          <line style="${_DS}" x1="68" y1="98" x2="64" y2="138"/>
+          <line style="${_DS}" x1="125" y1="60" x2="132" y2="56"/>
+          <line style="${_DA}" x1="132" y1="56">
+            <animate attributeName="x2" values="122;132;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="90;138;90" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="122" y2="90"/>`,lbl:'Bent'},
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="132" y2="138"/>`,lbl:'Extend'},
+          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="122" y2="90"/>`,lbl:'Return'},
+        ]
+      },
+      'Vertical Push': {
+        labels:['At shoulder','Press up','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DA}" x1="75" y1="60">
+            <animate attributeName="x2" values="62;52;62" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;38;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="125" y1="60">
+            <animate attributeName="x2" values="138;148;138" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;38;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="138" y2="96"/>`,lbl:'Start'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="52" y2="38"/><line style="${_DA}" x1="125" y1="60" x2="148" y2="38"/>`,lbl:'Press'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="138" y2="96"/>`,lbl:'Lower'},
+        ]
+      },
+      'Horizontal Push': {
+        labels:['Lower','Press','Lockout'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="75" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+          <line style="${_DS}" x1="100" y1="88" x2="100" y2="160"/>
+          <line style="${_DS}" x1="72" y1="105" x2="128" y2="105"/>
+          <line style="${_DS}" x1="86" y1="160" x2="82" y2="200"/>
+          <line style="${_DS}" x1="114" y1="160" x2="118" y2="200"/>
+          <line style="${_DA}" x1="72" y1="105">
+            <animate attributeName="x2" values="56;44;56" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="122;105;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="128" y1="105">
+            <animate attributeName="x2" values="144;156;144" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="122;105;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line></svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="56" y2="122"/><line style="${_DA}" x1="128" y1="105" x2="144" y2="122"/>`,lbl:'Lower'},
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="44" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="156" y2="105"/>`,lbl:'Press'},
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="44" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="156" y2="105"/>`,lbl:'Lock'},
+        ]
+      },
+      'Horizontal Fly': {
+        labels:['Wide open','Squeeze','Return'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="75" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+          <line style="${_DS}" x1="100" y1="88" x2="100" y2="160"/>
+          <line style="${_DS}" x1="72" y1="105" x2="128" y2="105"/>
+          <line style="${_DS}" x1="86" y1="160" x2="82" y2="200"/>
+          <line style="${_DS}" x1="114" y1="160" x2="118" y2="200"/>
+          <line style="${_DA}" x1="72" y1="105">
+            <animate attributeName="x2" values="38;72;38" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="105;105;105" dur="1.6s" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="128" y1="105">
+            <animate attributeName="x2" values="162;128;162" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="105;105;105" dur="1.6s" repeatCount="indefinite"/>
+          </line></svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="38" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="162" y2="105"/>`,lbl:'Open'},
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="72" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="128" y2="105"/>`,lbl:'Squeeze'},
+          {d:`<line style="${_DA}" x1="72" y1="105" x2="38" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="162" y2="105"/>`,lbl:'Return'},
+        ]
+      },
+      'Vertical Pull': {
+        labels:['Arms up','Pull down','Return'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DA}" x1="75" y1="60">
+            <animate attributeName="x2" values="58;68;58" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="28;96;28" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="125" y1="60">
+            <animate attributeName="x2" values="142;132;142" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="28;96;28" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="58" y2="28"/><line style="${_DA}" x1="125" y1="60" x2="142" y2="28"/>`,lbl:'Arms up'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="68" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="132" y2="96"/>`,lbl:'Pull'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="58" y2="28"/><line style="${_DA}" x1="125" y1="60" x2="142" y2="28"/>`,lbl:'Return'},
+        ]
+      },
+      'Horizontal Pull': {
+        labels:['Arm extended','Row back','Return'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="80" cy="40" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+          <line style="${_DS}" x1="80" y1="53" x2="90" y2="130"/>
+          <line style="${_DS}" x1="68" y1="84" x2="102" y2="78"/>
+          <line style="${_DS}" x1="90" y1="130" x2="76" y2="172"/>
+          <line style="${_DS}" x1="76" y1="172" x2="70" y2="220"/>
+          <line style="${_DS}" x1="104" y1="132" x2="118" y2="174"/>
+          <line style="${_DS}" x1="118" y1="174" x2="124" y2="220"/>
+          <line style="${_DA}" x1="102" y1="78">
+            <animate attributeName="x2" values="158;120;158" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="80;82;80" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line></svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="102" y1="78" x2="158" y2="80"/>`,lbl:'Extend'},
+          {d:`<line style="${_DA}" x1="102" y1="78" x2="120" y2="82"/>`,lbl:'Row'},
+          {d:`<line style="${_DA}" x1="102" y1="78" x2="158" y2="80"/>`,lbl:'Return'},
+        ]
+      },
+      'Hip Hinge': {
+        labels:['Standing','Hinge down','Drive up'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
+          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
+          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
+          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
+          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
+          <line style="${_DA}" x1="100" y1="35">
+            <animate attributeName="x2" values="100;50;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="126;120;126" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,0;0,0" dur="1.6s" repeatCount="indefinite"/>
+          <circle r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
+            <animate attributeName="cx" values="100;55;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="22;50;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </circle></svg>`,
+        frames:[
+          {d:``,lbl:'Stand'},
+          {d:``,lbl:'Hinge'},
+          {d:``,lbl:'Drive'},
+        ]
+      },
+      'Knee Extension': {
+        labels:['Seated','Extend','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/>
+          <line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>
+          <line style="${_DS}" x1="125" y1="60" x2="138" y2="96"/>
+          <line style="${_DS}" x1="138" y1="96" x2="140" y2="136"/>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>`,lbl:'Seat'},
+          {d:`<line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>`,lbl:'Extend'},
+          {d:``,lbl:'Lower'},
+        ]
+      },
+      'Knee Flexion': {
+        labels:['Standing','Curl leg','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DS}" x1="75" y1="60" x2="64" y2="96"/>
+          <line style="${_DS}" x1="64" y1="96" x2="62" y2="136"/>
+          <line style="${_DS}" x1="125" y1="60" x2="134" y2="96"/>
+          <line style="${_DA}" x1="116" y1="178">
+            <animate attributeName="x2" values="120;140;120" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="226;196;226" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Start'},
+          {d:`<line style="${_DA}" x1="116" y1="178" x2="140" y2="196"/>`,lbl:'Curl'},
+          {d:`<line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Lower'},
+        ]
+      },
+      'Hip Extension': {
+        labels:['Down','Thrust','Peak'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+          <line style="${_DA}" x1="100" y1="35" x2="100" y2="126"/>
+          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
+          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
+          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
+          <line style="${_DA}" x1="90" y1="126">
+            <animate attributeName="x2" values="84;76;84" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="178;148;178" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="110" y1="126">
+            <animate attributeName="x2" values="116;124;116" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="178;148;178" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line></svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="90" y1="126" x2="84" y2="178"/><line style="${_DA}" x1="110" y1="126" x2="116" y2="178"/>`,lbl:'Down'},
+          {d:`<line style="${_DA}" x1="90" y1="126" x2="76" y2="148"/><line style="${_DA}" x1="110" y1="126" x2="124" y2="148"/>`,lbl:'Thrust'},
+          {d:`<line style="${_DA}" x1="90" y1="126" x2="84" y2="178"/><line style="${_DA}" x1="110" y1="126" x2="116" y2="178"/>`,lbl:'Lower'},
+        ]
+      },
+      'Plantar Flexion': {
+        labels:['Flat','Rise','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DS}" x1="75" y1="60" x2="64" y2="96"/>
+          <line style="${_DS}" x1="64" y1="96" x2="62" y2="136"/>
+          <line style="${_DS}" x1="125" y1="60" x2="136" y2="96"/>
+          <line style="${_DS}" x1="136" y1="96" x2="138" y2="136"/>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="84" y1="178" x2="80" y2="226"/><line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Flat'},
+          {d:`<line style="${_DA}" x1="84" y1="178" x2="82" y2="210"/><line style="${_DA}" x1="116" y1="178" x2="118" y2="210"/>`,lbl:'Rise'},
+          {d:`<line style="${_DA}" x1="84" y1="178" x2="80" y2="226"/><line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Lower'},
+        ]
+      },
+      'Shoulder Abduction': {
+        labels:['Arms down','Raise','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DA}" x1="75" y1="60">
+            <animate attributeName="x2" values="64;32;64" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;58;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="125" y1="60">
+            <animate attributeName="x2" values="136;168;136" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;58;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="64" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="136" y2="96"/>`,lbl:'Down'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="32" y2="58"/><line style="${_DA}" x1="125" y1="60" x2="168" y2="58"/>`,lbl:'Raise'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="64" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="136" y2="96"/>`,lbl:'Lower'},
+        ]
+      },
+      'Shoulder Isolation': {
+        labels:['Arms forward','Raise','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
+          <line style="${_DA}" x1="75" y1="60">
+            <animate attributeName="x2" values="60;48;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;56;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="125" y1="60">
+            <animate attributeName="x2" values="140;152;140" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="y2" values="96;56;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>`)}</svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="96"/>`,lbl:'Down'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="48" y2="56"/><line style="${_DA}" x1="125" y1="60" x2="152" y2="56"/>`,lbl:'Raise'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="96"/>`,lbl:'Lower'},
+        ]
+      },
+      'Shrug': {
+        labels:['Neutral','Shrug up','Lower'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
+            <animate attributeName="cy" values="22;14;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </circle>
+          <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
+          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
+          <line style="${_DA}" x1="100" y1="35">
+            <animate attributeName="y1" values="35;27;35" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="75" y1="60">
+            <animate attributeName="y1" values="60;52;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DA}" x1="125" y1="60">
+            <animate attributeName="y1" values="60;52;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </line>
+          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
+          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
+          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
+          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
+          <line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/>
+          <line style="${_DA}" x1="60" y1="98" x2="58" y2="136"/>
+          <line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>
+          <line style="${_DA}" x1="140" y1="98" x2="142" y2="136"/></svg>`,
+        frames:[
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>`,lbl:'Neutral'},
+          {d:`<line style="${_DA}" x1="75" y1="52" x2="60" y2="90"/><line style="${_DA}" x1="125" y1="52" x2="140" y2="90"/>`,lbl:'Shrug'},
+          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>`,lbl:'Lower'},
+        ]
+      },
+      'Neck Flexion': {
+        labels:['Neutral','Flex','Return'],
+        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+          <circle r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
+            <animate attributeName="cx" values="100;96;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+            <animate attributeName="cy" values="22;28;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
+          </circle>
+          <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
+          <line style="${_DS}" x1="75" y1="60" x2="60" y2="98"/>
+          <line style="${_DS}" x1="60" y1="98" x2="58" y2="136"/>
+          <line style="${_DS}" x1="125" y1="60" x2="140" y2="98"/>
+          <line style="${_DS}" x1="140" y1="98" x2="142" y2="136"/>
+          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
+          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
+          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
+          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
+          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/></svg>`,
+        frames:[
+          {d:``,lbl:'Neutral'},
+          {d:``,lbl:'Flex'},
+          {d:``,lbl:'Return'},
+        ]
+      },
+    };
+
+    const _demoFigBase = (extra='') => {
+      const s = _DS, a = _DA;
+      return `<circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
+        <line style="${s}" x1="100" y1="35" x2="100" y2="126"/>
+        <line style="${s}" x1="75" y1="60" x2="125" y2="60"/>
+        <line style="${s}" x1="86" y1="126" x2="114" y2="126"/>
+        <line style="${s}" x1="90" y1="126" x2="84" y2="178"/>
+        <line style="${s}" x1="84" y1="178" x2="80" y2="226"/>
+        <line style="${s}" x1="110" y1="126" x2="116" y2="178"/>
+        <line style="${s}" x1="116" y1="178" x2="120" y2="226"/>${extra}`;
+    };
+
+    const PATTERN_MAP = {
+      'Incline Push':             'Horizontal Push',
+      'Horizontal Push (Narrow)': 'Horizontal Push',
+      'Lateral Raise':            'Shoulder Abduction',
+      'Shoulder Elevation':       'Shrug',
+      'Elevation':                'Shrug',
+      'Horizontal Pull (High)':   'Horizontal Pull',
+      'Shoulder Extension':       'Horizontal Pull',
+      'Elbow Flexion (Neutral)':  'Elbow Flexion',
+      'Elbow Flexion (Isolated)': 'Elbow Flexion',
+      'Elbow Extension (Lying)':  'Elbow Extension',
+      'Vertical Push (Bilateral)':'Vertical Push',
+      'Linear Push (Bilateral)':  'Vertical Push',
+      'Squat':                    'Knee Extension',
+      'Single Leg Squat':         'Knee Extension',
+      'Hip Abduction':            'Shoulder Abduction',
+      'Spinal Flexion':           'Knee Flexion',
+      'Rotational':               'Hip Extension',
+      'Anti-Rotation':            'Hip Extension',
+      'Wrist Flexion':            'Elbow Flexion',
+      'Loaded Carry':             'Shrug',
+      'Neck Extension':           'Neck Flexion',
+      'Neck Lateral Flexion':     'Neck Flexion',
+    };
+    function getExerciseDemo(pattern) {
+      const key = PATTERN_MAP[pattern] || pattern;
+      return DEMO_ANIMS[key] || DEMO_ANIMS['Horizontal Push'];
+    }
+
     /* ═══════════════════════════════════════════════════════
        PHASE 3 — WEIGHT MODAL (functional)
     ═══════════════════════════════════════════════════════ */
@@ -3960,6 +4359,48 @@
       Utils.checkAchievements();
       closeWeightModal();
       if (Render.home) Render.home();          /* refresh home screen */
+    }
+
+    /* ── Muscle bottom sheet ──────────────────────────────────── */
+    function openMuscleSheet(muscle) {
+      const sh = document.getElementById('muscle-sheet');
+      const bd = document.getElementById('muscle-backdrop');
+      const exercises = DB.exercises.filter(e => e.muscle === muscle || (e.secondary||[]).includes(muscle));
+      const top3 = exercises.slice(0, 3);
+      const MC = {
+        chest:'#ef4444', back:'#3b82f6', lats:'#2563eb', shoulders:'#a855f7',
+        biceps:'#f97316', triceps:'#eab308', quads:'#22c55e', traps:'#6366f1',
+        glutes:'#22c55e', 'rear-delts':'#c084fc', forearms:'#ea580c',
+        calves:'#4ade80', core:'#06b6d4', hamstrings:'#15803d', neck:'#f59e0b'
+      };
+      const col = MC[muscle] || '#6366f1';
+      sh.innerHTML = `
+        <div class="muscle-sheet-handle"></div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="width:12px;height:12px;border-radius:50%;background:${col};flex-shrink:0"></div>
+          <div class="t-h2" style="color:${col};text-transform:capitalize">${muscle}</div>
+          <div class="t-sm t-muted" style="margin-left:auto">${exercises.length} exercises</div>
+        </div>
+        ${top3.map(ex => `
+          <div class="muscle-sheet-ex" onclick="closeMuscleSheet();openDetail('${ex.id}')">
+            ${Utils.bodyCard(ex.muscle, ex.secondary||[], 40)}
+            <div style="flex:1;min-width:0">
+              <div class="t-body" style="font-weight:500">${ex.name}</div>
+              <div class="t-xs t-muted">${ex.equipment} · ${ex.sets}×${ex.reps}</div>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>`).join('')}
+        ${exercises.length > 3 ? `<button class="btn btn-ghost btn-full mt-3"
+          onclick="closeMuscleSheet();Nav.go('exercises');setTimeout(()=>{State.exerciseFilters=new Set(['${muscle}']);Render.exercises&&Render.exercises();},100)">
+          See all ${exercises.length} exercises
+        </button>` : ''}
+      `;
+      sh.classList.add('open');
+      bd.classList.add('open');
+    }
+    function closeMuscleSheet() {
+      document.getElementById('muscle-sheet').classList.remove('open');
+      document.getElementById('muscle-backdrop').classList.remove('open');
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -4130,8 +4571,10 @@
         ${!isRest && plan ? `<div class="muscle-focus card">
           <div class="muscle-diagram">${Utils.muscleDiagram(
             DB.exercises.find(e => plan.exercises[0] && e.id === plan.exercises[0])?.muscle || 'chest',
-            plan.exercises.slice(1,4).map(id => DB.exercises.find(e=>e.id===id)?.muscle).filter(Boolean)
+            plan.exercises.slice(1,4).map(id => DB.exercises.find(e=>e.id===id)?.muscle).filter(Boolean),
+            'home', true
           )}</div>
+          <div class="t-xs t-muted" style="text-align:center;margin-top:4px;opacity:.7">Tap a muscle to find exercises</div>
           <div class="muscle-list">
             ${[...new Set(plan.exercises.map(id=>DB.exercises.find(e=>e.id===id)?.muscle).filter(Boolean))].map(m=>
               `<div class="muscle-chip" style="border-color:${Utils.muscleColor(m)};color:${Utils.muscleColor(m)}">${m}</div>`
@@ -4658,7 +5101,7 @@
       const note      = S.getNote(id);
 
       const breathCue = BREATHING[ex.pattern] || BREATHING['default'];
-      const similarEx = DB.filter(e => e.id !== id && (e.muscle === ex.muscle || (ex.secondary||[]).includes(e.muscle))).slice(0,4);
+      const similarEx = DB.exercises.filter(e => e.id !== id && (e.muscle === ex.muscle || (ex.secondary||[]).includes(e.muscle))).slice(0,4);
 
       const sparklineSVG = (points, w=90, h=30) => {
         if (!points || points.length < 2) return '';
@@ -4762,7 +5205,32 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="${isFav?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
             </button>
           </div>
-          <div class="detail-hero-body">${Utils.bodyCard(ex.muscle, ex.secondary||[], 110)}</div>
+          ${(() => {
+            const demo = getExerciseDemo(ex.pattern);
+            const MC = {chest:'#ef4444',back:'#3b82f6',lats:'#2563eb',shoulders:'#a855f7',biceps:'#f97316',triceps:'#eab308',quads:'#22c55e',traps:'#6366f1',glutes:'#22c55e','rear-delts':'#c084fc',forearms:'#ea580c',calves:'#4ade80',core:'#06b6d4',hamstrings:'#15803d',neck:'#f59e0b'};
+            const acol = MC[ex.muscle] || '#6366f1';
+            const syncCard = Utils.bodyCard(ex.muscle, ex.secondary||[], 90).replace('class="body-card-svg"', 'class="body-card-svg bc-sync"');
+            const framesSVG = demo.frames.map(f => `
+              <div class="demo-frame-box">
+                <svg viewBox="0 0 200 260" width="72" height="94" xmlns="http://www.w3.org/2000/svg">
+                  ${_demoFigBase(f.d)}
+                </svg>
+                <div class="demo-frame-lbl">${f.lbl}</div>
+              </div>`).join('');
+            return `<div class="demo-hero">
+              <div class="demo-anim-row">
+                <div>
+                  <svg viewBox="0 0 200 260" width="110" height="143" xmlns="http://www.w3.org/2000/svg">${demo.anim.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>
+                  <div class="demo-anim-label" style="color:${acol}">${ex.pattern||'Movement'}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
+                  ${syncCard}
+                  <div class="demo-anim-label">Muscles</div>
+                </div>
+              </div>
+              <div class="demo-frames-strip">${framesSVG}</div>
+            </div>`;
+          })()}
           <div class="detail-meta-row">
             <span class="badge badge-${ex.muscle}">${ex.muscle}</span>
             <span class="chip">${ex.equipment}</span>
