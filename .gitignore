@@ -27,3 +27,5 @@ publications/
 
 # Android debug keystore
 android/app/debug.keystore
+
+.vercel
