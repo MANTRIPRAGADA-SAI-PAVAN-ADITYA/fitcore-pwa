@@ -1414,6 +1414,27 @@
     .muscle-sheet-ex:active { opacity:.7; }
     .m-path-tap { cursor:pointer; }
     .m-path-tap:hover { opacity:.8; }
+
+    /* ── Unit toggle ─────────────────────────────────────────── */
+    .unit-toggle { display:flex; gap:0; background:var(--card2); border-radius:8px; padding:3px; margin-top:6px; }
+    .unit-btn { flex:1; padding:7px; border:none; background:none; border-radius:6px; font-size:13px; color:var(--muted); cursor:pointer; transition:all .2s; font-weight:500; }
+    .unit-btn.active { background:var(--accent); color:#fff; font-weight:700; }
+
+    /* ── Warm-up set rows ────────────────────────────────────── */
+    .wu-set-row td { color:var(--muted); font-size:11px; }
+    .wu-set-row { background:rgba(99,102,241,.06); }
+    .wu-badge { font-size:10px; background:rgba(99,102,241,.15); color:var(--accent); padding:2px 6px; border-radius:4px; white-space:nowrap; }
+
+    /* ── 1RM calculator ──────────────────────────────────────── */
+    .orm-calc { background:var(--card2); border-radius:var(--r); padding:12px 14px; margin-top:12px; }
+    .orm-input-row { display:flex; gap:8px; align-items:center; margin-top:8px; }
+    .orm-input-row .num-input { flex:1; }
+    .orm-pct-grid { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
+    .orm-pct-cell { background:var(--card); border-radius:6px; padding:5px 10px; text-align:center; flex:1; min-width:52px; }
+
+    /* ── Export button ───────────────────────────────────────── */
+    .btn-export { background:var(--card2); color:var(--text2); border:1px solid var(--border); }
+    .btn-export:active { opacity:.8; }
   </style>
 </head>
 <body>
@@ -3533,7 +3554,8 @@
           age:            28,
           calorieTarget:  2000,
           proteinTarget:  175,
-          waterTarget:    3.5
+          waterTarget:    3.5,
+          unit:           'kg'
         });
       },
       saveSettings(s) { this._s('fc_settings', s); },
@@ -3633,6 +3655,24 @@
       getCurrWeight() {
         const ws = S.weights;
         return ws.length ? ws[ws.length - 1].w : S.settings.startWeight;
+      },
+
+      get unitLabel() { return S.settings.unit || 'kg'; },
+      fmtWVal(kg) {
+        if (kg === undefined || kg === null || kg === '') return '';
+        const u = S.settings.unit || 'kg';
+        const v = +kg;
+        return u === 'lbs' ? (v * 2.20462).toFixed(1) : (Number.isInteger(v) ? v.toString() : v.toFixed(1));
+      },
+      fmtW(kg) {
+        if (kg === undefined || kg === null || kg === '') return '—';
+        const u = S.settings.unit || 'kg';
+        const v = +kg;
+        return u === 'lbs' ? `${(v * 2.20462).toFixed(1)} lbs` : `${Number.isInteger(v) ? v : v.toFixed(1)} kg`;
+      },
+      fromDisplay(val) {
+        const u = S.settings.unit || 'kg';
+        return u === 'lbs' ? (+val / 2.20462) : +val;
       },
 
       getWeightProgress() {
@@ -3977,8 +4017,8 @@
     };
 
     /* ── Exercise demo animations (SMIL, front-view figure) ──── */
-    const _DS = 'stroke:#2a3655;stroke-width:9;stroke-linecap:round;fill:none';
-    const _DA = 'stroke:#6366f1;stroke-width:9;stroke-linecap:round;fill:none';
+    const _DS = 'stroke:#2a3655;stroke-width:11;stroke-linecap:round;fill:none';
+    const _DA = 'stroke:#6366f1;stroke-width:11;stroke-linecap:round;fill:none';
     const _figBase = (extra='') => `
       <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
       <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
@@ -4659,7 +4699,7 @@
               <div>
                 <div class="t-body">${ex.name}</div>
                 <div class="t-xs t-muted">${ex.sets}×${ex.reps} · ${ex.rest}s rest</div>
-                ${pr ? `<div class="t-xs" style="color:var(--accent2)">PR: ${pr.w}kg × ${pr.r}</div>` : ''}
+                ${pr ? `<div class="t-xs" style="color:var(--accent2)">PR: ${Utils.fmtW(pr.w)} × ${pr.r}</div>` : ''}
               </div>
             </div>
             <div class="badge badge-${ex.muscle}">${ex.muscle}</div>
@@ -4762,7 +4802,7 @@
                 ${'●'.repeat(ex.difficulty)}${'○'.repeat(3-ex.difficulty)}
               </span>
             </div>
-            ${pr ? `<div class="t-xs" style="color:var(--accent2);margin-top:4px">PR ${pr.w}kg</div>` : ''}
+            ${pr ? `<div class="t-xs" style="color:var(--accent2);margin-top:4px">PR ${Utils.fmtW(pr.w)}</div>` : ''}
           </div>`;
         }).join('')
         : `<div class="empty-state" style="grid-column:1/-1;padding:48px 0;text-align:center">
@@ -4937,7 +4977,7 @@
             <div style="flex-shrink:0">${Utils.bodyCard(ex.muscle, ex.secondary||[], 28)}</div>
             <div class="pr-spark-info">
               <div class="pr-spark-name">${ex.name}</div>
-              <div class="pr-spark-meta">${pr.w} kg × ${pr.r} reps${delta>0?` · <span style="color:#22c55e">+${delta}kg</span>`:''}</div>
+              <div class="pr-spark-meta">${Utils.fmtW(pr.w)} × ${pr.r} reps${delta>0?` · <span style="color:#22c55e">+${Utils.fmtWVal(delta)}${Utils.unitLabel}</span>`:''}</div>
             </div>
             <div style="flex-shrink:0">${mkSpark(history)}</div>
           </div>`;
@@ -4965,7 +5005,7 @@
         <!-- KPI strip -->
         <div class="kpi-strip">
           <div class="kpi-card">
-            <div class="kpi-num">${cw}<span style="font-size:14px;font-weight:500"> kg</span></div>
+            <div class="kpi-num">${Utils.fmtWVal(cw)}<span style="font-size:14px;font-weight:500"> ${Utils.unitLabel}</span></div>
             <div class="kpi-label">Current weight</div>
           </div>
           <div class="kpi-card">
@@ -5158,13 +5198,23 @@
             ${pr ? `<div class="pr-banner">
               <div style="display:flex;align-items:center;gap:12px;margin-bottom:${prHistory.length?'8px':'0'}">
                 <span style="font-size:24px">🏅</span>
-                <div><div class="t-h3">Personal Record</div><div class="t-sm t-muted">${pr.w} kg × ${pr.r} reps · ${Utils.formatDate(pr.date)}</div></div>
+                <div><div class="t-h3">Personal Record</div><div class="t-sm t-muted">${Utils.fmtW(pr.w)} × ${pr.r} reps · ${Utils.formatDate(pr.date)}</div></div>
               </div>
               ${prHistory.length >= 2 ? `<div style="margin-top:8px">
                 <div class="t-xs t-muted mb-1">Weight progression</div>
                 ${sparklineSVG(prHistory, 220, 36)}
               </div>` : ''}
             </div>` : '<div class="t-sm t-muted" style="padding:12px 0">No PR logged yet — complete a set to set your first record.</div>'}
+            <div class="orm-calc">
+              <div class="t-h3">1RM Calculator</div>
+              <div class="t-xs t-muted" style="margin-top:2px">Enter your working weight + reps to estimate max</div>
+              <div class="orm-input-row">
+                <input id="orm-w" type="number" class="num-input" placeholder="${Utils.unitLabel}" step="0.5" min="0"${pr ? ` value="${Utils.fmtWVal(pr.w)}"` : ''}>
+                <input id="orm-r" type="number" class="num-input" placeholder="reps" min="1" step="1"${pr ? ` value="${pr.r}"` : ''}>
+                <button class="btn btn-primary btn-sm" onclick="calc1RM()">Calc</button>
+              </div>
+              <div id="orm-result">${pr ? (() => { const orm = pr.w*(1+pr.r/30); const pcts = [100,90,85,80,75,70]; return `<div class="t-sm" style="color:var(--accent);font-weight:700;margin-top:8px">Est. 1RM: ${Utils.fmtW(orm)}</div><div class="orm-pct-grid">${pcts.map(p=>`<div class="orm-pct-cell"><div class="t-xs t-muted">${p}%</div><div class="t-sm" style="font-weight:600">${Utils.fmtWVal(orm*p/100)}</div></div>`).join('')}</div>`; })() : ''}</div>
+            </div>
             <div class="detail-stat-row mt-3">
               <div class="detail-stat"><div class="t-h3" style="color:${Utils.muscleColor(ex.muscle)}">${ex.muscle}</div><div class="t-xs t-muted">Primary</div></div>
               ${(ex.secondary||[]).map(m=>`<div class="detail-stat"><div class="t-h3" style="color:${Utils.muscleColor(m)}">${m}</div><div class="t-xs t-muted">Secondary</div></div>`).join('')}
@@ -5180,7 +5230,7 @@
               const sets = w.logs[id] || [];
               return `<div class="hist-session">
                 <div class="hist-date">${Utils.formatDate(w.date)} · ${w.type||'Workout'}</div>
-                ${sets.map((s,i)=>`<div class="hist-set-row"><span class="t-muted">Set ${i+1}</span><span>${s.w} kg × ${s.r} reps</span></div>`).join('')}
+                ${sets.map((s,i)=>`<div class="hist-set-row"><span class="t-muted">Set ${i+1}</span><span>${Utils.fmtW(s.w)} × ${s.r} reps</span></div>`).join('')}
               </div>`;
             }).join('')}
           </div>`;
@@ -5209,10 +5259,10 @@
             const demo = getExerciseDemo(ex.pattern);
             const MC = {chest:'#ef4444',back:'#3b82f6',lats:'#2563eb',shoulders:'#a855f7',biceps:'#f97316',triceps:'#eab308',quads:'#22c55e',traps:'#6366f1',glutes:'#22c55e','rear-delts':'#c084fc',forearms:'#ea580c',calves:'#4ade80',core:'#06b6d4',hamstrings:'#15803d',neck:'#f59e0b'};
             const acol = MC[ex.muscle] || '#6366f1';
-            const syncCard = Utils.bodyCard(ex.muscle, ex.secondary||[], 90).replace('class="body-card-svg"', 'class="body-card-svg bc-sync"');
+            const syncCard = Utils.bodyCard(ex.muscle, ex.secondary||[], 110).replace('class="body-card-svg"', 'class="body-card-svg bc-sync"');
             const framesSVG = demo.frames.map(f => `
               <div class="demo-frame-box">
-                <svg viewBox="0 0 200 260" width="72" height="94" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 200 260" width="88" height="114" xmlns="http://www.w3.org/2000/svg">
                   ${_demoFigBase(f.d)}
                 </svg>
                 <div class="demo-frame-lbl">${f.lbl}</div>
@@ -5220,7 +5270,7 @@
             return `<div class="demo-hero">
               <div class="demo-anim-row">
                 <div>
-                  <svg viewBox="0 0 200 260" width="110" height="143" xmlns="http://www.w3.org/2000/svg">${demo.anim.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>
+                  <svg viewBox="0 0 200 260" width="145" height="189" xmlns="http://www.w3.org/2000/svg">${demo.anim.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>
                   <div class="demo-anim-label" style="color:${acol}">${ex.pattern||'Movement'}</div>
                 </div>
                 <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
@@ -5318,16 +5368,27 @@
       const logs = aw.loggedSets[ex.id] || [];
       const elapsed = Math.round((Date.now() - aw.startTime) / 60000);
 
+      const pr      = S.prs[ex.id];
+      const wuRows  = (pr && pr.w && !logs.length) ? [
+        { label:'W1', w:(pr.w*0.4).toFixed(1), r:10, hint:'Warm-up' },
+        { label:'W2', w:(pr.w*0.6).toFixed(1), r:6,  hint:'Warm-up' },
+        { label:'W3', w:(pr.w*0.8).toFixed(1), r:3,  hint:'Feeler'  },
+      ].map(wu=>`<tr class="wu-set-row">
+        <td>${wu.label}</td>
+        <td>${Utils.fmtWVal(wu.w)}</td>
+        <td>${wu.r}</td>
+        <td><span class="wu-badge">${wu.hint}</span></td>
+      </tr>`).join('') : '';
+
       const setRows = Array.from({ length: ex.sets }, (_, si) => {
         const log  = logs.find(l => l.idx === si);
         const done = !!log;
-        const pr   = S.prs[ex.id];
         const wDef = pr ? pr.w : '';
         const rDef = pr ? pr.r : ex.reps.split('-')[0];
         return `<tr class="${done?'set-done':''}">
           <td class="t-sm t-muted">${si+1}</td>
-          <td><input id="set-w-${si}" type="number" class="num-input" placeholder="kg" min="0" step="0.5"
-            value="${done?log.w:wDef}" ${done?'disabled':''}></td>
+          <td><input id="set-w-${si}" type="number" class="num-input" placeholder="${Utils.unitLabel}" min="0" step="0.5"
+            value="${done ? Utils.fmtWVal(log.w) : (wDef ? Utils.fmtWVal(wDef) : '')}" ${done?'disabled':''}></td>
           <td><input id="set-r-${si}" type="number" class="num-input" placeholder="reps" min="1" step="1"
             value="${done?log.r:rDef}" ${done?'disabled':''}></td>
           <td>
@@ -5373,11 +5434,11 @@
             <table class="set-table" aria-label="Set tracker">
               <thead><tr>
                 <th class="t-xs t-muted">Set</th>
-                <th class="t-xs t-muted">Weight</th>
+                <th class="t-xs t-muted">${Utils.unitLabel.toUpperCase()}</th>
                 <th class="t-xs t-muted">Reps</th>
                 <th class="t-xs t-muted">Done</th>
               </tr></thead>
-              <tbody>${setRows}</tbody>
+              <tbody>${wuRows}${setRows}</tbody>
             </table>
           </div>
           <div class="rest-hint t-xs t-muted">Rest ${ex.rest}s between sets</div>
@@ -5393,12 +5454,14 @@
     function logSet(si) {
       const aw = State.activeWorkout;
       const ex = aw.exList[aw.currExIdx];
-      const w  = parseFloat(document.getElementById('set-w-'+si)?.value) || 0;
+      const wRaw = parseFloat(document.getElementById('set-w-'+si)?.value) || 0;
+      const w  = Utils.fromDisplay(wRaw);
       const r  = parseInt(document.getElementById('set-r-'+si)?.value)   || 0;
       if (!aw.loggedSets[ex.id]) aw.loggedSets[ex.id] = [];
       aw.loggedSets[ex.id] = aw.loggedSets[ex.id].filter(l => l.idx !== si);
       aw.loggedSets[ex.id].push({ idx:si, w, r });
-      S.updatePR(ex.id, w, r);
+      const isPR = S.updatePR(ex.id, w, r);
+      if (isPR) showConfetti();
       _renderActiveWorkout();
       /* Auto-start rest timer */
       const allDone = aw.loggedSets[ex.id].length >= ex.sets;
@@ -5488,7 +5551,7 @@
           <div class="wk-sum-stat"><div class="t-h2">${totalSets}</div><div class="t-xs t-muted">Sets Logged</div></div>
           <div class="wk-sum-stat"><div class="t-h2">${exDone}</div><div class="t-xs t-muted">Exercises</div></div>
           <div class="wk-sum-stat"><div class="t-h2">${totalVol > 0 ? (totalVol/1000).toFixed(1)+'k' : prsHit}</div>
-            <div class="t-xs t-muted">${totalVol > 0 ? 'kg Volume' : 'PRs Hit'}</div></div>
+            <div class="t-xs t-muted">${totalVol > 0 ? `${Utils.unitLabel} Volume` : 'PRs Hit'}</div></div>
         </div>
         ${musHTML ? `<div class="t-h3 mb-2">Muscles Worked</div><div>${musHTML}</div>` : ''}
         <button class="btn btn-primary btn-full mt-4" onclick="closeSummary()">Done — Back to Home</button>
@@ -5576,15 +5639,22 @@
             </div>
           </div>
           <div class="settings-group">
+            <div class="settings-label">Weight Unit</div>
+            <div class="unit-toggle">
+              <button class="unit-btn${(cfg.unit||'kg')==='kg'?' active':''}" onclick="setUnit('kg')">kg</button>
+              <button class="unit-btn${cfg.unit==='lbs'?' active':''}" onclick="setUnit('lbs')">lbs</button>
+            </div>
+          </div>
+          <div class="settings-group">
             <div class="settings-label">Weight Goal</div>
             <div class="form-row">
               <div class="form-field">
-                <label class="form-label">Start Weight (kg)</label>
-                <input class="form-input" id="cfg-start" type="number" step="0.1" value="${cfg.startWeight||105}">
+                <label class="form-label">Start Weight (${Utils.unitLabel})</label>
+                <input class="form-input" id="cfg-start" type="number" step="0.1" value="${Utils.fmtWVal(cfg.startWeight||105)}">
               </div>
               <div class="form-field">
-                <label class="form-label">Target Weight (kg)</label>
-                <input class="form-input" id="cfg-target" type="number" step="0.1" value="${cfg.targetWeight||90}">
+                <label class="form-label">Target Weight (${Utils.unitLabel})</label>
+                <input class="form-input" id="cfg-target" type="number" step="0.1" value="${Utils.fmtWVal(cfg.targetWeight||90)}">
               </div>
             </div>
           </div>
@@ -5602,6 +5672,8 @@
             </div>
           </div>
           <button class="btn btn-primary btn-full" onclick="saveSettings()">Save Settings</button>
+          <div style="height:10px"></div>
+          <button class="btn btn-full btn-export" onclick="exportData()">⬇ Export My Data (JSON)</button>
           <div style="height:8px"></div>
         </div>`;
 
@@ -5612,7 +5684,7 @@
             <div class="bmi-meta">
               <div class="t-h2" style="color:${bmiColor}">${bmi}</div>
               <div class="t-sm t-muted">BMI · ${bmiLabel}</div>
-              <div class="t-xs t-muted">${Utils.getCurrWeight()} kg · ${cfg.height} cm</div>
+              <div class="t-xs t-muted">${Utils.fmtW(Utils.getCurrWeight())} · ${cfg.height} cm</div>
             </div>
           </div>
           <div class="measurement-log card" style="padding:12px 16px">
@@ -5668,13 +5740,112 @@
       const cfg = S.settings;
       cfg.height        = parseFloat(document.getElementById('cfg-height')?.value) || cfg.height;
       cfg.age           = parseInt(document.getElementById('cfg-age')?.value)       || cfg.age;
-      cfg.startWeight   = parseFloat(document.getElementById('cfg-start')?.value)   || cfg.startWeight;
-      cfg.targetWeight  = parseFloat(document.getElementById('cfg-target')?.value)  || cfg.targetWeight;
+      cfg.startWeight   = Utils.fromDisplay(document.getElementById('cfg-start')?.value)  || cfg.startWeight;
+      cfg.targetWeight  = Utils.fromDisplay(document.getElementById('cfg-target')?.value) || cfg.targetWeight;
       cfg.calorieTarget = parseInt(document.getElementById('cfg-cal')?.value)       || cfg.calorieTarget;
       cfg.proteinTarget = parseInt(document.getElementById('cfg-prot')?.value)      || cfg.proteinTarget;
       S.saveSettings(cfg);
       Render.profile();
       if (Nav.current === 'home') Render.home();
+    }
+
+    function setUnit(u) {
+      const cfg = S.settings; cfg.unit = u; S.saveSettings(cfg);
+      Render.profile();
+      if (Nav.current === 'progress') Render.progress();
+    }
+
+    function exportData() {
+      const data = {
+        exportDate: new Date().toISOString(),
+        app: 'FitCore',
+        settings: S.settings,
+        measurements: S.measurements,
+        weightLog: S.weights,
+        workouts: S.history,
+        prs: S.prs,
+        prLog: S.prLog,
+        notes: S._g('fc_notes', {}),
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href = url;
+      a.download = `fitcore-backup-${Utils.today()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function showConfetti() {
+      const canvas = document.createElement('canvas');
+      canvas.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;width:100%;height:100%';
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+      document.body.appendChild(canvas);
+      const ctx    = canvas.getContext('2d');
+      const colors = ['#f59e0b','#22c55e','#6366f1','#ec4899','#a855f7','#06b6d4'];
+      const parts  = Array.from({ length: 90 }, () => ({
+        x:   Math.random() * canvas.width,
+        y:  -10 - Math.random() * 60,
+        vx:  (Math.random() - 0.5) * 5,
+        vy:  3 + Math.random() * 4,
+        g:   0.06,
+        col: colors[Math.floor(Math.random() * colors.length)],
+        w:   5 + Math.random() * 6,
+        h:   3 + Math.random() * 4,
+        ang: Math.random() * 360,
+        sp:  (Math.random() - 0.5) * 12,
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        parts.forEach(p => {
+          p.x  += p.vx; p.y += p.vy; p.vy += p.g; p.ang += p.sp;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.ang * Math.PI / 180);
+          ctx.fillStyle = p.col;
+          ctx.globalAlpha = Math.max(0, 1 - frame / 100);
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 120) requestAnimationFrame(draw);
+        else canvas.remove();
+      }
+      draw();
+    }
+
+    function calc1RM() {
+      const wInp = parseFloat(document.getElementById('orm-w')?.value);
+      const r    = parseInt(document.getElementById('orm-r')?.value);
+      if (!wInp || !r || r < 1) return;
+      const wKg  = Utils.fromDisplay(wInp);
+      const orm  = wKg * (1 + r / 30);
+      const pcts = [100, 90, 85, 80, 75, 70];
+      const grid = pcts.map(p => `<div class="orm-pct-cell">
+        <div class="t-xs t-muted">${p}%</div>
+        <div class="t-sm" style="font-weight:600">${Utils.fmtWVal(orm * p / 100)}</div>
+      </div>`).join('');
+
+      /* Plate calculator — standard 20 kg Olympic barbell */
+      const plateKgs = [20, 15, 10, 5, 2.5, 1.25];
+      let rem = Math.max(0, (orm - 20) / 2);
+      const loaded = [];
+      plateKgs.forEach(p => { const n = Math.floor(rem / p); if (n) { loaded.push({p, n}); rem -= n * p; } });
+      const platesHTML = loaded.length
+        ? loaded.map(({p, n}) => `<span style="background:var(--card);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:12px;font-weight:600">${n}×${Utils.fmtWVal(p)}</span>`).join(' + ')
+        : '<span class="t-xs t-muted">Bar only (20 kg)</span>';
+
+      document.getElementById('orm-result').innerHTML = `
+        <div class="t-sm" style="color:var(--accent);font-weight:700;margin-top:8px">Est. 1RM: ${Utils.fmtW(orm)}</div>
+        <div class="orm-pct-grid">${grid}</div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)44">
+          <div class="t-xs t-muted mb-1">Plates each side (20 kg bar)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">${platesHTML}</div>
+        </div>`;
     }
 
     /* ═══════════════════════════════════════════════════════
