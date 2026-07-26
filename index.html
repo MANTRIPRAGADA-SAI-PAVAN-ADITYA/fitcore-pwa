@@ -1392,11 +1392,11 @@
 
     /* ── Exercise demo hero ─────────────────────────────────── */
     .demo-hero { background:var(--card2); border-bottom:1px solid var(--border); }
-    .demo-anim-row { display:flex; align-items:center; justify-content:center; gap:16px; padding:16px 20px 8px; }
+    .demo-anim-row { display:flex; align-items:center; justify-content:center; gap:20px; padding:16px 20px 12px; }
     .demo-anim-label { font-size:10px; color:var(--muted); text-align:center; text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
-    .demo-frames-strip { display:flex; gap:8px; padding:8px 16px 14px; overflow-x:auto; }
-    .demo-frame-box { flex-shrink:0; background:var(--card); border:1px solid var(--border)66; border-radius:var(--r); padding:8px; text-align:center; }
-    .demo-frame-lbl { font-size:10px; color:var(--muted); margin-top:4px; }
+    .demo-gif-container { display:flex; flex-direction:column; align-items:center; }
+    .demo-gif { width:160px; height:160px; object-fit:cover; border-radius:10px; border:1px solid var(--border); background:var(--card2); }
+    .demo-gif-fallback { width:160px; height:160px; display:none; align-items:center; justify-content:center; flex-direction:column; background:var(--card2); border-radius:10px; border:1px solid var(--border); }
     @keyframes bcSync { 0%,100%{opacity:.45} 40%,60%{opacity:1} }
     .bc-sync { animation:bcSync 1.6s ease-in-out infinite; }
 
@@ -2326,1079 +2326,486 @@
           instructions:['Reverse your position on the pec deck — face the pad with arms in front','Grip the handles in a neutral or pronated position','Spread arms wide in an arc to the sides — rear delts driving the movement','Hold peak retraction for 1–2 seconds squeezing the rear delts','Return slowly — 3-second eccentric — maintain tension throughout'],
           tips:['"Pinky up" cue maximises rear delt isolation and activation','Light weight, high reps — rear delts are small muscles easily dominated by traps','Set seat height so handles align exactly with shoulder height'],
           mistakes:['Too heavy — traps and rhomboids take over completely','Not reaching full retraction at the end of each rep','Hunching forward — sit tall with chest up and shoulders back']
+        },
+
+        /* ── BODYWEIGHT ─────────────────────── */
+        'push-up': {
+          id:'push-up', name:'Push-Up',
+          muscle:'chest', secondary:['triceps','shoulders'],
+          equipment:'Bodyweight', difficulty:1, pattern:'Horizontal Push',
+          equip:'bodyweight', easier:'', harder:'diamond-push-up',
+          sets:3, reps:'10–20', rest:60, cat:'compound', dur:12,
+          days:['push','home-push'],
+          instructions:['Set up with hands slightly wider than shoulder-width, fingers pointing forward','Lower your chest to about 2–3cm from the floor, elbows at 45° from body','Maintain a straight line from head to heels — brace core the entire time','Press explosively back to start — do not lock elbows fully at top','Breathe in on the way down, out on the way up'],
+          tips:['Squeeze glutes and abs to prevent hips sagging','Slow down the descent to 2–3 seconds for more muscle stimulus','Hands close = more triceps; wider = more chest'],
+          mistakes:['Hips sagging or piking — destroy core tension','Flaring elbows straight out to the sides — shoulder impingement risk','Partial range — go all the way down every rep']
+        },
+        'diamond-push-up': {
+          id:'diamond-push-up', name:'Diamond Push-Up',
+          muscle:'triceps', secondary:['chest','shoulders'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Horizontal Push',
+          equip:'bodyweight', easier:'push-up', harder:'',
+          sets:3, reps:'8–15', rest:60, cat:'isolation', dur:10,
+          days:['push','home-push'],
+          instructions:['Form a diamond shape with thumbs and index fingers directly under your chest','Lower chest to hand level — elbows track straight back beside the body','Keep core and glutes tight throughout the entire movement','Press back up to the start — full extension but do not lock elbows','Start on knees if needed to maintain full range of motion'],
+          tips:['One of the best bodyweight tricep builders — close grip shifts load significantly','Place hands slightly lower on the chest for more comfortable wrist angles','Slow eccentric (3 sec down) dramatically increases difficulty'],
+          mistakes:['Letting elbows flare wide — defeats the tricep focus entirely','Not reaching full range at the bottom — reduce reps before cheating range','Hands too high on the chest — this strains wrists']
+        },
+        'pike-push-up': {
+          id:'pike-push-up', name:'Pike Push-Up',
+          muscle:'shoulders', secondary:['triceps'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Vertical Push',
+          equip:'bodyweight', easier:'push-up', harder:'pull-up',
+          sets:3, reps:'8–12', rest:75, cat:'compound', dur:12,
+          days:['push','home-push','hiit'],
+          instructions:['Start in a push-up position then walk feet in to form an inverted V shape','Head points down toward the floor, hips high — the more vertical the more shoulder emphasis','Lower head toward the floor by bending elbows — tracking out to the sides','Press back up until arms are straight again','The higher the hips, the closer this becomes to a handstand push-up'],
+          tips:['Elevating feet on a chair increases shoulder stimulus significantly','This is the primary stepping stone toward a handstand push-up','Keep the neck neutral — do not crank the chin down'],
+          mistakes:['Hips too low — turns it into a regular push-up losing shoulder emphasis','Wide elbow flare — works better with elbows 45° out','Not going deep enough — head should come close to the floor']
+        },
+        'pull-up': {
+          id:'pull-up', name:'Pull-Up',
+          muscle:'lats', secondary:['biceps','core'],
+          equipment:'Pull-up Bar', difficulty:3, pattern:'Vertical Pull',
+          equip:'pull-up-bar', easier:'inverted-row', harder:'',
+          sets:3, reps:'5–12', rest:90, cat:'compound', dur:16,
+          days:['pull','home-pull'],
+          instructions:['Grip the bar with an overhand (pronated) grip, hands shoulder-width to slightly wider','Hang at full extension — dead hang — shoulder blades relaxed','Initiate by depressing and retracting the shoulder blades, then pull elbows down','Continue until chin clears the bar — chest ideally reaching it','Lower with full control back to a dead hang — do not drop'],
+          tips:['Think "elbows to hips" not "chin to bar" for better lat activation','Full dead hang at the bottom is not optional — it is where the lats stretch','Scapular pull-ups are an excellent warm-up — just shrug the shoulder blades down without bending elbows'],
+          mistakes:['Kipping or momentum — trains your swing, not your lats','Not achieving dead hang at the bottom — shortens the effective range','Chin barely clearing the bar — aim for chest-to-bar as you get stronger']
+        },
+        'chin-up': {
+          id:'chin-up', name:'Chin-Up',
+          muscle:'biceps', secondary:['lats','core'],
+          equipment:'Pull-up Bar', difficulty:2, pattern:'Vertical Pull',
+          equip:'pull-up-bar', easier:'inverted-row', harder:'pull-up',
+          sets:3, reps:'6–12', rest:90, cat:'compound', dur:14,
+          days:['pull','home-pull'],
+          instructions:['Grip the bar with an underhand (supinated) grip, hands shoulder-width or slightly narrower','Hang at full extension with shoulder blades relaxed','Pull elbows down and back while curling the hands toward the shoulders','Continue until chin clears the bar or chest reaches it','Lower slowly to a full dead hang — 2–3 second eccentric'],
+          tips:['Supinated grip puts biceps in a stronger line of pull than pull-ups','Dead hang at the bottom is essential for full bicep and lat development','Squeeze the bar hard for better forearm activation'],
+          mistakes:['Swinging the legs to generate momentum — reduces lat and bicep work','Short range — never shortening the eccentric','Elbows drifting forward instead of driving down and back']
+        },
+        'inverted-row': {
+          id:'inverted-row', name:'Inverted Row',
+          muscle:'back', secondary:['biceps','core'],
+          equipment:'Bar/Table', difficulty:1, pattern:'Horizontal Pull',
+          equip:'pull-up-bar', easier:'', harder:'pull-up',
+          sets:3, reps:'10–15', rest:75, cat:'compound', dur:12,
+          days:['pull','home-pull'],
+          instructions:['Set a bar at hip height in a squat rack, or use a sturdy table','Lie underneath with straight body, arms extended, gripping the bar overhand','Keep body in a straight plank line — heels on floor, hips up','Pull chest up to the bar leading with elbows — shoulder blades coming together','Lower with control until arms are fully extended — do not let hips sag'],
+          tips:['Feet elevated on a bench dramatically increases difficulty','Closer feet together and straighter body = harder; more knee bend = easier','One of the best horizontal pull movements requiring zero equipment beyond a table'],
+          mistakes:['Hips sagging to the ground — must maintain plank tension','Pulling with the hands instead of driving the elbows back','Too short a range — chest must actually reach or near the bar']
+        },
+        'glute-bridge': {
+          id:'glute-bridge', name:'Glute Bridge',
+          muscle:'glutes', secondary:['hamstrings','core'],
+          equipment:'Bodyweight', difficulty:1, pattern:'Hip Hinge',
+          equip:'bodyweight', easier:'', harder:'single-leg-glute-bridge',
+          sets:3, reps:'15–20', rest:45, cat:'isolation', dur:10,
+          days:['legs','home-legs'],
+          instructions:['Lie on your back with knees bent, feet flat on floor hip-width apart','Press through heels and lift hips off the ground to form a straight line from shoulder to knee','Squeeze glutes hard at the top — hold 2 seconds','Lower hips under control — do not let them touch the floor between reps','Tuck chin slightly and keep lower back neutral — no overextension at the top'],
+          tips:['Drive knees slightly outward to activate the glute medius','Feet position matters — closer to glutes = more glute; further = more hamstring','Add a band above the knees for more glute medius activation'],
+          mistakes:['Extending the lower back at the top instead of squeezing glutes','Heels raised — keep the whole foot flat','Hips dropping between reps — maintain tension the whole set']
+        },
+        'single-leg-glute-bridge': {
+          id:'single-leg-glute-bridge', name:'Single-Leg Glute Bridge',
+          muscle:'glutes', secondary:['hamstrings','core'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Hip Hinge',
+          equip:'bodyweight', easier:'glute-bridge', harder:'barbell-hip-thrust',
+          sets:3, reps:'12–15 each', rest:60, cat:'isolation', dur:12,
+          days:['legs','home-legs'],
+          instructions:['Lie on back with knees bent, feet flat — lift one leg off the floor, extending it','Drive through the heel of the grounded foot to lift hips to a straight line','Squeeze glute hard at the top — 2-second hold','Lower under control without touching the ground','Complete all reps on one side before switching'],
+          tips:['Reveals asymmetries between legs that bilateral bridges can hide','Keep the raised leg in line with the torso — do not let it drift to the side','Progress this before adding weight to barbell hip thrusts'],
+          mistakes:['Rotating the hips as you press up — keep pelvis perfectly level','Heel popping off the floor — whole foot must stay flat','Not achieving full hip extension — squeeze hard at the top']
+        },
+        'plank': {
+          id:'plank', name:'Plank',
+          muscle:'core', secondary:['shoulders','glutes'],
+          equipment:'Bodyweight', difficulty:1, pattern:'Isometric',
+          equip:'bodyweight', easier:'', harder:'side-plank',
+          sets:3, reps:'30–60s', rest:45, cat:'isolation', dur:8,
+          days:['full-body','home-push','hiit'],
+          instructions:['Set up in a push-up position but rest on your forearms instead of hands','Body forms a straight rigid line from head to heels','Brace your core as if about to be punched — ribs down, no arch in the lower back','Hold this position, breathing steadily, for the target time','Avoid letting hips rise or fall throughout the hold'],
+          tips:['Squeeze glutes hard — they are a key anti-extension muscle','Pulling forearms toward your feet (without moving them) dramatically increases core activation','60-second plank with perfect form beats a 3-minute sagging plank every time'],
+          mistakes:['Hips sagging or piking — kills the anti-extension benefit entirely','Holding breath instead of breathing steadily through the hold','Looking up, straining the neck — keep head neutral, eyes toward floor']
+        },
+        'side-plank': {
+          id:'side-plank', name:'Side Plank',
+          muscle:'core', secondary:['glutes','shoulders'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Isometric',
+          equip:'bodyweight', easier:'plank', harder:'',
+          sets:3, reps:'20–45s each', rest:45, cat:'isolation', dur:8,
+          days:['full-body','home-push','hiit'],
+          instructions:['Lie on your side with forearm on floor, elbow under shoulder','Stack feet on top of each other or stagger them for stability','Lift hips off the floor to form a straight diagonal line','Hold position — core engaged, hips high, body in one plane','Complete all time on one side before switching'],
+          tips:['Add a hip dip (lower and raise hips) for more challenge','Star side plank (raise top arm and leg) is an excellent progression','The obliques and glute medius are the primary targets — key muscles for hip stability'],
+          mistakes:['Hips dropping toward the floor — defeats the lateral core purpose','Rotating forward or backward — stay in one vertical plane','Top arm across the body — extend it straight up or place on hip']
+        },
+        'mountain-climber': {
+          id:'mountain-climber', name:'Mountain Climber',
+          muscle:'core', secondary:['shoulders','quads'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Isometric',
+          equip:'bodyweight', easier:'plank', harder:'burpee',
+          sets:3, reps:'30–45s', rest:45, cat:'compound', dur:10,
+          days:['hiit','home-push'],
+          instructions:['Start in a high push-up position — wrists under shoulders, body straight','Drive one knee toward your chest as quickly as possible','Switch legs rapidly in a running motion — keeping hips flat and stable','Maintain plank position throughout — do not let hips rise','Breathe continuously — this is conditioning as well as core work'],
+          tips:['Slow controlled reps = core focus; fast alternating reps = cardio conditioning','Placing hands on a slightly elevated surface makes the movement easier to control','Cross-body mountain climbers (knee to opposite elbow) add rotational core work'],
+          mistakes:['Hips piking up with each knee drive — most common error','Looking up and straining the neck — keep neutral spine','Taking too long pauses between alternations — keep the cadence continuous']
+        },
+        'burpee': {
+          id:'burpee', name:'Burpee',
+          muscle:'quads', secondary:['chest','core','shoulders'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Isometric',
+          equip:'bodyweight', easier:'mountain-climber', harder:'',
+          sets:3, reps:'10–15', rest:60, cat:'compound', dur:12,
+          days:['hiit'],
+          instructions:['Stand upright — feet hip-width apart','Drop hands to floor and jump feet back to a push-up position simultaneously','Perform one push-up (optional but recommended for full body engagement)','Jump feet forward back to hands in a tuck jump','Explode upward into a jump with arms overhead — soft landing'],
+          tips:['Scale by removing the push-up or the final jump if needed for higher volumes','In HIIT, focus on consistent pace rather than maximum speed with poor form','The jump at the top is the cardio element — make it explosive for conditioning benefit'],
+          mistakes:['Collapsing mid-section on the way down — brace through the entire movement','Landing hard from the jump — practise soft, absorbing landings','Rushing through without hitting full positions — does more harm than good']
+        },
+        'pistol-squat': {
+          id:'pistol-squat', name:'Pistol Squat',
+          muscle:'quads', secondary:['glutes','core'],
+          equipment:'Bodyweight', difficulty:3, pattern:'Squat',
+          equip:'bodyweight', easier:'lunge-bw', harder:'',
+          sets:3, reps:'5–10 each', rest:90, cat:'compound', dur:16,
+          days:['home-legs'],
+          instructions:['Stand on one leg, extend the other leg straight out in front','Squat down on the standing leg as deep as flexibility allows — ideally below parallel','Reach forward with arms for counterbalance throughout the descent','Drive through the heel of the standing leg to return to standing','Keep the free leg extended throughout — do not let it touch the ground'],
+          tips:['Use a box or elevated surface to limit depth as you build up','Counterbalance with arms or holding a light weight in front dramatically helps balance','Box pistols (sitting down to a box) are the best entry-level progression'],
+          mistakes:['Heel coming off the floor at the bottom — work ankle mobility first','Collapsing the standing knee inward — drive it out throughout','Rushing the descent — slow controlled lowering is how to build the strength safely']
+        },
+        'lunge-bw': {
+          id:'lunge-bw', name:'Walking Lunge',
+          muscle:'quads', secondary:['glutes','hamstrings'],
+          equipment:'Bodyweight', difficulty:1, pattern:'Squat',
+          equip:'bodyweight', easier:'glute-bridge', harder:'pistol-squat',
+          sets:3, reps:'12–16 each', rest:60, cat:'compound', dur:12,
+          days:['home-legs','legs'],
+          instructions:['Stand upright — feet hip-width apart, core braced','Step forward with one leg into a long stride — front foot fully flat on floor','Lower back knee toward the ground — front thigh parallel or below','Drive off the front heel to step the back foot forward and into the next lunge','Continue alternating legs in a walking pattern for the target reps'],
+          tips:['Take a long enough stride — front shin should be close to vertical','Use dumbbells or a loaded backpack for progressive overload at home','Reverse lunges (stepping back instead of forward) are easier on the knees'],
+          mistakes:['Stride too short — front knee shoots far forward over toes','Torso leaning forward — stay upright and drive through the front heel','Back heel popping up off the floor on the descent']
+        },
+        'box-jump': {
+          id:'box-jump', name:'Box Jump',
+          muscle:'quads', secondary:['glutes','calves'],
+          equipment:'Box/Step', difficulty:2, pattern:'Squat',
+          equip:'bodyweight', easier:'box-step-up', harder:'',
+          sets:3, reps:'5–8', rest:90, cat:'compound', dur:12,
+          days:['home-legs','hiit'],
+          instructions:['Stand in front of a sturdy box or step — feet hip-width apart','Perform a short counter-movement (mini squat) and swing arms back','Explode upward driving arms forward — aim for the centre of the box','Land softly with both feet on the box in a quarter squat position','Step back down carefully — do not jump down, especially on higher boxes'],
+          tips:['Soft landing is paramount — practise landing mechanics before adding height','Start conservatively with box height — a failed jump can be dangerous','The power comes from the hips, not just the legs — drive the hips through'],
+          mistakes:['Landing with stiff legs — must absorb with bent knees and hips','Not committing to the jump — hesitation causes mistimed landings','Jumping down from height — always step down one foot at a time']
+        },
+
+        /* ── RESISTANCE BANDS ────────────────── */
+        'band-chest-press': {
+          id:'band-chest-press', name:'Band Chest Press',
+          muscle:'chest', secondary:['triceps','shoulders'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Horizontal Push',
+          equip:'bands', easier:'push-up', harder:'bench-press',
+          sets:3, reps:'12–15', rest:60, cat:'compound', dur:12,
+          days:['push','bands-plan','home-push'],
+          instructions:['Anchor band at chest height behind you or loop around your back','Grip each end, hands at chest height, elbows bent at 90°','Press arms forward to full extension — squeeze chest at the end','Return with control to the start — feel the stretch in the chest','Keep elbows at 45° from body — not flared straight out'],
+          tips:['Band resistance increases through the range — hardest at full extension','Use a door anchor or wrap behind your back for different angles','Incline angle (anchor lower) shifts emphasis to upper chest'],
+          mistakes:['Anchor slipping during the set — test thoroughly before loading','Elbows dropping below shoulder height on the return','Rushing the return — the eccentric is where strength is built even with bands']
+        },
+        'band-row': {
+          id:'band-row', name:'Band Seated Row',
+          muscle:'back', secondary:['biceps'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Horizontal Pull',
+          equip:'bands', easier:'', harder:'bent-row',
+          sets:3, reps:'12–15', rest:60, cat:'compound', dur:12,
+          days:['pull','bands-plan','home-pull'],
+          instructions:['Sit on the floor with legs extended, band looped around feet','Hold one end in each hand, palms facing each other','Pull elbows back past the body — squeeze shoulder blades together at the end','Maintain upright torso — avoid swinging the back','Return with control to the start — arms fully extended'],
+          tips:['The stretch position (arms extended) is the most valuable part for lat development','Loop band twice for more resistance','Sitting on a folded mat makes this much more comfortable'],
+          mistakes:['Leaning back excessively to generate momentum','Shrugging shoulders on the pull — think "elbows down and back"','Letting the band snap forward — control the return throughout']
+        },
+        'band-pulldown': {
+          id:'band-pulldown', name:'Band Lat Pulldown',
+          muscle:'lats', secondary:['biceps'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Vertical Pull',
+          equip:'bands', easier:'band-row', harder:'lat-pulldown',
+          sets:3, reps:'12–15', rest:60, cat:'compound', dur:12,
+          days:['pull','bands-plan','home-pull'],
+          instructions:['Anchor band overhead (door anchor or pull-up bar)','Kneel or sit, gripping each side of the band at full arm extension overhead','Pull elbows down toward your hips — squeeze lats at the bottom','Lean back slightly with chest up — do not round the lower back','Return to full arm extension overhead — feel the lat stretch'],
+          tips:['Think "elbows to your back pockets" for optimal lat recruitment','The overhead stretch is the key to lat development — reach full extension every rep','Use a longer band looped twice for more adjustable resistance'],
+          mistakes:['Pulling with the hands/biceps instead of leading with the elbows','Rounding forward at the bottom — chest should stay up','Not reaching full overhead extension — missing the essential stretch position']
+        },
+        'band-curl': {
+          id:'band-curl', name:'Band Bicep Curl',
+          muscle:'biceps', secondary:['forearms'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Elbow Flexion',
+          equip:'bands', easier:'', harder:'barbell-curl',
+          sets:3, reps:'12–15', rest:60, cat:'isolation', dur:10,
+          days:['pull','bands-plan','home-pull'],
+          instructions:['Stand on the centre of the band, feet hip-width','Hold one end in each hand, arms straight at your sides, palms forward','Curl both hands up toward shoulders — elbows pinned to your sides throughout','Squeeze biceps hard at the top — hold 1 second','Lower with full control — do not let the band snap down'],
+          tips:['Resistance increases toward the top — the peak squeeze matters most','Staggering feet widens or narrows band tension for resistance adjustment','Alternate arms for a continuous-tension approach at higher rep ranges'],
+          mistakes:['Elbows drifting forward as fatigue sets in — pin them to your sides','Jerking the band up using momentum from the torso','Not reaching full extension at the bottom — you miss the full length of the curl']
+        },
+        'band-tricep-pushdown': {
+          id:'band-tricep-pushdown', name:'Band Tricep Pushdown',
+          muscle:'triceps', secondary:['forearms'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Elbow Extension',
+          equip:'bands', easier:'', harder:'cable-pushdown',
+          sets:3, reps:'12–15', rest:60, cat:'isolation', dur:10,
+          days:['push','bands-plan','home-push'],
+          instructions:['Anchor band above head height — door top or pull-up bar','Grip the band with both hands at chest height, elbows bent 90° at your sides','Push hands down until arms are fully extended — squeeze triceps hard','Slowly return to the start position — elbows stay pinned to your sides','Keep upper arms stationary throughout — only the forearm should move'],
+          tips:['Rope-style handle attachment provides a more natural wrist position','Wider grip = more lateral head; underhand grip = more medial head','Slow eccentrics with band resistance are very effective for tricep growth'],
+          mistakes:['Elbows drifting forward and away from the body — ruins isolation','Partial range — only going halfway down and missing full lockout','Leaning forward with the torso to assist the press — strict form only']
+        },
+        'band-squat': {
+          id:'band-squat', name:'Band Squat',
+          muscle:'quads', secondary:['glutes','hamstrings'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Squat',
+          equip:'bands', easier:'lunge-bw', harder:'back-squat',
+          sets:3, reps:'15–20', rest:60, cat:'compound', dur:12,
+          days:['home-legs','bands-plan'],
+          instructions:['Stand on the centre of the band, feet shoulder-width, toes slightly out','Hold ends at shoulder height with elbows high — band forms a front rack position','Squat by pushing knees out and sitting back and down — maintain upright torso','Reach at least parallel depth — thighs parallel to floor','Drive through heels to stand, squeezing glutes at the top'],
+          tips:['Multiple bands or doubled band provides more resistance as you get stronger','The front rack position shifts emphasis to quads and core','Good substitute for goblet squats when no kettlebell is available'],
+          mistakes:['Bands snapping off feet — step firmly on the middle of both bands','Torso collapsing forward — keep elbows high throughout','Knee caving inward — consciously push knees out in line with toes']
+        },
+        'band-glute-bridge': {
+          id:'band-glute-bridge', name:'Band Glute Bridge',
+          muscle:'glutes', secondary:['hamstrings'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Hip Hinge',
+          equip:'bands', easier:'glute-bridge', harder:'barbell-hip-thrust',
+          sets:3, reps:'15–20', rest:45, cat:'isolation', dur:10,
+          days:['home-legs','bands-plan','legs'],
+          instructions:['Lie on your back — loop the band above your knees or over your hips','For hip-loaded version: feet on floor, band anchored to a heavy object and over your hips','Drive through heels to thrust hips up — squeeze glutes hard at the top','Hold for 2 seconds — do not let hips drop between the peak hold','Lower with control — do not let hips touch the floor between reps'],
+          tips:['Band above knees activates the glute medius — push knees out throughout','Hip-loaded version (band over pelvis) is more like the barbell hip thrust — higher load','Pair this with a glute squeeze cue for maximum muscle-mind connection'],
+          mistakes:['Not fully extending the hips at the top — partial hip extension limits glute stimulus','Feet too far from body — shifts load to hamstrings','Band slipping during the set — double-check placement before starting']
+        },
+        'band-face-pull': {
+          id:'band-face-pull', name:'Band Face Pull',
+          muscle:'rear-delts', secondary:['traps'],
+          equipment:'Resistance Band', difficulty:1, pattern:'Horizontal Pull',
+          equip:'bands', easier:'', harder:'face-pull',
+          sets:3, reps:'15–20', rest:45, cat:'isolation', dur:10,
+          days:['pull','bands-plan','home-pull'],
+          instructions:['Anchor band at face height — door anchor or pull-up bar','Step back so band has tension at full arm extension with elbows straight','Pull the band toward your face, hands coming to ear level with elbows wide','Squeeze rear delts and external rotators at the peak — thumbs pointing behind you','Return slowly with control — maintain tension throughout'],
+          tips:['External rotation at the end is the key to rear delt and rotator cuff health','Light resistance, high reps — this is a corrective exercise not a strength exercise','Face pulls should be in every upper body day for long-term shoulder health'],
+          mistakes:['Too much resistance — reduces range of motion and external rotation','Elbows dropping below shoulder level on the pull — keep them high and wide','Pulling to chin level instead of face/forehead level']
+        },
+        'band-lateral-raise': {
+          id:'band-lateral-raise', name:'Band Lateral Raise',
+          muscle:'shoulders', secondary:[],
+          equipment:'Resistance Band', difficulty:1, pattern:'Shoulder Abduction',
+          equip:'bands', easier:'', harder:'lat-raise',
+          sets:3, reps:'15–20', rest:45, cat:'isolation', dur:10,
+          days:['push','bands-plan','home-push'],
+          instructions:['Stand on the centre of the band, feet hip-width — one handle in each hand','Arms hang at sides, slight bend in elbows, palms facing in','Raise arms out to the sides up to shoulder height — leading with elbows','Hold 1 second at the top — squeeze the middle delts','Lower with full control — do not let the band pull hands back down fast'],
+          tips:['Band resistance increases as you raise — hardest at the top where delts are weakest','Tilt the band grip so pinkies are slightly higher than thumbs for better activation','Moderate and light resistance only — lateral deltoids are small muscles'],
+          mistakes:['Shrugging the traps on the raise — keep shoulders down throughout','Swinging the torso to get the weight up — strict upright posture','Raising above shoulder height — the delts disengage above 90° and traps take over']
+        },
+
+        /* ── KETTLEBELL ──────────────────────── */
+        'kb-deadlift': {
+          id:'kb-deadlift', name:'Kettlebell Deadlift',
+          muscle:'hamstrings', secondary:['glutes','back'],
+          equipment:'Kettlebell', difficulty:1, pattern:'Hip Hinge',
+          equip:'kettlebell', easier:'glute-bridge', harder:'deadlift',
+          sets:3, reps:'10–15', rest:75, cat:'compound', dur:14,
+          days:['home-legs','legs'],
+          instructions:['Stand with feet hip-width over the kettlebell, toes slightly out','Hinge at the hips — push them back, not down — keeping back flat','Grip the kettlebell handle with both hands','Drive through heels, extend hips and stand tall — squeeze glutes at top','Lower with the same hinge pattern — controlled and slow'],
+          tips:['The hinge pattern here teaches correct mechanics for barbell deadlifts','Keep the bell close to your legs on both the lift and the lower','Maintain lat tension — think of protecting your armpits from a tickle'],
+          mistakes:['Squatting the weight up instead of hinging — this is hip, not knee dominant','Rounding the lower back at the bottom — brace and keep spine neutral','Bell swinging away from the body on the lift']
+        },
+        'kb-clean': {
+          id:'kb-clean', name:'Kettlebell Clean',
+          muscle:'shoulders', secondary:['glutes','core','biceps'],
+          equipment:'Kettlebell', difficulty:2, pattern:'Olympic',
+          equip:'kettlebell', easier:'kb-swing', harder:'kb-press',
+          sets:3, reps:'6–8 each', rest:90, cat:'compound', dur:16,
+          days:['home-pull','hiit'],
+          instructions:['Start in a hike-pass position — bell between legs, hips hinging back','Drive hips forward powerfully as with a swing but redirect the bell path upward','As the bell rises, pull elbow back and guide the bell into the rack position on the forearm','Bell rests on the back of the forearm — not the wrist — with elbow tucked in','Stand tall in rack before lowering back to hike-pass position'],
+          tips:['The rack position should be painless — if the bell bangs the forearm, work on the wrist path','Clean into press is one of the best full-body conditioning combinations','Hip drive powers the movement — arm only guides the bell, does not pull it'],
+          mistakes:['Muscling the bell up with the arm instead of using hip drive','Bell banging the forearm painfully — practice the wrist flip movement at slow speed','Not achieving full lockout in the rack — bell should be stable not shifting']
+        },
+        'kb-turkish-getup': {
+          id:'kb-turkish-getup', name:'Turkish Get-Up',
+          muscle:'shoulders', secondary:['core','glutes'],
+          equipment:'Kettlebell', difficulty:3, pattern:'Vertical Push',
+          equip:'kettlebell', easier:'kb-press', harder:'',
+          sets:3, reps:'3–5 each', rest:90, cat:'compound', dur:20,
+          days:['home-push','hiit'],
+          instructions:['Lie on floor, bell in right hand pressed to full extension above the shoulder','Bend right knee, foot flat on floor — left arm and leg extended at 45°','Roll to left forearm then to left hand while keeping bell arm locked straight overhead','Sweep left leg back and come to a half-kneeling position','Stand fully — then reverse each step carefully back to the floor'],
+          tips:['Perform with no weight first to master the movement pattern thoroughly','The bell arm stays fully locked overhead through every single phase transition','This is one exercise — take 30–60 seconds per rep is completely normal'],
+          mistakes:['Bell arm bending at any point — stop and reset rather than dropping it','Rushing through the transitions — this is a technique exercise, never a race','Eyes not tracking the bell overhead throughout — gaze should follow the bell']
+        },
+        'kb-row': {
+          id:'kb-row', name:'Kettlebell Single-Arm Row',
+          muscle:'back', secondary:['biceps'],
+          equipment:'Kettlebell', difficulty:1, pattern:'Horizontal Pull',
+          equip:'kettlebell', easier:'band-row', harder:'bent-row',
+          sets:3, reps:'10–12 each', rest:75, cat:'compound', dur:14,
+          days:['home-pull','pull'],
+          instructions:['Hinge forward at the hips to about 45° — support free hand on knee or bench','Hold the kettlebell with one arm hanging down from the shoulder','Pull elbow back past the body — squeeze the lat and rear delt at the top','Lower with control until arm is fully extended — full stretch at the bottom','Complete all reps on one side then switch'],
+          tips:['Using the knee for support allows heavier load without lower back strain','Drive elbow as high as possible for maximum upper back recruitment','The slight shoulder rotation at the top is fine and natural — do not fight it'],
+          mistakes:['Rotating the whole torso on the pull instead of isolating the arm and shoulder','Not reaching full extension at the bottom — missing the lat stretch','Shrugging the shoulder instead of pulling it down and back']
+        },
+        'kb-windmill': {
+          id:'kb-windmill', name:'Kettlebell Windmill',
+          muscle:'core', secondary:['shoulders','hamstrings'],
+          equipment:'Kettlebell', difficulty:3, pattern:'Lateral Flexion',
+          equip:'kettlebell', easier:'side-plank', harder:'',
+          sets:3, reps:'5–8 each', rest:90, cat:'compound', dur:16,
+          days:['home-push'],
+          instructions:['Press the kettlebell overhead with one hand to full lockout — keep it there throughout','Turn both feet 45° away from the pressing arm','Push your hip to the side of the pressing arm as you tilt the torso toward the floor','Lower your free hand down the inside of the straight leg toward the floor','Return to standing by reversing the movement — bell overhead the entire time'],
+          tips:['Start very light or with no weight — this is a mobility and stability exercise first','Keep your eyes on the kettlebell throughout — it helps with balance and alignment','The hip push is the key movement — without it this becomes a dangerous side bend'],
+          mistakes:['Bending the pressing elbow at any point — full lockout is mandatory','Dropping the chin and losing sight of the bell during the descent','Not pushing the hip far enough to the side — limits the range of motion']
+        },
+        'kb-snatch': {
+          id:'kb-snatch', name:'Kettlebell Snatch',
+          muscle:'shoulders', secondary:['glutes','core'],
+          equipment:'Kettlebell', difficulty:3, pattern:'Olympic',
+          equip:'kettlebell', easier:'kb-swing', harder:'',
+          sets:3, reps:'5–8 each', rest:90, cat:'compound', dur:16,
+          days:['home-push','hiit'],
+          instructions:['Start with bell between legs in hike-pass position — hinge the hips back','Hike the bell back explosively and drive hips forward like a swing','As the bell rises to shoulder height, punch your hand through and around the bell','The bell should float overhead and land in your grip in a lockout — not crash onto the wrist','Lower to the rack position then back to hike-pass for the next rep'],
+          tips:['Practice the high pull and the punch-through separately before combining them','The bell should feel weightless at the top — if not, use more hip drive and less arm','Protect the wrist by punching through rather than letting the bell flip over it'],
+          mistakes:['Muscling the bell up with the shoulder instead of driving from the hips','Letting the bell crash onto the wrist — work on the punch-through technique','Pressing the bell at the top instead of catching it in a locked-out position']
+        },
+
+        /* ── CARDIO / CONDITIONING ───────────── */
+        'jump-rope': {
+          id:'jump-rope', name:'Jump Rope',
+          muscle:'calves', secondary:['core','shoulders'],
+          equipment:'Jump Rope', difficulty:1, pattern:'Conditioning',
+          equip:'bodyweight', easier:'', harder:'assault-bike',
+          sets:4, reps:'60s', rest:30, cat:'cardio', dur:15,
+          days:['hiit'],
+          instructions:['Hold handles at hip height — rope clears the floor with minimal slack','Bounce lightly on the balls of both feet — heels barely touch if at all','Keep elbows close to sides — wrist rotation drives the rope, not full arm circles','Start with basic two-foot bounce then progress to alternating feet','Maintain light knee bend throughout — absorb each landing softly'],
+          tips:['Jump rope is one of the best calorie-burning tools per minute of any cardio','10 minutes of jump rope is roughly equivalent to 8 minutes of running','Master the basic bounce fully before attempting speed or double-unders'],
+          mistakes:['Jumping too high — barely leave the floor, just enough to clear the rope','Arms flying wide — elbows stay close to the body','Stiff landing — absorb each jump through knees, ankles, and calves']
+        },
+        'high-knees': {
+          id:'high-knees', name:'High Knees',
+          muscle:'quads', secondary:['core','calves'],
+          equipment:'Bodyweight', difficulty:1, pattern:'Conditioning',
+          equip:'bodyweight', easier:'mountain-climber', harder:'burpee',
+          sets:3, reps:'30–45s', rest:30, cat:'cardio', dur:8,
+          days:['hiit'],
+          instructions:['Stand with feet hip-width — arms bent at 90° ready to drive','Drive one knee up to hip height while simultaneously driving the opposite arm forward','Switch legs rapidly in a running-on-the-spot motion','Stay on the balls of your feet — do not flat-foot between reps','Breathe rhythmically — do not hold your breath during the sprint'],
+          tips:['Keep an upright torso — do not lean back to kick the knees up','Use a target (hand at hip height) to enforce consistent knee height','High knees at controlled pace = warm-up; maximum effort = serious conditioning'],
+          mistakes:['Leaning backward to get the knees up — compromises posture and power','Letting arms drop — arm drive is critical to maintaining pace and rhythm','Flat-footing between reps — reduces the plyometric and cardio intensity']
+        },
+        'box-step-up': {
+          id:'box-step-up', name:'Box Step-Up',
+          muscle:'quads', secondary:['glutes','hamstrings'],
+          equipment:'Box/Step', difficulty:1, pattern:'Squat',
+          equip:'bodyweight', easier:'lunge-bw', harder:'box-jump',
+          sets:3, reps:'12–15 each', rest:60, cat:'compound', dur:12,
+          days:['home-legs','hiit'],
+          instructions:['Stand in front of a sturdy box or step — height should put thigh parallel or below at the top','Place one foot fully on the box — entire sole in contact','Drive through that heel to step up — do not push off the back leg','Stand fully upright on the box — then step the other foot up to join','Step back down with control — same leg leads back down for all reps, then switch'],
+          tips:['The drive must come from the elevated foot only — back leg just follows for balance','Add dumbbells for progressive overload at home','Higher box = more glute involvement; lower box = more quad drive'],
+          mistakes:['Pushing off the back foot — cheats the target leg out of most of the work','Leaning heavily forward — keep the torso upright throughout','Stepping down carelessly — same controlled movement coming down']
+        },
+        'rowing-machine': {
+          id:'rowing-machine', name:'Rowing Machine',
+          muscle:'back', secondary:['legs','core','arms'],
+          equipment:'Rowing Machine', difficulty:1, pattern:'Conditioning',
+          equip:'machine', easier:'band-row', harder:'assault-bike',
+          sets:1, reps:'10–20 min', rest:0, cat:'cardio', dur:20,
+          days:['hiit','pull'],
+          instructions:['Sit on the seat, feet strapped in, knees bent at the catch position','Lean slightly forward, arms straight, grip the handle with overhand grip','Drive through legs first — legs extend before the back leans back','Once legs are near full extension, pull the handle to your lower chest/upper abdomen','Return: arms extend first, then lean forward, then slide seat back to catch'],
+          tips:['The power order is always legs → back → arms on the drive','Damper setting around 4–6 is optimal for most — higher is not always harder','For conditioning: rate 20–24 strokes/min; for power: rate 18–20 with maximum force'],
+          mistakes:['Arm pulling before the legs finish their drive — kills power transfer','Hunching the back on the drive — maintain a proud chest and neutral spine','High damper with poor technique — just makes it feel harder without more benefit']
+        },
+        'assault-bike': {
+          id:'assault-bike', name:'Assault/Air Bike',
+          muscle:'quads', secondary:['core','shoulders','arms'],
+          equipment:'Assault Bike', difficulty:2, pattern:'Conditioning',
+          equip:'machine', easier:'rowing-machine', harder:'',
+          sets:4, reps:'20–30s sprint', rest:40, cat:'cardio', dur:12,
+          days:['hiit'],
+          instructions:['Adjust seat so leg is almost fully extended at the bottom of the pedal stroke','Grip both handles — they move with your push-pull arm motion','Start at a moderate pace to establish coordination between arms and legs','For intervals: sprint at maximum effort for the work period, then easy pedal to recover','Use handles hard — the assault bike is a whole-body machine, use all of it'],
+          tips:['20-second all-out sprint followed by 40-second easy pedal is a classic HIIT protocol','The resistance auto-adjusts to effort — the harder you push, the harder it gets','Never use handles for the recovery phase — just pedal easy with legs to catch breath'],
+          mistakes:['Going too hard in the warm-up — save maximum effort for the sprint intervals','Arms and legs working against each other instead of in sync','Leaning too far forward — stay upright to engage the core and breathe properly']
+        },
+        'lateral-bound': {
+          id:'lateral-bound', name:'Lateral Bound',
+          muscle:'glutes', secondary:['quads','calves'],
+          equipment:'Bodyweight', difficulty:2, pattern:'Conditioning',
+          equip:'bodyweight', easier:'box-step-up', harder:'',
+          sets:3, reps:'8–10 each', rest:60, cat:'compound', dur:10,
+          days:['hiit','home-legs'],
+          instructions:['Stand on one leg, slight knee bend','Push off laterally, driving the hip outward to propel yourself sideways','Land softly on the opposite leg — absorb through the hip, knee, and ankle','Pause for 1 second on the landing leg to establish balance before the next bound','Continue alternating sides for the full set'],
+          tips:['The pause on landing makes this into a single-leg stability exercise as well','Drive from the hip, not just the ankle — hip abductor power is the goal','Add a countermovement (small squat before the bound) for more power development'],
+          mistakes:['Landing with a stiff knee — must flex into the hip on every landing','Not pausing at all between bounds — becomes a shuffle, losing the intent','Minimal distance covered — push hard laterally to get training effect']
+        },
+
+        /* ── STABILITY BALL ──────────────────── */
+        'ball-hamstring-curl': {
+          id:'ball-hamstring-curl', name:'Stability Ball Hamstring Curl',
+          muscle:'hamstrings', secondary:['glutes','core'],
+          equipment:'Stability Ball', difficulty:2, pattern:'Knee Flexion',
+          equip:'stability-ball', easier:'glute-bridge', harder:'nordic-curl',
+          sets:3, reps:'10–15', rest:75, cat:'isolation', dur:12,
+          days:['home-legs'],
+          instructions:['Lie on your back, heels resting on top of the stability ball, arms at sides','Lift hips off the floor into a bridge position — straight from shoulders to heels','Pull heels toward you, rolling the ball in — hips stay up throughout','Continue until knees are at roughly 90°','Push ball back out to the start with full leg extension — hips stay elevated'],
+          tips:['One of the few bodyweight exercises that truly loads the hamstrings through the curl','Single-leg version (one heel on ball) is a significant difficulty upgrade','Keep glutes squeezed throughout — do not let hips sag as the ball rolls in'],
+          mistakes:['Hips dropping during the curl — they must stay up the entire time','Ball rolling too far or losing control — choose a non-slippery surface','Not reaching full extension on the return — missing the stretch position']
+        },
+        'ball-dumbbell-press': {
+          id:'ball-dumbbell-press', name:'Stability Ball DB Press',
+          muscle:'chest', secondary:['triceps','core'],
+          equipment:'Stability Ball, Dumbbells', difficulty:2, pattern:'Horizontal Push',
+          equip:'stability-ball', easier:'push-up', harder:'bench-press',
+          sets:3, reps:'10–12', rest:75, cat:'compound', dur:14,
+          days:['home-push','push'],
+          instructions:['Sit on the ball, then walk feet forward until upper back rests on the ball — hips up','Hold dumbbells at chest height — elbows at 45° from body','Press dumbbells up to full extension directly over the chest','Core and glutes engaged throughout to stabilize the ball','Lower with control to the start position — full stretch at the bottom'],
+          tips:['The unstable surface recruits more stabilizers than bench press — key core benefit','Place feet wider for more stability, narrower for more challenge','Unilateral (one dumbbell at a time) adds significant rotational core demand'],
+          mistakes:['Hips sagging below bench level — keep them in line with the torso','Ball rolling sideways from poor balance — set up on a level surface','Pressing dumbbells toward the face instead of straight up']
+        },
+
+        /* ── MEDICINE BALL ───────────────────── */
+        'mb-slam': {
+          id:'mb-slam', name:'Medicine Ball Slam',
+          muscle:'core', secondary:['shoulders','back','quads'],
+          equipment:'Medicine Ball', difficulty:2, pattern:'Power',
+          equip:'medicine-ball', easier:'burpee', harder:'',
+          sets:3, reps:'10–12', rest:60, cat:'compound', dur:12,
+          days:['hiit'],
+          instructions:['Stand with feet shoulder-width, ball held at hip level','Raise ball overhead with both hands — rise on toes for maximum reach','Explosively slam the ball into the floor directly in front of you','Exhale hard as you slam — engage the entire core at impact','Catch the ball on the bounce and return immediately to the next rep'],
+          tips:['Use a dead ball (no bounce) for maximum focus on the slam rather than the catch','The slam should feel like a total body contraction — every muscle fires at once','Excellent stress relief — the violent exhale with each slam is a known tension release'],
+          mistakes:['Arms-only slam with no core involvement — use the whole body','Slamming too far in front of you — directly at your feet for safety and intent','Using a bouncy ball on the first attempt — can hit your face if you miss the catch']
+        },
+        'mb-rotation': {
+          id:'mb-rotation', name:'Medicine Ball Rotational Throw',
+          muscle:'core', secondary:['shoulders'],
+          equipment:'Medicine Ball, Wall', difficulty:2, pattern:'Rotation',
+          equip:'medicine-ball', easier:'cable-woodchop', harder:'',
+          sets:3, reps:'8–10 each', rest:60, cat:'compound', dur:12,
+          days:['hiit'],
+          instructions:['Stand 1–2 metres from a solid wall, feet shoulder-width, sideways to the wall','Hold ball at chest height with both hands, rotate away from the wall','Explosively rotate toward the wall and throw the ball hard into it','Catch the rebound and load into the next rotation immediately','Complete all reps on one side before switching to face the other direction'],
+          tips:['Power comes from the hips rotating, not just the arms throwing','The faster the rotation and harder the throw, the more sports-specific this becomes','Use a rubber medicine ball — do not use a slam ball (no bounce back)'],
+          mistakes:['Throwing with just the arms — hips must lead the rotation','Standing too close to the wall — needs at least 1 metre for the throw and rebound','Not catching the rebound and resetting — flow into each rep']
+        },
+        'mb-woodchop': {
+          id:'mb-woodchop', name:'Medicine Ball Woodchop',
+          muscle:'core', secondary:['shoulders','back'],
+          equipment:'Medicine Ball', difficulty:2, pattern:'Rotation',
+          equip:'medicine-ball', easier:'cable-woodchop', harder:'mb-slam',
+          sets:3, reps:'10–12 each', rest:60, cat:'compound', dur:12,
+          days:['hiit'],
+          instructions:['Stand with feet shoulder-width, hold ball with both hands at one hip/thigh level','Rotate hips and shoulders to carry ball diagonally across to the opposite shoulder','Exhale as you chop and rotate — squeeze the obliques at the top','Return with control on the same diagonal path back to the starting position','Complete all reps on one diagonal then reverse the pattern'],
+          tips:['Both high-to-low and low-to-high patterns address different core angles','The power comes from the hip rotation — arms follow, do not lead','Add a pivot of the back foot to allow full hip rotation without straining the knee'],
+          mistakes:['Rotating at the spine only instead of through the entire torso and hips','Ball too heavy — sacrifices rotation speed and range of motion','Arms-only movement without any hip or foot involvement']
+        },
+        'mb-chest-pass': {
+          id:'mb-chest-pass', name:'Medicine Ball Chest Pass',
+          muscle:'chest', secondary:['triceps','shoulders'],
+          equipment:'Medicine Ball, Wall', difficulty:1, pattern:'Horizontal Push',
+          equip:'medicine-ball', easier:'push-up', harder:'',
+          sets:3, reps:'10–15', rest:60, cat:'compound', dur:10,
+          days:['hiit','home-push'],
+          instructions:['Stand 1–1.5m from a solid wall, feet shoulder-width — slight athletic stance','Hold ball at chest height with both hands — elbows tucked','Explosively press and throw the ball into the wall with maximum force','Catch the rebound with soft hands — absorb at the chest','Immediately load and throw again — minimal pause between throws'],
+          tips:['Excellent plyometric power exercise for the chest and pushing muscles','Stand further from the wall for more deceleration challenge on the catch','Partner passing version is excellent for coordination and reaction time'],
+          mistakes:['Throwing off-balance — establish a stable stance before each throw','Soft or slow throws — the whole benefit is the explosive press — be violent','Letting the ball bounce off the floor before catching — aim for direct wall contact']
         }
+
       }
     };
 
-    /* ═══════════════════════════════════════════════════════
-       PHASE 2 — 24 SVG ANIMATIONS
-    ═══════════════════════════════════════════════════════ */
-    const SVGS = {
 
-      'bench-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes bp{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}.bp{animation:bp 2s ease-in-out infinite}</style>
-<rect x="22" y="95" width="176" height="9" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="32" y1="104" x2="30" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="188" y1="104" x2="190" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="191" cy="78" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="180" y1="80" x2="57" y2="84" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="57" y1="84" x2="40" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="40" y1="114" x2="36" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="57" y1="84" x2="74" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="74" y1="112" x2="70" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="bp">
-<line x1="148" y1="82" x2="141" y2="57" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="126" y1="82" x2="119" y2="57" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="97" y1="57" x2="163" y2="57" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="98" cy="57" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="162" cy="57" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'incline-db-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes idl{0%,100%{transform:translate(0,0)}50%{transform:translate(-5px,-20px)}}.idl{animation:idl 2s ease-in-out infinite}@keyframes idr{0%,100%{transform:translate(0,0)}50%{transform:translate(5px,-20px)}}.idr{animation:idr 2s ease-in-out infinite}</style>
-<line x1="28" y1="152" x2="172" y2="94" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<line x1="28" y1="152" x2="28" y2="168" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="123" x2="90" y2="158" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="162" cy="78" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="152" y1="86" x2="84" y2="128" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="128" x2="64" y2="156" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="64" y1="156" x2="58" y2="172" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="128" x2="102" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="102" y1="150" x2="102" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="idl">
-<line x1="122" y1="108" x2="106" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="98" y="81" width="16" height="7" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g>
-<g class="idr">
-<line x1="142" y1="98" x2="160" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="156" y="71" width="16" height="7" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'cable-fly': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cfl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(40deg)}}.cfl{transform-origin:110px 58px;animation:cfl 2s ease-in-out infinite}@keyframes cfr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-40deg)}}.cfr{transform-origin:110px 58px;animation:cfr 2s ease-in-out infinite}</style>
-<circle cx="14" cy="68" r="5" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="206" cy="68" r="5" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="110" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="37" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="92" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="140" x2="90" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="140" x2="130" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="cfl">
-<line x1="110" y1="58" x2="24" y2="70" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="14" y1="68" x2="24" y2="70" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<g class="cfr">
-<line x1="110" y1="58" x2="196" y2="70" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="206" y1="68" x2="196" y2="70" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'weighted-dips': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes wd{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}.wd{animation:wd 2s ease-in-out infinite}</style>
-<line x1="58" y1="38" x2="58" y2="168" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<line x1="162" y1="38" x2="162" y2="168" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<line x1="38" y1="62" x2="78" y2="62" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<line x1="142" y1="62" x2="182" y2="62" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<g class="wd">
-<circle cx="110" cy="50" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="61" x2="110" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="74" x2="58" y2="62" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="74" x2="162" y2="62" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="112" x2="96" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="96" y1="142" x2="94" y2="164" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="112" x2="124" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="124" y1="142" x2="126" y2="164" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="110" cy="148" r="9" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'deadlift': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes dlt{0%,100%{transform:rotate(0deg)}40%,60%{transform:rotate(48deg)}}.dlt{transform-origin:108px 108px;animation:dlt 2s ease-in-out infinite}@keyframes dlb{0%,100%{transform:translateY(0)}40%,60%{transform:translateY(30px)}}.dlb{animation:dlb 2s ease-in-out infinite}</style>
-<line x1="30" y1="168" x2="190" y2="168" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
-<g class="dlb">
-<line x1="58" y1="138" x2="162" y2="138" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="60" cy="138" r="9" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="160" cy="138" r="9" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g>
-<g class="dlt">
-<circle cx="108" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="108" y1="37" x2="108" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="60" x2="78" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="130" y1="60" x2="138" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<line x1="94" y1="108" x2="84" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="148" x2="82" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="122" y1="108" x2="132" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="132" y1="148" x2="134" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-
-      'bent-row': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes brw{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}.brw{animation:brw 2s ease-in-out infinite}</style>
-<circle cx="178" cy="68" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="167" y1="76" x2="74" y2="106" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="74" y1="106" x2="64" y2="144" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="64" y1="144" x2="60" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="74" y1="106" x2="94" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="94" y1="140" x2="92" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="brw">
-<line x1="148" y1="88" x2="130" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="108" y1="98" x2="92" y2="124" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="66" y1="122" x2="154" y2="120" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="68" cy="122" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="152" cy="120" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'lat-pulldown': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lpd{0%,100%{transform:translateY(0)}50%{transform:translateY(36px)}}.lpd{animation:lpd 2s ease-in-out infinite}</style>
-<circle cx="110" cy="12" r="5" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="17" x2="110" y2="28" stroke="#fbbf24" stroke-width="2"/>
-<rect x="80" y="128" width="60" height="10" rx="3" stroke="#fbbf24" stroke-width="2" fill="none"/>
-<line x1="88" y1="138" x2="86" y2="162" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="132" y1="138" x2="134" y2="162" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="110" cy="74" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="85" x2="110" y2="126" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="88" y1="126" x2="72" y2="126" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="132" y1="126" x2="148" y2="126" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="72" y1="126" x2="70" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="148" y1="126" x2="150" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="lpd">
-<line x1="66" y1="28" x2="154" y2="28" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="67" cy="28" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="153" cy="28" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="74" y1="42" x2="90" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="146" y1="42" x2="130" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'seated-cable-row': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes scr{0%,100%{transform:translateX(0)}50%{transform:translateX(-26px)}}.scrm{animation:scr 2s ease-in-out infinite}</style>
-<rect x="8" y="58" width="18" height="80" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="17" cy="95" r="5" stroke="#fbbf24" stroke-width="2" fill="none"/>
-<line x1="8" y1="158" x2="80" y2="158" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="142" cy="72" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="142" y1="83" x2="142" y2="128" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="120" y1="128" x2="56" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="56" y1="130" x2="42" y2="158" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="126" y1="128" x2="66" y2="132" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="66" y1="132" x2="54" y2="158" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="scrm">
-<line x1="25" y1="95" x2="92" y2="95" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="92" cy="95" r="4" fill="#fbbf24"/>
-<line x1="92" y1="95" x2="122" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="95" x2="120" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'ohp': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ohp{0%,100%{transform:translateY(0)}50%{transform:translateY(-36px)}}.ohpm{animation:ohp 2s ease-in-out infinite}</style>
-<circle cx="110" cy="34" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="45" x2="110" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="108" x2="92" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="148" x2="90" y2="172" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="108" x2="128" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="148" x2="130" y2="172" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="ohpm">
-<line x1="82" y1="62" x2="74" y2="44" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="138" y1="62" x2="146" y2="44" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="50" y1="44" x2="170" y2="44" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="52" cy="44" r="9" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="168" cy="44" r="9" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'lat-raise': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lrl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-65deg)}}.lrl{transform-origin:80px 58px;animation:lrl 2s ease-in-out infinite}@keyframes lrr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(65deg)}}.lrr{transform-origin:140px 58px;animation:lrr 2s ease-in-out infinite}</style>
-<circle cx="110" cy="28" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="39" x2="110" y2="102" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="52" x2="140" y2="52" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="102" x2="92" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="142" x2="90" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="102" x2="128" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="142" x2="130" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="lrl">
-<line x1="80" y1="58" x2="46" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="38" y="92" width="14" height="6" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g>
-<g class="lrr">
-<line x1="140" y1="58" x2="174" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="168" y="92" width="14" height="6" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'face-pull': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes fpa{0%,100%{transform:translateX(0)}50%{transform:translateX(28px)}}.fpa{animation:fpa 2s ease-in-out infinite}</style>
-<rect x="6" y="38" width="18" height="92" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="15" cy="72" r="5" stroke="#fbbf24" stroke-width="2" fill="none"/>
-<circle cx="152" cy="46" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="152" y1="57" x2="152" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="152" y1="114" x2="136" y2="152" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="136" y1="152" x2="134" y2="172" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="152" y1="114" x2="168" y2="152" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="168" y1="152" x2="170" y2="172" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="fpa">
-<line x1="23" y1="72" x2="116" y2="66" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="116" y1="66" x2="130" y2="60" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="116" y1="66" x2="126" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="116" cy="66" r="3.5" fill="#fbbf24"/>
-</g></svg>`,
-
-      'db-shrugs': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes dbs{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}.dbsm{animation:dbs 2s ease-in-out infinite}</style>
-<line x1="110" y1="100" x2="92" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="142" x2="90" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="142" x2="130" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="dbsm">
-<circle cx="110" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="37" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="52" x2="142" y2="52" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="52" x2="76" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="140" y1="52" x2="144" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="62" y="96" width="18" height="8" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<rect x="140" y="96" width="18" height="8" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'barbell-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes bcurl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-78deg)}}.bcleft{transform-origin:78px 80px;animation:bcurl 2s ease-in-out infinite}@keyframes bcurlr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(78deg)}}.bcright{transform-origin:142px 80px;animation:bcurlr 2s ease-in-out infinite}</style>
-<circle cx="110" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="37" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="54" x2="78" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="142" y1="54" x2="142" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="92" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="140" x2="90" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="140" x2="130" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="bcleft">
-<line x1="78" y1="80" x2="72" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<g class="bcright">
-<line x1="142" y1="80" x2="148" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<line x1="52" y1="114" x2="168" y2="114" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="54" cy="114" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="166" cy="114" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/></svg>`,
-
-      'hammer-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes hcl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-76deg)}}.hcleft{transform-origin:82px 80px;animation:hcl 2s ease-in-out infinite}@keyframes hcr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(76deg)}}.hcright{transform-origin:138px 80px;animation:hcr 2s ease-in-out infinite}</style>
-<circle cx="110" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="37" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="82" y1="54" x2="82" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="138" y1="54" x2="138" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="92" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="140" x2="90" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="140" x2="130" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="hcleft">
-<line x1="82" y1="80" x2="78" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="70" y="110" width="8" height="20" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g>
-<g class="hcright">
-<line x1="138" y1="80" x2="142" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="142" y="110" width="8" height="20" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'preacher-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes pca{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-65deg)}}.pcarm{transform-origin:105px 108px;animation:pca 2s ease-in-out infinite}</style>
-<line x1="30" y1="100" x2="120" y2="60" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<line x1="30" y1="100" x2="28" y2="140" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="118" y1="62" x2="140" y2="140" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="20" y="136" width="140" height="10" rx="4" stroke="#fbbf24" stroke-width="2" fill="none"/>
-<circle cx="155" cy="64" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="145" y1="70" x2="120" y2="94" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="145" y1="78" x2="155" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="155" y1="140" x2="152" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="pcarm">
-<line x1="105" y1="108" x2="95" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="62" y1="150" x2="134" y2="148" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="64" cy="150" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="132" cy="148" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'cable-pushdown': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cpd{0%,100%{transform:translateY(0)}50%{transform:translateY(30px)}}.cpdm{animation:cpd 2s ease-in-out infinite}</style>
-<circle cx="110" cy="10" r="5" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="15" x2="110" y2="30" stroke="#fbbf24" stroke-width="2"/>
-<circle cx="110" cy="28" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="39" x2="110" y2="102" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="102" x2="92" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="142" x2="90" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="102" x2="128" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="142" x2="130" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="60" x2="136" y2="60" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="cpdm">
-<line x1="84" y1="60" x2="76" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="136" y1="60" x2="144" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="30" x2="110" y2="60" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="68" y1="92" x2="152" y2="92" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-</g></svg>`,
-
-      'skull-crusher': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sca{0%,100%{transform:rotate(0deg)}50%{transform:rotate(48deg)}}.scarm{transform-origin:130px 82px;animation:sca 2s ease-in-out infinite}</style>
-<rect x="22" y="96" width="176" height="9" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="32" y1="105" x2="30" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="188" y1="105" x2="190" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="46" cy="78" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="57" y1="80" x2="163" y2="83" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="163" y1="83" x2="180" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="180" y1="112" x2="184" y2="138" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="163" y1="83" x2="146" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="146" y1="112" x2="148" y2="138" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="scarm">
-<line x1="130" y1="82" x2="130" y2="56" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="108" y1="56" x2="152" y2="56" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="110" cy="56" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="150" cy="56" r="7" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'cgbp': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cgp{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}.cgpm{animation:cgp 2s ease-in-out infinite}</style>
-<rect x="22" y="95" width="176" height="9" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="32" y1="104" x2="30" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="188" y1="104" x2="190" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="191" cy="78" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="180" y1="80" x2="57" y2="84" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="57" y1="84" x2="40" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="40" y1="114" x2="36" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="57" y1="84" x2="74" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="74" y1="112" x2="70" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="cgpm">
-<line x1="140" y1="82" x2="126" y2="57" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="122" y1="82" x2="108" y2="57" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="97" y1="57" x2="151" y2="57" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="98" cy="57" r="6" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="150" cy="57" r="6" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'back-squat': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sqt{0%,100%{transform:translateY(0)}50%{transform:translateY(30px)}}.sqtm{animation:sqt 2s ease-in-out infinite}@keyframes sqleg{0%,100%{transform:rotate(0deg)}50%{transform:rotate(28deg)}}.sqll{transform-origin:92px 108px;animation:sqleg 2s ease-in-out infinite}@keyframes sqlegr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-28deg)}}.sqlr{transform-origin:128px 108px;animation:sqlegr 2s ease-in-out infinite}</style>
-<line x1="56" y1="14" x2="56" y2="64" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="164" y1="14" x2="164" y2="64" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<g class="sqtm">
-<circle cx="110" cy="40" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="51" x2="110" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="56" y1="62" x2="164" y2="62" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="58" cy="62" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="162" cy="62" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="78" y1="72" x2="62" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="142" y1="72" x2="158" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<g class="sqll">
-<line x1="92" y1="108" x2="76" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="76" y1="148" x2="72" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<g class="sqlr">
-<line x1="128" y1="108" x2="144" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="144" y1="148" x2="148" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'romanian-dl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes rdl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(50deg)}}.rdlb{transform-origin:110px 100px;animation:rdl 2s ease-in-out infinite}@keyframes rdlbar{0%,100%{transform:translateY(0)}50%{transform:translateY(34px)}}.rdlbar{animation:rdlbar 2s ease-in-out infinite}</style>
-<g class="rdlbar">
-<line x1="62" y1="110" x2="158" y2="110" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round"/>
-<circle cx="64" cy="110" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<circle cx="156" cy="110" r="8" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g>
-<g class="rdlb">
-<circle cx="110" cy="28" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="39" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="58" x2="78" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="134" y1="58" x2="142" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<line x1="94" y1="100" x2="84" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="142" x2="82" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="126" y1="100" x2="136" y2="142" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="136" y1="142" x2="138" y2="168" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></svg>`,
-
-      'leg-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lpr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-28deg)}}.lprl{transform-origin:60px 115px;animation:lpr 2s ease-in-out infinite}@keyframes lprr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-28deg)}}.lprr{transform-origin:80px 105px;animation:lprr 2s ease-in-out infinite}</style>
-<rect x="140" y="28" width="60" height="110" rx="5" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="140" y1="88" x2="200" y2="88" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3" opacity="0.5"/>
-<circle cx="54" cy="76" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="54" y1="87" x2="54" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="36" y1="100" x2="20" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="20" y1="100" x2="16" y2="126" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="lprl">
-<line x1="60" y1="115" x2="120" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="120" y1="88" x2="140" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<g class="lprr">
-<line x1="80" y1="105" x2="130" y2="74" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g>
-<rect x="136" y="60" width="8" height="56" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/></svg>`,
-
-      'leg-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lca{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-75deg)}}.lcm{transform-origin:110px 128px;animation:lca 2s ease-in-out infinite}</style>
-<rect x="22" y="74" width="176" height="10" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="32" y1="84" x2="30" y2="112" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="188" y1="84" x2="190" y2="112" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="46" cy="60" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="57" y1="62" x2="165" y2="64" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="64" x2="86" y2="76" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="140" y1="64" x2="138" y2="76" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="64" x2="110" y2="128" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="lcm">
-<line x1="110" y1="128" x2="96" y2="160" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="128" x2="124" y2="160" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="88" y="157" width="44" height="8" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'leg-extension': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lea{0%,100%{transform:rotate(0deg)}50%{transform:rotate(70deg)}}.learm{transform-origin:110px 116px;animation:lea 2s ease-in-out infinite}</style>
-<rect x="80" y="56" width="60" height="70" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="80" y1="126" x2="20" y2="160" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="140" y1="126" x2="200" y2="160" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="110" cy="34" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="45" x2="110" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="80" x2="62" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="136" y1="80" x2="158" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="116" x2="72" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="116" x2="148" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="learm">
-<line x1="110" y1="116" x2="96" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="116" x2="124" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="88" y="153" width="44" height="8" rx="4" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-</g></svg>`,
-
-      'calf-raise': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cra{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}.crm{animation:cra 2s ease-in-out infinite}</style>
-<rect x="50" y="148" width="120" height="10" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<line x1="60" y1="148" x2="56" y2="170" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="160" y1="148" x2="164" y2="170" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<g class="crm">
-<circle cx="110" cy="26" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="37" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="54" x2="140" y2="54" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="82" y1="54" x2="72" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="138" y1="54" x2="148" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="92" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="92" y1="140" x2="90" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="128" y1="140" x2="130" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      /* ── NEW EXERCISE SVGs ─────────────────────────── */
-
-      'pec-deck': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes pd{0%,100%{transform:translateX(0)}50%{transform:translateX(18px)}}.pdl{transform-origin:40px 90px;animation:pd 2s ease-in-out infinite}.pdr{transform-origin:180px 90px;animation:pd 2s ease-in-out infinite reverse}</style>
-<rect x="18" y="60" width="8" height="60" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<rect x="194" y="60" width="8" height="60" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="50" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="61" x2="110" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="104" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="116" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="pdl"><line x1="110" y1="90" x2="40" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="40" y1="90" x2="26" y2="90" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="pdr"><line x1="110" y1="90" x2="180" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="180" y1="90" x2="194" y2="90" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'smith-bench-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sbp{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}.sbp{animation:sbp 2s ease-in-out infinite}</style>
-<rect x="20" y="30" width="6" height="140" rx="2" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".5"/>
-<rect x="194" y="30" width="6" height="140" rx="2" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".5"/>
-<rect x="22" y="95" width="176" height="8" rx="3" stroke="#fbbf24" stroke-width="2.5" fill="none"/>
-<rect x="30" y="120" width="160" height="10" rx="3" fill="none" stroke="#334155" stroke-width="1.5"/>
-<circle cx="192" cy="78" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<g class="sbp">
-<line x1="181" y1="80" x2="60" y2="84" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="60" y1="84" x2="42" y2="114" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="181" y1="80" x2="195" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      't-bar-row': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes tbr{0%,100%{transform:translateY(4px)}50%{transform:translateY(-10px)}}.tbra{animation:tbr 2s ease-in-out infinite}</style>
-<line x1="110" y1="155" x2="190" y2="155" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle x1="185" cy="155" r="6" fill="none" stroke="#fbbf24" stroke-width="2.5" cx="190"/>
-<circle cx="100" cy="50" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="100" y1="61" x2="105" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="105" y1="100" x2="90" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="105" y1="100" x2="120" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="tbra">
-<line x1="100" y1="61" x2="82" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="82" y1="78" x2="115" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="61" x2="118" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="118" y1="78" x2="115" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'single-arm-db-row': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sadr{0%,100%{transform:translateY(6px) rotate(8deg)}50%{transform:translateY(-8px) rotate(-8deg)}}.sadra{transform-origin:130px 100px;animation:sadr 2s ease-in-out infinite}</style>
-<rect x="50" y="105" width="80" height="12" rx="4" fill="none" stroke="#334155" stroke-width="2"/>
-<line x1="50" y1="117" x2="48" y2="155" stroke="#334155" stroke-width="2"/>
-<line x1="130" y1="117" x2="132" y2="155" stroke="#334155" stroke-width="2"/>
-<circle cx="78" cy="75" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="78" y1="86" x2="80" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="105" x2="60" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="86" x2="55" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="sadra">
-<line x1="130" y1="100" x2="168" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="162" y="93" width="16" height="14" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'cable-row-wide': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes crw{0%,100%{transform:translateX(0)}50%{transform:translateX(-18px)}}.crwa{animation:crw 2s ease-in-out infinite}</style>
-<rect x="185" y="40" width="12" height="110" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="100" cy="72" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="100" y1="83" x2="100" y2="115" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="115" x2="88" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="115" x2="112" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="crwa">
-<line x1="100" y1="83" x2="80" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="95" x2="185" y2="95" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-dasharray="4,4"/>
-<line x1="100" y1="83" x2="120" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'machine-shoulder-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes msp{0%,100%{transform:translateY(0)}50%{transform:translateY(-22px)}}.mspa{animation:msp 2s ease-in-out infinite}</style>
-<rect x="28" y="40" width="8" height="110" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".6"/>
-<rect x="184" y="40" width="8" height="110" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".6"/>
-<rect x="55" y="110" width="110" height="50" rx="6" fill="none" stroke="#334155" stroke-width="2"/>
-<circle cx="110" cy="60" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="71" x2="110" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="mspa">
-<line x1="110" y1="71" x2="70" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="70" y1="85" x2="36" y2="85" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="71" x2="150" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="150" y1="85" x2="184" y2="85" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'rear-delt-fly': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes rdf{0%,100%{transform:rotate(0deg)}50%{transform:rotate(40deg)}}.rdfl{transform-origin:100px 95px;animation:rdf 2s ease-in-out infinite}.rdfr{transform-origin:100px 95px;animation:rdf 2s ease-in-out infinite reverse}</style>
-<circle cx="100" cy="60" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="100" y1="71" x2="100" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="95" x2="90" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="95" x2="110" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="rdfl"><line x1="100" y1="95" x2="50" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="38" y="89" width="14" height="12" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/></g>
-<g class="rdfr"><line x1="100" y1="95" x2="150" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="148" y="89" width="14" height="12" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/></g>
-</svg>`,
-
-      'cable-lateral-raise': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes clr{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-50deg)}}.clra{transform-origin:110px 90px;animation:clr 2s ease-in-out infinite}</style>
-<rect x="22" y="40" width="10" height="110" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="62" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="73" x2="110" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="100" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="120" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="clra">
-<line x1="110" y1="90" x2="58" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="58" y1="90" x2="32" y2="90" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" stroke-dasharray="4,3"/>
-</g></svg>`,
-
-      'cable-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ccl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-78deg)}}.ccll{transform-origin:95px 100px;animation:ccl 2s ease-in-out infinite}.cclr{transform-origin:125px 100px;animation:ccl 2s ease-in-out infinite reverse}</style>
-<rect x="22" y="40" width="10" height="110" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="32" y1="140" x2="88" y2="140" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="110" cy="58" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="69" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="100" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="120" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="ccll"><line x1="95" y1="100" x2="58" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="cclr"><line x1="125" y1="100" x2="162" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'incline-db-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes idc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-70deg)}}.idcl{transform-origin:78px 100px;animation:idc 2s ease-in-out infinite}.idcr{transform-origin:142px 100px;animation:idc 2s ease-in-out infinite reverse}</style>
-<rect x="60" y="80" width="100" height="55" rx="5" transform="rotate(-35 60 80)" fill="none" stroke="#334155" stroke-width="2"/>
-<circle cx="110" cy="50" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="61" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="100" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="120" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="idcl"><line x1="78" y1="100" x2="50" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="38" y="94" width="14" height="12" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/></g>
-<g class="idcr"><line x1="142" y1="100" x2="170" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="168" y="94" width="14" height="12" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/></g>
-</svg>`,
-
-      'ez-bar-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ezc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-72deg)}}.ezcl{transform-origin:80px 100px;animation:ezc 2s ease-in-out infinite}.ezcr{transform-origin:140px 100px;animation:ezc 2s ease-in-out infinite reverse}</style>
-<path d="M70 135 Q85 130 95 135 Q105 140 115 135 Q125 130 135 135 Q145 140 150 135" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
-<circle cx="110" cy="55" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="66" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="ezcl"><line x1="80" y1="100" x2="55" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="ezcr"><line x1="140" y1="100" x2="165" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'overhead-tricep-ext': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ote{0%,100%{transform:rotate(0deg)}50%{transform:rotate(55deg)}}.otel{transform-origin:92px 72px;animation:ote 2s ease-in-out infinite}.oter{transform-origin:128px 72px;animation:ote 2s ease-in-out infinite reverse}</style>
-<rect x="194" y="40" width="10" height="90" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="140" y1="72" x2="194" y2="72" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3"/>
-<circle cx="110" cy="45" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="56" x2="110" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="98" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="122" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="56" x2="92" y2="68" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="56" x2="128" y2="68" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="otel"><line x1="92" y1="72" x2="92" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="oter"><line x1="128" y1="72" x2="128" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'machine-tricep': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes mtr{0%,100%{transform:translateY(0)}50%{transform:translateY(22px)}}.mtra{animation:mtr 2s ease-in-out infinite}</style>
-<rect x="28" y="40" width="8" height="110" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".6"/>
-<rect x="184" y="40" width="8" height="110" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".6"/>
-<rect x="70" y="100" width="80" height="40" rx="5" fill="none" stroke="#334155" stroke-width="2"/>
-<circle cx="110" cy="52" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="63" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="mtra">
-<line x1="110" y1="63" x2="72" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="72" y1="78" x2="36" y2="78" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="63" x2="148" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="148" y1="78" x2="184" y2="78" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'tricep-rope-pushdown': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes trp{0%,100%{transform:rotate(0deg)}50%{transform:rotate(60deg)}}.trpl{transform-origin:92px 78px;animation:trp 2s ease-in-out infinite}.trpr{transform-origin:128px 78px;animation:trp 2s ease-in-out infinite reverse}</style>
-<rect x="100" y="22" width="20" height="50" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="50" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="61" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="61" x2="92" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="61" x2="128" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="trpl"><line x1="92" y1="78" x2="70" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="trpr"><line x1="128" y1="78" x2="150" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'barbell-hip-thrust': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes bht{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}.bhta{animation:bht 2s ease-in-out infinite}</style>
-<rect x="30" y="110" width="50" height="30" rx="6" fill="none" stroke="#334155" stroke-width="2"/>
-<line x1="10" y1="155" x2="210" y2="155" stroke="#334155" stroke-width="2"/>
-<g class="bhta">
-<circle cx="90" cy="100" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="90" y1="111" x2="95" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="95" y1="130" x2="75" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="95" y1="130" x2="140" y2="125" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="140" y1="125" x2="160" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="60" y1="125" x2="165" y2="120" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="55" cy="122" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="170" cy="118" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'cable-kickback': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ckb{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-45deg)}}.ckba{transform-origin:115px 130px;animation:ckb 2s ease-in-out infinite}</style>
-<rect x="22" y="40" width="10" height="110" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="100" cy="68" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="100" y1="79" x2="105" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="105" y1="105" x2="85" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="79" x2="80" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="90" x2="32" y2="90" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3" stroke-linecap="round"/>
-<g class="ckba">
-<line x1="105" y1="130" x2="150" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="150" y1="130" x2="165" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'hip-abduction': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes hab{0%,100%{transform:rotate(0deg)}50%{transform:rotate(18deg)}}.habl{transform-origin:90px 100px;animation:hab 2s ease-in-out infinite reverse}.habr{transform-origin:130px 100px;animation:hab 2s ease-in-out infinite}</style>
-<rect x="60" y="90" width="100" height="55" rx="6" fill="none" stroke="#334155" stroke-width="2"/>
-<circle cx="110" cy="55" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="66" x2="110" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="habl"><line x1="90" y1="100" x2="72" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="habr"><line x1="130" y1="100" x2="148" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'bulgarian-split-squat': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes bss{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}.bssa{animation:bss 2s ease-in-out infinite}</style>
-<rect x="155" y="100" width="50" height="14" rx="4" fill="none" stroke="#334155" stroke-width="2"/>
-<line x1="10" y1="160" x2="210" y2="160" stroke="#334155" stroke-width="1.5"/>
-<line x1="40" y1="65" x2="180" y2="65" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="37" cy="65" r="9" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="183" cy="65" r="9" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<g class="bssa">
-<circle cx="100" cy="42" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="100" y1="53" x2="100" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="85" x2="78" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="130" x2="72" y2="160" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="100" y1="85" x2="138" y2="118" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="138" y1="118" x2="165" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'cable-pull-through': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cpt{0%,100%{transform:rotate(30deg)}50%{transform:rotate(-10deg)}}.cpta{transform-origin:110px 100px;animation:cpt 2s ease-in-out infinite}</style>
-<rect x="184" y="100" width="12" height="55" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<g class="cpta">
-<circle cx="110" cy="72" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="83" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="92" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="128" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="83" x2="90" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="96" x2="168" y2="120" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5,3" stroke-linecap="round"/>
-</g></svg>`,
-
-      'cable-crunch': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cc2{0%,100%{transform:rotate(0deg)}50%{transform:rotate(30deg)}}.cc2a{transform-origin:110px 80px;animation:cc2 2s ease-in-out infinite}</style>
-<rect x="100" y="22" width="20" height="48" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="10" y1="160" x2="210" y2="160" stroke="#334155" stroke-width="1.5"/>
-<g class="cc2a">
-<circle cx="110" cy="55" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="66" x2="110" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="80" x2="90" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="100" x2="75" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="100" x2="115" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'cable-woodchop': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes cwc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(40deg)}}.cwca{transform-origin:110px 100px;animation:cwc 2s ease-in-out infinite}</style>
-<rect x="22" y="28" width="10" height="60" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<g class="cwca">
-<circle cx="110" cy="65" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="76" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="96" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="124" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="76" x2="80" y2="58" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="58" x2="32" y2="55" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3" stroke-linecap="round"/>
-</g></svg>`,
-
-      'machine-crunch': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes mc2{0%,100%{transform:rotate(0deg)}50%{transform:rotate(25deg)}}.mc2a{transform-origin:110px 95px;animation:mc2 2s ease-in-out infinite}</style>
-<rect x="60" y="95" width="100" height="60" rx="8" fill="none" stroke="#334155" stroke-width="2"/>
-<rect x="28" y="40" width="8" height="90" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".5"/>
-<rect x="184" y="40" width="8" height="90" rx="3" fill="none" stroke="#fbbf24" stroke-width="2" opacity=".5"/>
-<g class="mc2a">
-<circle cx="110" cy="58" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="69" x2="110" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="69" x2="88" y2="82" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="88" y1="82" x2="36" y2="82" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="69" x2="132" y2="82" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="132" y1="82" x2="184" y2="82" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'pallof-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes pp2{0%,100%{transform:translateX(0)}50%{transform:translateX(30px)}}.pp2a{animation:pp2 2s ease-in-out infinite}</style>
-<rect x="22" y="40" width="10" height="110" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="62" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="73" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="98" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="122" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="pp2a">
-<line x1="110" y1="73" x2="84" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="88" x2="32" y2="88" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="136" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'landmine-rotation': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lmr{0%,100%{transform:rotate(-25deg)}50%{transform:rotate(25deg)}}.lmra{transform-origin:110px 100px;animation:lmr 2s ease-in-out infinite}</style>
-<circle cx="110" cy="155" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<g class="lmra">
-<circle cx="110" cy="62" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="73" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="96" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="124" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="82" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="138" y2="88" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="82" y1="88" x2="110" y2="155" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'barbell-shrug': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes bsh{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}.bsha{animation:bsh 2s ease-in-out infinite}</style>
-<line x1="40" y1="115" x2="180" y2="115" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="35" cy="115" r="10" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="185" cy="115" r="10" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<g class="bsha">
-<circle cx="110" cy="58" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="69" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="98" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="122" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="69" x2="75" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="75" y1="85" x2="45" y2="115" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="69" x2="145" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="145" y1="85" x2="175" y2="115" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'upright-row': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ur{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}.ura{animation:ur 2s ease-in-out infinite}</style>
-<g class="ura">
-<line x1="62" y1="120" x2="158" y2="120" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="57" cy="120" r="9" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="163" cy="120" r="9" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="52" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="63" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="63" x2="80" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="90" x2="66" y2="120" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="63" x2="140" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="140" y1="90" x2="154" y2="120" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'rack-pull': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes rp{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}.rpa{animation:rp 2s ease-in-out infinite}</style>
-<rect x="28" y="30" width="8" height="140" rx="3" fill="none" stroke="#334155" stroke-width="2"/>
-<rect x="184" y="30" width="8" height="140" rx="3" fill="none" stroke="#334155" stroke-width="2"/>
-<line x1="36" y1="108" x2="184" y2="108" stroke="#334155" stroke-width="2" stroke-dasharray="4,4"/>
-<g class="rpa">
-<line x1="48" y1="110" x2="172" y2="110" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="43" cy="110" r="10" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="177" cy="110" r="10" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="62" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="73" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="78" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="90" x2="53" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="142" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="142" y1="90" x2="167" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'wrist-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes wc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(30deg)}}.wcl{transform-origin:80px 110px;animation:wc 2s ease-in-out infinite}.wcr{transform-origin:140px 110px;animation:wc 2s ease-in-out infinite reverse}</style>
-<rect x="55" y="100" width="110" height="12" rx="3" fill="none" stroke="#334155" stroke-width="2"/>
-<circle cx="110" cy="60" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="71" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="98" y1="140" x2="80" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="122" y1="140" x2="140" y2="110" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="65" y1="110" x2="155" y2="110" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<g class="wcl"><line x1="80" y1="110" x2="70" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="wcr"><line x1="140" y1="110" x2="150" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'reverse-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes rc2{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-65deg)}}.rc2l{transform-origin:82px 100px;animation:rc2 2s ease-in-out infinite}.rc2r{transform-origin:138px 100px;animation:rc2 2s ease-in-out infinite reverse}</style>
-<path d="M72 130 Q85 125 95 130 Q105 135 115 130 Q125 125 135 130 Q145 135 148 130" stroke="#fbbf24" stroke-width="3" fill="none" stroke-linecap="round"/>
-<circle cx="110" cy="55" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="66" x2="110" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="98" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="100" x2="122" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="rc2l"><line x1="82" y1="100" x2="56" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-<g class="rc2r"><line x1="138" y1="100" x2="164" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/></g>
-</svg>`,
-
-      'farmers-carry': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes fc2{0%,100%{transform:translateX(0)}25%{transform:translateX(8px)}75%{transform:translateX(-8px)}}.fc2a{animation:fc2 .9s ease-in-out infinite}</style>
-<g class="fc2a">
-<circle cx="110" cy="48" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="59" x2="110" y2="95" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="95" x2="98" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="95" x2="122" y2="140" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="59" x2="72" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="59" x2="148" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="56" y="80" width="16" height="30" rx="5" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<rect x="148" y="80" width="16" height="30" rx="5" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'kb-swing': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes kbs{0%,100%{transform:rotate(35deg)}50%{transform:rotate(-20deg)}}.kbsa{transform-origin:110px 105px;animation:kbs 2s ease-in-out infinite}</style>
-<g class="kbsa">
-<circle cx="110" cy="68" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="79" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="90" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="130" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="79" x2="84" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="79" x2="136" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="84" y1="96" x2="100" y2="115" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="136" y1="96" x2="120" y2="115" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="98" y="115" width="24" height="20" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="104" y1="115" x2="104" y2="111" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="116" y1="115" x2="116" y2="111" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="104" y1="111" x2="116" y2="111" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'kb-goblet-squat': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes kgq{0%,100%{transform:translateY(0)}50%{transform:translateY(22px)}}.kgqa{animation:kgq 2s ease-in-out infinite}</style>
-<g class="kgqa">
-<circle cx="110" cy="42" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="53" x2="110" y2="85" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="85" x2="86" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="130" x2="80" y2="160" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="85" x2="134" y2="130" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="134" y1="130" x2="140" y2="160" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="53" x2="86" y2="72" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="53" x2="134" y2="72" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="95" y="72" width="30" height="22" rx="5" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="100" y1="72" x2="100" y2="67" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="120" y1="72" x2="120" y2="67" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="100" y1="67" x2="120" y2="67" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'kb-press': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes kbp{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}.kbpa{animation:kbp 2s ease-in-out infinite}</style>
-<circle cx="110" cy="58" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="69" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="96" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="124" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="69" x2="148" y2="82" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="kbpa">
-<rect x="142" y="82" width="24" height="20" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="148" y1="82" x2="148" y2="77" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="160" y1="82" x2="160" y2="77" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
-<line x1="148" y1="77" x2="160" y2="77" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      /* ── NECK ─────────────────────────────────────────── */
-      'neck-curl': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes nc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(30deg)}}.nca{transform-origin:110px 64px;animation:nc 2s ease-in-out infinite}</style>
-<rect x="40" y="90" width="140" height="12" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="50" y1="102" x2="50" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="170" y1="102" x2="170" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="90" x2="86" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="112" x2="74" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="112" x2="98" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="nca">
-<circle cx="110" cy="64" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="75" x2="110" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="98" y="56" width="24" height="8" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'neck-extension': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes ne{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-28deg)}}.nea{transform-origin:110px 64px;animation:ne 2s ease-in-out infinite}</style>
-<rect x="40" y="78" width="140" height="12" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="50" y1="90" x2="50" y2="118" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="170" y1="90" x2="170" y2="118" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="78" x2="86" y2="100" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="100" x2="74" y2="138" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="86" y1="100" x2="98" y2="136" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="nea">
-<circle cx="110" cy="64" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="75" x2="110" y2="78" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="100" y="64" width="20" height="8" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'neck-lateral': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes nl{0%,100%{transform:rotate(0deg)}50%{transform:rotate(25deg)}}.nla{transform-origin:110px 52px;animation:nl 2s ease-in-out infinite}</style>
-<line x1="110" y1="63" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="94" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="126" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="78" x2="80" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="78" x2="140" y2="90" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="nla">
-<circle cx="110" cy="52" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<rect x="118" y="46" width="18" height="8" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'neck-harness': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes nh{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-30deg)}}.nha{transform-origin:80px 80px;animation:nh 2s ease-in-out infinite}</style>
-<line x1="80" y1="80" x2="80" y2="125" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="125" x2="60" y2="158" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="125" x2="100" y2="158" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="96" x2="48" y2="106" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="96" x2="108" y2="106" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="nha">
-<circle cx="80" cy="80" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<path d="M72 84 Q80 92 88 84" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="80" y1="92" x2="80" y2="110" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3"/>
-<circle cx="80" cy="118" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      /* ── LATS ─────────────────────────────────────────── */
-      'straight-arm-pulldown': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sapd{0%,100%{transform:rotate(0deg)}50%{transform:rotate(55deg)}}.sapda{transform-origin:110px 80px;animation:sapd 2s ease-in-out infinite}</style>
-<line x1="110" y1="10" x2="110" y2="22" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="110" cy="10" r="5" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="110" cy="52" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="63" x2="110" y2="105" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="94" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="105" x2="126" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="sapda">
-<line x1="110" y1="80" x2="110" y2="22" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="90" y1="22" x2="130" y2="22" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-</g></svg>`,
-
-      'dumbbell-pullover': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes dpo{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-70deg)}}.dpoa{transform-origin:90px 80px;animation:dpo 2s ease-in-out infinite}</style>
-<rect x="40" y="96" width="140" height="10" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="60" y1="106" x2="58" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="160" y1="106" x2="162" y2="130" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="90" cy="80" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="90" y1="91" x2="110" y2="96" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="96" x2="138" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="dpoa">
-<line x1="90" y1="80" x2="90" y2="46" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="78" y="38" width="24" height="10" rx="4" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'underhand-pulldown': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes upd{0%,100%{transform:translateY(0)}50%{transform:translateY(28px)}}.upda{animation:upd 2s ease-in-out infinite}</style>
-<line x1="60" y1="14" x2="160" y2="14" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<line x1="60" y1="10" x2="60" y2="18" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="160" y1="10" x2="160" y2="18" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="14" x2="110" y2="36" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,3"/>
-<circle cx="110" cy="62" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="73" x2="110" y2="112" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="112" x2="94" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="112" x2="126" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="upda">
-<line x1="110" y1="73" x2="86" y2="36" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="73" x2="134" y2="36" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="76" y1="36" x2="144" y2="36" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-</g></svg>`,
-
-      /* ── HAMSTRINGS ───────────────────────────────────── */
-      'stiff-leg-deadlift': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes sld{0%,100%{transform:rotate(0deg)}50%{transform:rotate(55deg)}}.slda{transform-origin:110px 110px;animation:sld 2s ease-in-out infinite}</style>
-<line x1="110" y1="155" x2="90" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="155" x2="130" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="slda">
-<circle cx="110" cy="80" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="91" x2="110" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="110" x2="78" y2="118" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="78" y1="118" x2="62" y2="148" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="40" y1="148" x2="180" y2="148" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="42" cy="148" r="7" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="178" cy="148" r="7" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      'good-morning': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes gm{0%,100%{transform:rotate(0deg)}50%{transform:rotate(60deg)}}.gma{transform-origin:110px 108px;animation:gm 2s ease-in-out infinite}</style>
-<line x1="110" y1="150" x2="90" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="150" x2="130" y2="170" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="gma">
-<circle cx="110" cy="76" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="87" x2="110" y2="150" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="108" x2="74" y2="108" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="74" y1="108" x2="56" y2="122" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="50" y1="104" x2="170" y2="104" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="52" cy="104" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="168" cy="104" r="8" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`,
-
-      /* ── CALVES ───────────────────────────────────────── */
-      'standing-calf-raise': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes scr{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}.scra{animation:scr 2s ease-in-out infinite}</style>
-<rect x="60" y="60" width="100" height="12" rx="3" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<line x1="60" y1="60" x2="48" y2="44" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="160" y1="60" x2="172" y2="44" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="48" y1="44" x2="172" y2="44" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
-<rect x="70" y="155" width="80" height="8" rx="2" fill="none" stroke="#fbbf24" stroke-width="2"/>
-<g class="scra">
-<circle cx="110" cy="76" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="72" x2="110" y2="60" stroke="#e2e8f0" stroke-width="2" stroke-linecap="round"/>
-<line x1="110" y1="87" x2="110" y2="125" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="108" x2="88" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="108" x2="132" y2="116" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="96" y1="125" x2="88" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="124" y1="125" x2="132" y2="155" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-</g></svg>`,
-
-      'leg-press-calf-raise': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes lpc{0%,100%{transform:rotate(0deg)}50%{transform:rotate(18deg)}}.lpca{transform-origin:140px 80px;animation:lpc 2s ease-in-out infinite}</style>
-<rect x="20" y="90" width="100" height="55" rx="6" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-<circle cx="56" cy="82" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="56" y1="93" x2="56" y2="120" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="56" y1="110" x2="38" y2="118" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="56" y1="110" x2="74" y2="118" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="56" y1="120" x2="90" y2="136" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="lpca">
-<line x1="90" y1="136" x2="140" y2="80" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="130" y1="70" x2="158" y2="56" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
-<circle cx="130" cy="70" r="7" fill="none" stroke="#fbbf24" stroke-width="2"/>
-</g></svg>`,
-
-      /* ── REAR DELTS ───────────────────────────────────── */
-      'reverse-pec-deck': `<svg viewBox="0 0 220 180" xmlns="http://www.w3.org/2000/svg">
-<style>@keyframes rpd{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-45deg)}}.rpda{transform-origin:110px 72px;animation:rpd 2s ease-in-out infinite}@keyframes rpd2{0%,100%{transform:rotate(0deg)}50%{transform:rotate(45deg)}}.rpdb{transform-origin:110px 72px;animation:rpd2 2s ease-in-out infinite}</style>
-<rect x="96" y="38" width="28" height="60" rx="4" fill="none" stroke="#fbbf24" stroke-width="2" opacity="0.4"/>
-<circle cx="110" cy="46" r="11" stroke="#e2e8f0" stroke-width="2.5" fill="none"/>
-<line x1="110" y1="57" x2="110" y2="98" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="98" x2="94" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<line x1="110" y1="98" x2="126" y2="145" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<g class="rpda">
-<line x1="110" y1="72" x2="60" y2="72" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="48" cy="72" r="6" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g>
-<g class="rpdb">
-<line x1="110" y1="72" x2="160" y2="72" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
-<circle cx="172" cy="72" r="6" fill="none" stroke="#fbbf24" stroke-width="2.5"/>
-</g></svg>`
-
-    };
 
     /* ═══════════════════════════════════════════════════════
        PHASE 2 — WORKOUT PLANS + SCHEDULE
@@ -3438,6 +2845,41 @@
         warmup:['Stationary bike — 10 min','Empty bar squat — 2 × 10 reps','Empty bar press — 2 × 10 reps'],
         cooldown:['Full-body static stretch circuit — 10 min','Focus on hip flexors, lats, chest, and core'],
         duration:70, calories:450, optional:true
+      },
+      'home-push': {
+        name:'Home Push', subtitle:'Chest · Shoulders · Triceps (No Gym)', color:'#f97316',
+        exercises:['push-up','diamond-push-up','pike-push-up','band-chest-press','band-tricep-pushdown','band-lateral-raise','plank'],
+        warmup:['Arm circles — 30 sec each direction','Wall push-ups — 2 × 15 reps','Shoulder rolls — 20 reps'],
+        cooldown:['Chest doorway stretch — 45 s each side','Tricep overhead stretch — 30 s each arm','Childs pose — 60 s'],
+        duration:50, calories:280
+      },
+      'home-pull': {
+        name:'Home Pull', subtitle:'Back · Biceps (No Gym)', color:'#22c55e',
+        exercises:['pull-up','chin-up','inverted-row','band-row','band-pulldown','band-curl','band-face-pull'],
+        warmup:['Cat-cow stretches — 10 reps','Band pull-apart — 2 × 15 reps','Dead hang — 20 s'],
+        cooldown:['Lat doorframe stretch — 45 s each side','Bicep wall stretch — 30 s each arm','Childs pose — 60 s'],
+        duration:50, calories:270
+      },
+      'home-legs': {
+        name:'Home Legs', subtitle:'Quads · Glutes · Hamstrings (No Gym)', color:'#a855f7',
+        exercises:['lunge-bw','glute-bridge','single-leg-glute-bridge','band-squat','band-glute-bridge','ball-hamstring-curl','box-step-up'],
+        warmup:['Hip circles — 10 each side','Bodyweight squat — 2 × 15 reps','Glute bridge — 2 × 10 reps'],
+        cooldown:['Standing quad stretch — 45 s each leg','Lying hamstring stretch — 45 s each leg','Seated glute stretch — 30 s each side'],
+        duration:50, calories:300
+      },
+      'hiit': {
+        name:'HIIT Circuit', subtitle:'Conditioning · Fat Loss · Full Body', color:'#ef4444',
+        exercises:['burpee','mountain-climber','jump-rope','high-knees','box-jump','lateral-bound','mb-slam','assault-bike'],
+        warmup:['Light jog in place — 3 min','Jumping jacks — 30 s','Leg swings — 10 each side'],
+        cooldown:['Walking cool-down — 3 min','Full-body stretch — 5 min','Focus on quads, hips, calves'],
+        duration:30, calories:380
+      },
+      'bands-plan': {
+        name:'Bands Full Body', subtitle:'Resistance Bands Only — Anywhere', color:'#06b6d4',
+        exercises:['band-chest-press','band-row','band-pulldown','band-squat','band-glute-bridge','band-curl','band-tricep-pushdown','band-face-pull','band-lateral-raise'],
+        warmup:['Band pull-apart — 2 × 20 reps','Band dislocates — 10 reps','Bodyweight squat — 2 × 10 reps'],
+        cooldown:['Full-body stretch — 8 min','Focus on chest, back, hips, and hamstrings'],
+        duration:60, calories:260
       }
     };
 
@@ -3506,6 +2948,7 @@
       exerciseSearch:  '',
       exerciseSort:    'name',
       showFavsOnly:    false,
+      showMyGymOnly:   false,
       detailId:        null,
       detailTab:       'instructions',
       activeWorkout:   null,   /* {type, plan, exList, currExIdx, currSetIdx, startTime, date, loggedSets} */
@@ -3988,11 +3431,6 @@
         </svg>`;
       },
 
-      /* ── Generic mini-card for exercise rows (legacy) ─────── */
-      miniSVG(id) {
-        const raw = SVGS[id] || '';
-        return raw.replace('<svg ', '<svg width="42" height="34" ');
-      },
     };
 
     /* ── Breathing cues by movement pattern ─────────────────── */
@@ -4015,370 +3453,6 @@
       'Neck Flexion':      'Breathe freely and steadily — never hold breath during neck work.',
       'default':           'Exhale on the exertion (the hard part) → inhale on the return.',
     };
-
-    /* ── Exercise demo animations (SMIL, front-view figure) ──── */
-    const _DS = 'stroke:#2a3655;stroke-width:11;stroke-linecap:round;fill:none';
-    const _DA = 'stroke:#6366f1;stroke-width:11;stroke-linecap:round;fill:none';
-    const _figBase = (extra='') => `
-      <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-      <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
-      <line style="${_DS}" x1="75" y1="60" x2="125" y2="60"/>
-      <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
-      <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
-      <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
-      <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
-      <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
-      ${extra}`;
-
-    const DEMO_ANIMS = {
-      'Elbow Flexion': {
-        labels:['Start','Curl up','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DS}" x1="75" y1="60" x2="68" y2="98"/>
-          <line style="${_DS}" x1="68" y1="98" x2="64" y2="138"/>
-          <line style="${_DS}" x1="125" y1="60" x2="132" y2="98"/>
-          <line style="${_DA}" x1="132" y1="98">
-            <animate attributeName="x2" values="134;112;134" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="138;68;138" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="134" y2="138"/>`,lbl:'Start'},
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="112" y2="68"/>`,lbl:'Curl'},
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="98"/><line style="${_DA}" x1="132" y1="98" x2="134" y2="138"/>`,lbl:'Lower'},
-        ]
-      },
-      'Elbow Extension': {
-        labels:['Bent','Extend','Return'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DS}" x1="75" y1="60" x2="68" y2="98"/>
-          <line style="${_DS}" x1="68" y1="98" x2="64" y2="138"/>
-          <line style="${_DS}" x1="125" y1="60" x2="132" y2="56"/>
-          <line style="${_DA}" x1="132" y1="56">
-            <animate attributeName="x2" values="122;132;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="90;138;90" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="122" y2="90"/>`,lbl:'Bent'},
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="132" y2="138"/>`,lbl:'Extend'},
-          {d:`<line style="${_DA}" x1="125" y1="60" x2="132" y2="56"/><line style="${_DA}" x1="132" y1="56" x2="122" y2="90"/>`,lbl:'Return'},
-        ]
-      },
-      'Vertical Push': {
-        labels:['At shoulder','Press up','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DA}" x1="75" y1="60">
-            <animate attributeName="x2" values="62;52;62" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;38;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="125" y1="60">
-            <animate attributeName="x2" values="138;148;138" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;38;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="138" y2="96"/>`,lbl:'Start'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="52" y2="38"/><line style="${_DA}" x1="125" y1="60" x2="148" y2="38"/>`,lbl:'Press'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="138" y2="96"/>`,lbl:'Lower'},
-        ]
-      },
-      'Horizontal Push': {
-        labels:['Lower','Press','Lockout'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="75" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-          <line style="${_DS}" x1="100" y1="88" x2="100" y2="160"/>
-          <line style="${_DS}" x1="72" y1="105" x2="128" y2="105"/>
-          <line style="${_DS}" x1="86" y1="160" x2="82" y2="200"/>
-          <line style="${_DS}" x1="114" y1="160" x2="118" y2="200"/>
-          <line style="${_DA}" x1="72" y1="105">
-            <animate attributeName="x2" values="56;44;56" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="122;105;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="128" y1="105">
-            <animate attributeName="x2" values="144;156;144" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="122;105;122" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line></svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="56" y2="122"/><line style="${_DA}" x1="128" y1="105" x2="144" y2="122"/>`,lbl:'Lower'},
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="44" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="156" y2="105"/>`,lbl:'Press'},
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="44" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="156" y2="105"/>`,lbl:'Lock'},
-        ]
-      },
-      'Horizontal Fly': {
-        labels:['Wide open','Squeeze','Return'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="75" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-          <line style="${_DS}" x1="100" y1="88" x2="100" y2="160"/>
-          <line style="${_DS}" x1="72" y1="105" x2="128" y2="105"/>
-          <line style="${_DS}" x1="86" y1="160" x2="82" y2="200"/>
-          <line style="${_DS}" x1="114" y1="160" x2="118" y2="200"/>
-          <line style="${_DA}" x1="72" y1="105">
-            <animate attributeName="x2" values="38;72;38" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="105;105;105" dur="1.6s" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="128" y1="105">
-            <animate attributeName="x2" values="162;128;162" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="105;105;105" dur="1.6s" repeatCount="indefinite"/>
-          </line></svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="38" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="162" y2="105"/>`,lbl:'Open'},
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="72" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="128" y2="105"/>`,lbl:'Squeeze'},
-          {d:`<line style="${_DA}" x1="72" y1="105" x2="38" y2="105"/><line style="${_DA}" x1="128" y1="105" x2="162" y2="105"/>`,lbl:'Return'},
-        ]
-      },
-      'Vertical Pull': {
-        labels:['Arms up','Pull down','Return'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DA}" x1="75" y1="60">
-            <animate attributeName="x2" values="58;68;58" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="28;96;28" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="125" y1="60">
-            <animate attributeName="x2" values="142;132;142" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="28;96;28" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="58" y2="28"/><line style="${_DA}" x1="125" y1="60" x2="142" y2="28"/>`,lbl:'Arms up'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="68" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="132" y2="96"/>`,lbl:'Pull'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="58" y2="28"/><line style="${_DA}" x1="125" y1="60" x2="142" y2="28"/>`,lbl:'Return'},
-        ]
-      },
-      'Horizontal Pull': {
-        labels:['Arm extended','Row back','Return'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="80" cy="40" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-          <line style="${_DS}" x1="80" y1="53" x2="90" y2="130"/>
-          <line style="${_DS}" x1="68" y1="84" x2="102" y2="78"/>
-          <line style="${_DS}" x1="90" y1="130" x2="76" y2="172"/>
-          <line style="${_DS}" x1="76" y1="172" x2="70" y2="220"/>
-          <line style="${_DS}" x1="104" y1="132" x2="118" y2="174"/>
-          <line style="${_DS}" x1="118" y1="174" x2="124" y2="220"/>
-          <line style="${_DA}" x1="102" y1="78">
-            <animate attributeName="x2" values="158;120;158" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="80;82;80" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line></svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="102" y1="78" x2="158" y2="80"/>`,lbl:'Extend'},
-          {d:`<line style="${_DA}" x1="102" y1="78" x2="120" y2="82"/>`,lbl:'Row'},
-          {d:`<line style="${_DA}" x1="102" y1="78" x2="158" y2="80"/>`,lbl:'Return'},
-        ]
-      },
-      'Hip Hinge': {
-        labels:['Standing','Hinge down','Drive up'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
-          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
-          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
-          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
-          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
-          <line style="${_DA}" x1="100" y1="35">
-            <animate attributeName="x2" values="100;50;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="126;120;126" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <animateTransform attributeName="transform" type="translate" values="0,0;0,0;0,0" dur="1.6s" repeatCount="indefinite"/>
-          <circle r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
-            <animate attributeName="cx" values="100;55;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="cy" values="22;50;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </circle></svg>`,
-        frames:[
-          {d:``,lbl:'Stand'},
-          {d:``,lbl:'Hinge'},
-          {d:``,lbl:'Drive'},
-        ]
-      },
-      'Knee Extension': {
-        labels:['Seated','Extend','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/>
-          <line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>
-          <line style="${_DS}" x1="125" y1="60" x2="138" y2="96"/>
-          <line style="${_DS}" x1="138" y1="96" x2="140" y2="136"/>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>`,lbl:'Seat'},
-          {d:`<line style="${_DS}" x1="75" y1="60" x2="62" y2="96"/><line style="${_DS}" x1="62" y1="96" x2="60" y2="136"/>`,lbl:'Extend'},
-          {d:``,lbl:'Lower'},
-        ]
-      },
-      'Knee Flexion': {
-        labels:['Standing','Curl leg','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DS}" x1="75" y1="60" x2="64" y2="96"/>
-          <line style="${_DS}" x1="64" y1="96" x2="62" y2="136"/>
-          <line style="${_DS}" x1="125" y1="60" x2="134" y2="96"/>
-          <line style="${_DA}" x1="116" y1="178">
-            <animate attributeName="x2" values="120;140;120" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="226;196;226" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Start'},
-          {d:`<line style="${_DA}" x1="116" y1="178" x2="140" y2="196"/>`,lbl:'Curl'},
-          {d:`<line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Lower'},
-        ]
-      },
-      'Hip Extension': {
-        labels:['Down','Thrust','Peak'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-          <line style="${_DA}" x1="100" y1="35" x2="100" y2="126"/>
-          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
-          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
-          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
-          <line style="${_DA}" x1="90" y1="126">
-            <animate attributeName="x2" values="84;76;84" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="178;148;178" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="110" y1="126">
-            <animate attributeName="x2" values="116;124;116" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="178;148;178" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line></svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="90" y1="126" x2="84" y2="178"/><line style="${_DA}" x1="110" y1="126" x2="116" y2="178"/>`,lbl:'Down'},
-          {d:`<line style="${_DA}" x1="90" y1="126" x2="76" y2="148"/><line style="${_DA}" x1="110" y1="126" x2="124" y2="148"/>`,lbl:'Thrust'},
-          {d:`<line style="${_DA}" x1="90" y1="126" x2="84" y2="178"/><line style="${_DA}" x1="110" y1="126" x2="116" y2="178"/>`,lbl:'Lower'},
-        ]
-      },
-      'Plantar Flexion': {
-        labels:['Flat','Rise','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DS}" x1="75" y1="60" x2="64" y2="96"/>
-          <line style="${_DS}" x1="64" y1="96" x2="62" y2="136"/>
-          <line style="${_DS}" x1="125" y1="60" x2="136" y2="96"/>
-          <line style="${_DS}" x1="136" y1="96" x2="138" y2="136"/>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="84" y1="178" x2="80" y2="226"/><line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Flat'},
-          {d:`<line style="${_DA}" x1="84" y1="178" x2="82" y2="210"/><line style="${_DA}" x1="116" y1="178" x2="118" y2="210"/>`,lbl:'Rise'},
-          {d:`<line style="${_DA}" x1="84" y1="178" x2="80" y2="226"/><line style="${_DA}" x1="116" y1="178" x2="120" y2="226"/>`,lbl:'Lower'},
-        ]
-      },
-      'Shoulder Abduction': {
-        labels:['Arms down','Raise','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DA}" x1="75" y1="60">
-            <animate attributeName="x2" values="64;32;64" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;58;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="125" y1="60">
-            <animate attributeName="x2" values="136;168;136" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;58;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="64" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="136" y2="96"/>`,lbl:'Down'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="32" y2="58"/><line style="${_DA}" x1="125" y1="60" x2="168" y2="58"/>`,lbl:'Raise'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="64" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="136" y2="96"/>`,lbl:'Lower'},
-        ]
-      },
-      'Shoulder Isolation': {
-        labels:['Arms forward','Raise','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">${_figBase(`
-          <line style="${_DA}" x1="75" y1="60">
-            <animate attributeName="x2" values="60;48;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;56;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="125" y1="60">
-            <animate attributeName="x2" values="140;152;140" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="y2" values="96;56;96" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>`)}</svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="96"/>`,lbl:'Down'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="48" y2="56"/><line style="${_DA}" x1="125" y1="60" x2="152" y2="56"/>`,lbl:'Raise'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="96"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="96"/>`,lbl:'Lower'},
-        ]
-      },
-      'Shrug': {
-        labels:['Neutral','Shrug up','Lower'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="100" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
-            <animate attributeName="cy" values="22;14;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </circle>
-          <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
-          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
-          <line style="${_DA}" x1="100" y1="35">
-            <animate attributeName="y1" values="35;27;35" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="75" y1="60">
-            <animate attributeName="y1" values="60;52;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DA}" x1="125" y1="60">
-            <animate attributeName="y1" values="60;52;60" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </line>
-          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
-          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
-          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
-          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/>
-          <line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/>
-          <line style="${_DA}" x1="60" y1="98" x2="58" y2="136"/>
-          <line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>
-          <line style="${_DA}" x1="140" y1="98" x2="142" y2="136"/></svg>`,
-        frames:[
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>`,lbl:'Neutral'},
-          {d:`<line style="${_DA}" x1="75" y1="52" x2="60" y2="90"/><line style="${_DA}" x1="125" y1="52" x2="140" y2="90"/>`,lbl:'Shrug'},
-          {d:`<line style="${_DA}" x1="75" y1="60" x2="60" y2="98"/><line style="${_DA}" x1="125" y1="60" x2="140" y2="98"/>`,lbl:'Lower'},
-        ]
-      },
-      'Neck Flexion': {
-        labels:['Neutral','Flex','Return'],
-        anim:`<svg viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
-          <circle r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5">
-            <animate attributeName="cx" values="100;96;100" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-            <animate attributeName="cy" values="22;28;22" dur="1.6s" calcMode="spline" keySplines=".4 0 .2 1;.4 0 .2 1" repeatCount="indefinite"/>
-          </circle>
-          <line style="${_DS}" x1="100" y1="35" x2="100" y2="126"/>
-          <line style="${_DS}" x1="75" y1="60" x2="60" y2="98"/>
-          <line style="${_DS}" x1="60" y1="98" x2="58" y2="136"/>
-          <line style="${_DS}" x1="125" y1="60" x2="140" y2="98"/>
-          <line style="${_DS}" x1="140" y1="98" x2="142" y2="136"/>
-          <line style="${_DS}" x1="86" y1="126" x2="114" y2="126"/>
-          <line style="${_DS}" x1="90" y1="126" x2="84" y2="178"/>
-          <line style="${_DS}" x1="84" y1="178" x2="80" y2="226"/>
-          <line style="${_DS}" x1="110" y1="126" x2="116" y2="178"/>
-          <line style="${_DS}" x1="116" y1="178" x2="120" y2="226"/></svg>`,
-        frames:[
-          {d:``,lbl:'Neutral'},
-          {d:``,lbl:'Flex'},
-          {d:``,lbl:'Return'},
-        ]
-      },
-    };
-
-    const _demoFigBase = (extra='') => {
-      const s = _DS, a = _DA;
-      return `<circle cx="100" cy="22" r="13" fill="#1e2534" stroke="#334155" stroke-width="1.5"/>
-        <line style="${s}" x1="100" y1="35" x2="100" y2="126"/>
-        <line style="${s}" x1="75" y1="60" x2="125" y2="60"/>
-        <line style="${s}" x1="86" y1="126" x2="114" y2="126"/>
-        <line style="${s}" x1="90" y1="126" x2="84" y2="178"/>
-        <line style="${s}" x1="84" y1="178" x2="80" y2="226"/>
-        <line style="${s}" x1="110" y1="126" x2="116" y2="178"/>
-        <line style="${s}" x1="116" y1="178" x2="120" y2="226"/>${extra}`;
-    };
-
-    const PATTERN_MAP = {
-      'Incline Push':             'Horizontal Push',
-      'Horizontal Push (Narrow)': 'Horizontal Push',
-      'Lateral Raise':            'Shoulder Abduction',
-      'Shoulder Elevation':       'Shrug',
-      'Elevation':                'Shrug',
-      'Horizontal Pull (High)':   'Horizontal Pull',
-      'Shoulder Extension':       'Horizontal Pull',
-      'Elbow Flexion (Neutral)':  'Elbow Flexion',
-      'Elbow Flexion (Isolated)': 'Elbow Flexion',
-      'Elbow Extension (Lying)':  'Elbow Extension',
-      'Vertical Push (Bilateral)':'Vertical Push',
-      'Linear Push (Bilateral)':  'Vertical Push',
-      'Squat':                    'Knee Extension',
-      'Single Leg Squat':         'Knee Extension',
-      'Hip Abduction':            'Shoulder Abduction',
-      'Spinal Flexion':           'Knee Flexion',
-      'Rotational':               'Hip Extension',
-      'Anti-Rotation':            'Hip Extension',
-      'Wrist Flexion':            'Elbow Flexion',
-      'Loaded Carry':             'Shrug',
-      'Neck Extension':           'Neck Flexion',
-      'Neck Lateral Flexion':     'Neck Flexion',
-    };
-    function getExerciseDemo(pattern) {
-      const key = PATTERN_MAP[pattern] || pattern;
-      return DEMO_ANIMS[key] || DEMO_ANIMS['Horizontal Push'];
-    }
 
     /* ═══════════════════════════════════════════════════════
        PHASE 3 — WEIGHT MODAL (functional)
@@ -4485,6 +3559,78 @@
     ═══════════════════════════════════════════════════════ */
     /* Normalize DB.exercises from keyed object → array */
     if (!Array.isArray(DB.exercises)) DB.exercises = Object.values(DB.exercises);
+
+    /* Patch equip + progression fields on existing exercises */
+    const EQUIP_MAP = {
+      'bench-press':'barbell','incline-db-press':'dumbbell','cable-fly':'cable',
+      'weighted-dips':'pull-up-bar','pec-deck':'machine','smith-bench-press':'machine',
+      'deadlift':'barbell','bent-row':'barbell','lat-pulldown':'cable',
+      'seated-cable-row':'cable','t-bar-row':'barbell','single-arm-db-row':'dumbbell',
+      'cable-row-wide':'cable','straight-arm-pulldown':'cable','dumbbell-pullover':'dumbbell',
+      'underhand-pulldown':'cable','ohp':'barbell','lat-raise':'dumbbell','face-pull':'cable',
+      'db-shrugs':'dumbbell','machine-shoulder-press':'machine','rear-delt-fly':'dumbbell',
+      'cable-lateral-raise':'cable','reverse-pec-deck':'machine','barbell-curl':'barbell',
+      'hammer-curl':'dumbbell','preacher-curl':'barbell','cable-curl':'cable',
+      'incline-db-curl':'dumbbell','ez-bar-curl':'barbell','cable-pushdown':'cable',
+      'skull-crusher':'barbell','cgbp':'barbell','overhead-tricep-ext':'cable',
+      'machine-tricep':'machine','tricep-rope-pushdown':'cable','back-squat':'barbell',
+      'leg-press':'machine','leg-extension':'machine','bulgarian-split-squat':'dumbbell',
+      'kb-goblet-squat':'kettlebell','romanian-dl':'barbell','leg-curl':'machine',
+      'stiff-leg-deadlift':'barbell','good-morning':'barbell','barbell-hip-thrust':'barbell',
+      'cable-kickback':'cable','hip-abduction':'machine','cable-pull-through':'cable',
+      'kb-swing':'kettlebell','calf-raise':'machine','standing-calf-raise':'machine',
+      'leg-press-calf-raise':'machine','cable-crunch':'cable','cable-woodchop':'cable',
+      'machine-crunch':'machine','pallof-press':'cable','landmine-rotation':'barbell',
+      'barbell-shrug':'barbell','upright-row':'barbell','rack-pull':'barbell',
+      'wrist-curl':'barbell','reverse-curl':'barbell','farmers-carry':'dumbbell',
+      'kb-press':'kettlebell','neck-curl':'bodyweight','neck-extension':'bodyweight',
+      'neck-lateral':'bodyweight','neck-harness':'machine'
+    };
+    const PROG_MAP = {
+      'bench-press':{easier:'push-up',harder:''},
+      'incline-db-press':{easier:'push-up',harder:'bench-press'},
+      'cable-fly':{easier:'band-chest-press',harder:''},
+      'weighted-dips':{easier:'push-up',harder:''},
+      'pec-deck':{easier:'band-chest-press',harder:'cable-fly'},
+      'deadlift':{easier:'kb-deadlift',harder:''},
+      'bent-row':{easier:'kb-row',harder:''},
+      'lat-pulldown':{easier:'band-pulldown',harder:'pull-up'},
+      'seated-cable-row':{easier:'band-row',harder:''},
+      'single-arm-db-row':{easier:'kb-row',harder:''},
+      'straight-arm-pulldown':{easier:'band-pulldown',harder:''},
+      'underhand-pulldown':{easier:'chin-up',harder:''},
+      'ohp':{easier:'pike-push-up',harder:''},
+      'lat-raise':{easier:'band-lateral-raise',harder:''},
+      'face-pull':{easier:'band-face-pull',harder:''},
+      'cable-lateral-raise':{easier:'band-lateral-raise',harder:'lat-raise'},
+      'rear-delt-fly':{easier:'band-face-pull',harder:'reverse-pec-deck'},
+      'barbell-curl':{easier:'band-curl',harder:''},
+      'hammer-curl':{easier:'band-curl',harder:''},
+      'cable-curl':{easier:'band-curl',harder:'barbell-curl'},
+      'cable-pushdown':{easier:'band-tricep-pushdown',harder:''},
+      'skull-crusher':{easier:'diamond-push-up',harder:''},
+      'overhead-tricep-ext':{easier:'band-tricep-pushdown',harder:''},
+      'back-squat':{easier:'band-squat',harder:''},
+      'leg-press':{easier:'band-squat',harder:'back-squat'},
+      'bulgarian-split-squat':{easier:'lunge-bw',harder:'pistol-squat'},
+      'kb-goblet-squat':{easier:'band-squat',harder:'back-squat'},
+      'romanian-dl':{easier:'kb-deadlift',harder:'deadlift'},
+      'stiff-leg-deadlift':{easier:'romanian-dl',harder:''},
+      'barbell-hip-thrust':{easier:'band-glute-bridge',harder:''},
+      'kb-swing':{easier:'kb-deadlift',harder:'kb-snatch'},
+      'cable-crunch':{easier:'plank',harder:''},
+      'cable-woodchop':{easier:'mb-woodchop',harder:''},
+      'pallof-press':{easier:'side-plank',harder:''},
+      'barbell-shrug':{easier:'db-shrugs',harder:''},
+      'farmers-carry':{easier:'kb-deadlift',harder:''},
+      'kb-press':{easier:'pike-push-up',harder:'kb-turkish-getup'}
+    };
+    DB.exercises.forEach(ex => {
+      if (!ex.equip) ex.equip = EQUIP_MAP[ex.id] || 'barbell';
+      if (!ex.easier && PROG_MAP[ex.id]) ex.easier = PROG_MAP[ex.id].easier || '';
+      if (!ex.harder && PROG_MAP[ex.id]) ex.harder = PROG_MAP[ex.id].harder || '';
+    });
+
     const Render = {};
 
     /* ────────────────────────────────────────────────────
@@ -4763,9 +3909,11 @@
       const search  = State.exerciseSearch.toLowerCase();
       const filters = State.exerciseFilters;
 
+      const myEquip = (S.settings.equipment || []);
       let list = DB.exercises.filter(ex => {
         if (filters.size > 0 && !filters.has(ex.muscle)) return false;
         if (State.showFavsOnly && !favs.has(ex.id)) return false;
+        if (State.showMyGymOnly && myEquip.length > 0 && !myEquip.includes(ex.equip||'barbell')) return false;
         if (search && !ex.name.toLowerCase().includes(search) &&
             !ex.muscle.toLowerCase().includes(search) &&
             !ex.equipment.toLowerCase().includes(search)) return false;
@@ -4782,6 +3930,9 @@
         Muscles${fc ? ` <span class="flt-count">${fc}</span>` : ''}
       </button>
       ${fc ? `<button class="btn btn-ghost btn-sm" onclick="clearFilters()" style="padding:6px 10px">✕ Clear</button>` : ''}
+      <button class="btn btn-ghost btn-sm${State.showMyGymOnly?' active':''}" onclick="toggleMyGym()" aria-label="My Gym filter">
+        🏋️ My Gym
+      </button>
       <span class="t-xs t-muted" style="margin-left:auto;padding:0 4px">${list.length} exercise${list.length!==1?'s':''}</span>`;
 
       const grid = list.length
@@ -5179,6 +4330,13 @@
             <div class="t-h3 mb-2">Breathing</div>
             <p class="t-sm" style="color:var(--text2);line-height:1.5">${breathCue}</p>
           </div>
+          ${(ex.easier || ex.harder) ? `<div class="detail-section">
+            <div class="t-h3 mb-2">Progression</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              ${ex.easier ? `<button class="similar-chip" style="border-color:var(--success);color:var(--success)" onclick="openDetail('${ex.easier}')">← Easier: ${(DB.exercises.find(e=>e.id===ex.easier)||{name:ex.easier}).name}</button>` : ''}
+              ${ex.harder ? `<button class="similar-chip" style="border-color:var(--accent2);color:var(--accent2)" onclick="openDetail('${ex.harder}')">Harder: ${(DB.exercises.find(e=>e.id===ex.harder)||{name:ex.harder}).name} →</button>` : ''}
+            </div>
+          </div>` : ''}
           ${similarEx.length ? `<div class="detail-section">
             <div class="t-h3 mb-2">Similar Exercises</div>
             <div style="display:flex;flex-wrap:wrap;gap:8px">
@@ -5256,29 +4414,25 @@
             </button>
           </div>
           ${(() => {
-            const demo = getExerciseDemo(ex.pattern);
             const MC = {chest:'#ef4444',back:'#3b82f6',lats:'#2563eb',shoulders:'#a855f7',biceps:'#f97316',triceps:'#eab308',quads:'#22c55e',traps:'#6366f1',glutes:'#22c55e','rear-delts':'#c084fc',forearms:'#ea580c',calves:'#4ade80',core:'#06b6d4',hamstrings:'#15803d',neck:'#f59e0b'};
             const acol = MC[ex.muscle] || '#6366f1';
             const syncCard = Utils.bodyCard(ex.muscle, ex.secondary||[], 110).replace('class="body-card-svg"', 'class="body-card-svg bc-sync"');
-            const framesSVG = demo.frames.map(f => `
-              <div class="demo-frame-box">
-                <svg viewBox="0 0 200 260" width="88" height="114" xmlns="http://www.w3.org/2000/svg">
-                  ${_demoFigBase(f.d)}
-                </svg>
-                <div class="demo-frame-lbl">${f.lbl}</div>
-              </div>`).join('');
             return `<div class="demo-hero">
               <div class="demo-anim-row">
-                <div>
-                  <svg viewBox="0 0 200 260" width="145" height="189" xmlns="http://www.w3.org/2000/svg">${demo.anim.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/,'')}</svg>
-                  <div class="demo-anim-label" style="color:${acol}">${ex.pattern||'Movement'}</div>
+                <div class="demo-gif-container">
+                  <img src="gifs/${id}.gif" alt="${ex.name}" class="demo-gif" loading="lazy"
+                    onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                  <div class="demo-gif-fallback">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--muted)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <div style="font-size:11px;color:var(--muted);margin-top:6px">${ex.pattern||'Exercise'}</div>
+                  </div>
+                  <div class="demo-anim-label" style="color:${acol};margin-top:4px">${ex.pattern||'Movement'}</div>
                 </div>
                 <div style="display:flex;flex-direction:column;align-items:center;gap:6px">
                   ${syncCard}
                   <div class="demo-anim-label">Muscles</div>
                 </div>
               </div>
-              <div class="demo-frames-strip">${framesSVG}</div>
             </div>`;
           })()}
           <div class="detail-meta-row">
@@ -5427,7 +4581,10 @@
             <div class="active-ex-info">
               <div class="t-h2">${ex.name}</div>
               <div class="t-sm t-muted">${ex.sets} sets · ${ex.reps} reps · ${ex.rest}s rest</div>
-              <div class="badge badge-${ex.muscle} mt-1">${ex.muscle}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                <div class="badge badge-${ex.muscle}">${ex.muscle}</div>
+                <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 8px" onclick="openSwapModal('${ex.id}')">⇄ Swap</button>
+              </div>
             </div>
           </div>
           <div class="set-table-wrap card">
@@ -5671,6 +4828,20 @@
               </div>
             </div>
           </div>
+          <div class="settings-group">
+            <div class="settings-label">My Equipment</div>
+            <div class="t-xs t-muted" style="margin-bottom:8px">Check everything you have access to — filters exercises in the library</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              ${['barbell','dumbbell','cable','machine','kettlebell','bands','pull-up-bar','bodyweight','stability-ball','medicine-ball'].map(eq => {
+                const has = (cfg.equipment||[]).includes(eq);
+                const labels = {'barbell':'Barbell','dumbbell':'Dumbbells','cable':'Cable Machine','machine':'Machines','kettlebell':'Kettlebell','bands':'Resistance Bands','pull-up-bar':'Pull-up Bar','bodyweight':'Bodyweight','stability-ball':'Stability Ball','medicine-ball':'Medicine Ball'};
+                return `<label style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--card2);border-radius:8px;border:1px solid ${has?'var(--accent)':'var(--border)'};cursor:pointer">
+                  <input type="checkbox" id="eq-${eq}" ${has?'checked':''} onchange="updateEquip('${eq}',this.checked)" style="accent-color:var(--accent);width:16px;height:16px">
+                  <span class="t-xs" style="color:${has?'var(--accent)':'var(--text2)'}">${labels[eq]}</span>
+                </label>`;
+              }).join('')}
+            </div>
+          </div>
           <button class="btn btn-primary btn-full" onclick="saveSettings()">Save Settings</button>
           <div style="height:10px"></div>
           <button class="btn btn-full btn-export" onclick="exportData()">⬇ Export My Data (JSON)</button>
@@ -5721,6 +4892,67 @@
     };
 
     function switchProfileTab(tab) { State.profileTab = tab; Render.profile(); }
+
+    function toggleMyGym() {
+      State.showMyGymOnly = !State.showMyGymOnly;
+      Render.exercises();
+    }
+
+    function updateEquip(tag, checked) {
+      const cfg = S.settings;
+      if (!cfg.equipment) cfg.equipment = [];
+      if (checked) { if (!cfg.equipment.includes(tag)) cfg.equipment.push(tag); }
+      else { cfg.equipment = cfg.equipment.filter(e => e !== tag); }
+      S.saveSettings(cfg);
+    }
+
+    function openSwapModal(currentId) {
+      const ex = DB.exercises.find(e => e.id === currentId);
+      if (!ex) return;
+      const myEquip = S.settings.equipment || [];
+      let alts = DB.exercises.filter(e =>
+        e.id !== currentId &&
+        (e.muscle === ex.muscle || (ex.secondary||[]).includes(e.muscle)) &&
+        (myEquip.length === 0 || myEquip.includes(e.equip||'barbell'))
+      ).slice(0, 8);
+      const modal = document.createElement('div');
+      modal.id = 'swap-modal';
+      modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9999;display:flex;align-items:flex-end;justify-content:center';
+      modal.innerHTML = `<div style="background:var(--card);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:480px;max-height:70vh;overflow-y:auto">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <div class="t-h3">Swap Exercise</div>
+          <button class="btn btn-ghost btn-sm" onclick="closeSwapModal()">✕</button>
+        </div>
+        <div class="t-xs t-muted mb-2">Same muscle · Your equipment</div>
+        ${alts.length ? alts.map(a => `<button onclick="swapExercise('${currentId}','${a.id}')" style="display:flex;align-items:center;gap:12px;width:100%;padding:12px;background:var(--card2);border-radius:10px;margin-bottom:8px;text-align:left">
+          <div>${Utils.bodyCard(a.muscle,a.secondary||[],40)}</div>
+          <div>
+            <div class="t-sm" style="font-weight:600">${a.name}</div>
+            <div class="t-xs t-muted">${a.muscle} · ${a.equipment}</div>
+          </div>
+        </button>`).join('') : '<div class="t-sm t-muted">No alternatives found for your equipment</div>'}
+        <div style="height:12px"></div>
+      </div>`;
+      modal.addEventListener('click', e => { if (e.target === modal) closeSwapModal(); });
+      document.body.appendChild(modal);
+    }
+
+    function closeSwapModal() {
+      const m = document.getElementById('swap-modal');
+      if (m) m.remove();
+    }
+
+    function swapExercise(oldId, newId) {
+      closeSwapModal();
+      const aw = State.activeWorkout;
+      if (!aw) return;
+      const idx = aw.exList.findIndex(e => e.id === oldId);
+      if (idx < 0) return;
+      const newEx = DB.exercises.find(e => e.id === newId);
+      if (!newEx) return;
+      aw.exList[idx] = newEx;
+      _renderActiveWorkout();
+    }
 
     function saveMeasurements() {
       const fields = ['waist','chest','hips','neck','lArm','rArm','lThigh','rThigh','lCalf','rCalf'];

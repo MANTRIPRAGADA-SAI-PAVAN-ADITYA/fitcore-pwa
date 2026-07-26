@@ -1,4 +1,4 @@
-const CACHE = 'fitcore-v1';
+const CACHE = 'fitcore-v2';
 const ASSETS = ['./index.html', './manifest.json', './sw.js'];
 
 self.addEventListener('install', e => {
