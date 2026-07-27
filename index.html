@@ -1521,6 +1521,69 @@
     /* ── Export button ───────────────────────────────────────── */
     .btn-export { background:var(--card2); color:var(--text2); border:1px solid var(--border); }
     .btn-export:active { opacity:.8; }
+
+    /* ── XP & Gamification ─────────────────────────────────────────── */
+    .xp-bar-wrap { padding:6px 0 8px; }
+    .xp-bar-track { height:6px;border-radius:4px;background:var(--card2);overflow:hidden;margin-top:4px; }
+    .xp-bar-fill { height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#f97316);transition:width .5s ease; }
+    .xp-level-row { display:flex;align-items:center;justify-content:space-between; }
+    .xp-toast { position:fixed;bottom:calc(var(--nav-h) + 16px);left:50%;
+      transform:translateX(-50%) translateY(24px);
+      background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;
+      padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;
+      z-index:9999;pointer-events:none;opacity:0;
+      transition:opacity .3s,transform .3s;white-space:nowrap;
+      box-shadow:0 4px 16px rgba(99,102,241,.4); }
+    .xp-toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
+    /* ── Daily Challenge ─────────────────────────────────────────────── */
+    .challenge-card { display:flex;align-items:center;gap:14px;padding:14px 16px;
+      border-radius:var(--r);
+      background:linear-gradient(135deg,var(--card) 0%,#1a1a2e 100%);
+      border:1px solid rgba(99,102,241,.25);margin-top:10px; }
+    .challenge-card.done { border-color:rgba(34,197,94,.35);background:linear-gradient(135deg,var(--card) 0%,#0d2010 100%); }
+    .challenge-icon { font-size:24px;flex-shrink:0;line-height:1; }
+    .challenge-info { flex:1;min-width:0; }
+    .challenge-badge { font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+      color:var(--accent-l);background:var(--accent-dim);border-radius:4px;
+      padding:2px 6px;display:inline-block;margin-bottom:4px; }
+    .challenge-text { font-size:14px;font-weight:600;line-height:1.3; }
+    .challenge-xp { font-size:11px;color:var(--muted);margin-top:3px; }
+    .challenge-done-badge { font-size:11px;font-weight:700;color:var(--success);
+      background:rgba(34,197,94,.12);border-radius:12px;padding:4px 10px;flex-shrink:0; }
+    /* ── Recovery tracker ───────────────────────────────────────────── */
+    .recovery-section { margin-top:10px; }
+    .recovery-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px; }
+    .rec-item { border-radius:10px;padding:9px 4px;text-align:center;border:1px solid transparent; }
+    .rec-item.ready { background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e; }
+    .rec-item.partial { background:rgba(234,179,8,.1);border-color:rgba(234,179,8,.3);color:#eab308; }
+    .rec-item.recovering { background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#ef4444; }
+    .rec-dot { font-size:12px;line-height:1; }
+    .rec-item-name { font-size:9px;font-weight:600;text-transform:capitalize;margin-top:2px;opacity:.9;word-break:break-word; }
+    /* ── Weekly report card ─────────────────────────────────────────── */
+    .report-card { border-radius:var(--r);background:linear-gradient(135deg,var(--card),#1a1a2e);
+      border:1px solid rgba(99,102,241,.25);margin-bottom:14px;overflow:hidden; }
+    .report-header { padding:11px 16px 8px;border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:space-between; }
+    .report-grid { display:grid;grid-template-columns:repeat(4,1fr); }
+    .report-stat { padding:10px 6px;text-align:center;border-right:1px solid rgba(255,255,255,.06); }
+    .report-stat:last-child { border-right:none; }
+    .report-stat-num { font-size:20px;font-weight:700;line-height:1; }
+    .report-stat-lbl { font-size:10px;color:var(--muted);margin-top:3px; }
+    .report-delta { font-size:10px;padding:2px 5px;border-radius:4px;font-weight:700;
+      margin-top:4px;display:inline-block; }
+    .report-delta.up { color:#22c55e;background:rgba(34,197,94,.12); }
+    .report-delta.down { color:#ef4444;background:rgba(239,68,68,.12); }
+    .report-delta.eq { color:var(--muted); }
+    /* ── Overload suggestion banner ─────────────────────────────────── */
+    .overload-banner { background:var(--card2);border-radius:10px;padding:10px 14px;
+      margin-bottom:10px;border-left:3px solid var(--accent); }
+    .overload-banner-title { font-weight:700;color:var(--accent-l);font-size:11px;
+      text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px; }
+    .overload-sets { display:flex;gap:5px;flex-wrap:wrap; }
+    .overload-set-chip { background:var(--card);border:1px solid var(--border);
+      border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600; }
+    .overload-suggest { margin-top:6px;font-size:12px;color:var(--success);font-weight:600; }
+
   </style>
 </head>
 <body>
@@ -3884,6 +3947,116 @@
       if (!ex.harder && PROG_MAP[ex.id]) ex.harder = PROG_MAP[ex.id].harder || '';
     });
 
+    /* XP & LEVEL SYSTEM */
+    const XPSys = (() => {
+      const LVS = [
+        {min:0,     name:'Rookie',  icon:'&#129353;'},
+        {min:300,   name:'Novice',  icon:'&#129352;'},
+        {min:800,   name:'Trainee', icon:'&#129351;'},
+        {min:1800,  name:'Amateur', icon:'&#128170;'},
+        {min:3500,  name:'Fighter', icon:'&#9889;'},
+        {min:6000,  name:'Grinder', icon:'&#128293;'},
+        {min:10000, name:'Warrior', icon:'&#9876;&#65039;'},
+        {min:16000, name:'Elite',   icon:'&#127942;'},
+        {min:25000, name:'Pro',     icon:'&#128142;'},
+        {min:40000, name:'Legend',  icon:'&#128081;'},
+      ];
+      function _get() { return S._g('fc_xp', {total:0}); }
+      function total() { return _get().total || 0; }
+      function levelInfo() {
+        const t = total();
+        let li = 0;
+        for (let i = 0; i < LVS.length; i++) { if (t >= LVS[i].min) li = i; }
+        const cur  = LVS[li];
+        const next = LVS[li+1] || null;
+        const pct  = next ? Math.round((t - cur.min) / (next.min - cur.min) * 100) : 100;
+        return { ...cur, lv: li+1, next, pct, total: t };
+      }
+      function add(amount, reason) {
+        const d = _get(); d.total = (d.total || 0) + amount;
+        S._s('fc_xp', d);
+        const toast = document.createElement('div');
+        toast.className = 'xp-toast';
+        toast.textContent = '+' + amount + ' XP' + (reason ? '  ' + reason : '');
+        document.body.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2200);
+        if (Nav.current === 'home') { Nav.rendered.home = false; Render.home(); }
+      }
+      return { total, levelInfo, add };
+    })();
+
+    /* DAILY CHALLENGES */
+    const DailyChal = (() => {
+      function _td() { return new Date().toISOString().slice(0,10); }
+      const POOL = [
+        { id:'any',    text:'Complete any workout today',        icon:'&#127947;', xp:75,
+          check: function() { return S.history.some(function(w){ return w.date && w.date.slice(0,10) === _td(); }); } },
+        { id:'sets10', text:'Log 10 or more sets in one session',icon:'&#128170;', xp:60,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); return !!(w&&Object.values(w.logs||{}).flat().length>=10); } },
+        { id:'pr',     text:'Hit a new personal record today',   icon:'&#127942;', xp:100,
+          check: function() { var l=S._g('fc_prlog',{}); return Object.values(l).some(function(a){ return (a||[]).some(function(e){ return e&&e.date&&e.date.slice(0,10)===_td(); }); }); } },
+        { id:'heavy',  text:'Lift 100 kg or more in any set',    icon:'&#9889;', xp:80,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); return !!(w&&Object.values(w.logs||{}).flat().some(function(s){ return s.w>=100; })); } },
+        { id:'push',   text:'Complete a Push Day workout',       icon:'&#128308;', xp:80,
+          check: function() { return S.history.some(function(w){ return w.date&&w.date.slice(0,10)===_td()&&(w.type||'').toLowerCase().includes('push'); }); } },
+        { id:'pull',   text:'Complete a Pull Day workout',       icon:'&#128309;', xp:80,
+          check: function() { return S.history.some(function(w){ return w.date&&w.date.slice(0,10)===_td()&&(w.type||'').toLowerCase().includes('pull'); }); } },
+        { id:'legs',   text:'Complete a Leg Day workout',        icon:'&#129461;', xp:80,
+          check: function() { return S.history.some(function(w){ return w.date&&w.date.slice(0,10)===_td()&&(w.type||'').toLowerCase().includes('leg'); }); } },
+        { id:'mgs3',   text:'Train 3 or more muscle groups',     icon:'&#129470;', xp:90,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); if(!w)return false; var ms=new Set(Object.keys(w.logs||{}).map(function(id){ var ex=DB.exercises.find(function(e){ return e.id===id; }); return ex?ex.muscle:null; }).filter(Boolean)); return ms.size>=3; } },
+        { id:'streak3',text:'Maintain a 3-day or longer streak', icon:'&#128293;', xp:50,
+          check: function() { return Utils.getStreak() >= 3; } },
+        { id:'sets20', text:'Log 20 or more total sets today',   icon:'&#128165;', xp:120,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); return !!(w&&Object.values(w.logs||{}).flat().length>=20); } },
+        { id:'chest5', text:'Log 5+ sets of chest exercises',    icon:'&#128293;', xp:60,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); if(!w)return false; var c=0; Object.entries(w.logs||{}).forEach(function(e){ var ex=DB.exercises.find(function(x){ return x.id===e[0]; }); if(ex&&ex.muscle==='chest') c+=(e[1]||[]).length; }); return c>=5; } },
+        { id:'back5',  text:'Log 5+ sets of back exercises',     icon:'&#128309;', xp:60,
+          check: function() { var w=S.history.find(function(x){ return x.date&&x.date.slice(0,10)===_td(); }); if(!w)return false; var c=0; Object.entries(w.logs||{}).forEach(function(e){ var ex=DB.exercises.find(function(x){ return x.id===e[0]; }); if(ex&&(ex.muscle==='back'||ex.muscle==='lats')) c+=(e[1]||[]).length; }); return c>=5; } },
+      ];
+      function today() {
+        var seed = parseInt(_td().replace(/-/g,''));
+        return POOL[seed % POOL.length];
+      }
+      function isDone() { var d=S._g('fc_daily',{}); return d.date===_td()&&!!d.done; }
+      function check() {
+        if (isDone()) return false;
+        var ch = today();
+        try {
+          if (ch.check()) {
+            S._s('fc_daily', {date:_td(), done:true, id:ch.id});
+            XPSys.add(ch.xp, 'Daily challenge!');
+            Nav.rendered.home = false;
+            if (Nav.current==='home') Render.home();
+            return true;
+          }
+        } catch(e2) { /* silent */ }
+        return false;
+      }
+      return { today: today, isDone: isDone, check: check };
+    })();
+
+    /* Muscle recovery helper */
+    function getMuscleRecovery() {
+      var now = Date.now();
+      var last = {};
+      S.history.forEach(function(w) {
+        if (!w || !w.date) return;
+        var ts = new Date(w.date).getTime();
+        Object.keys(w.logs || {}).forEach(function(id) {
+          var ex = DB.exercises.find(function(e) { return e.id === id; });
+          if (ex && (!last[ex.muscle] || ts > last[ex.muscle])) last[ex.muscle] = ts;
+        });
+      });
+      var res = {};
+      Object.keys(last).forEach(function(m) {
+        var hrs = (now - last[m]) / 3600000;
+        res[m] = hrs < 24 ? 'recovering' : hrs < 72 ? 'partial' : 'ready';
+      });
+      return res;
+    }
+
     const Render = {};
 
     /* ────────────────────────────────────────────────────
@@ -3957,6 +4130,13 @@
           </button>
         </div>
 
+        ${(function() {
+          var lvl = XPSys.levelInfo();
+          var pct = Math.min(100, lvl.pct);
+          var nxt = lvl.next ? ' &middot; ' + (lvl.next.min - lvl.total) + ' XP to Lv' + (lvl.lv+1) : ' &middot; Max!';
+          return '<div class="xp-bar-wrap"><div class="xp-level-row"><span class="t-xs t-muted">' + lvl.icon + ' Lv' + lvl.lv + ' &middot; ' + lvl.name + '</span><span class="t-xs t-muted">' + lvl.total + ' XP' + nxt + '</span></div><div class="xp-bar-track"><div class="xp-bar-fill" style="width:' + pct + '%"></div></div></div>';
+        })()}
+
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon">${Utils.progressRing(pct, 52, 5, ringColor)}</div>
@@ -4004,6 +4184,13 @@
           <div class="week-dots">${dotHTML}</div>
         </div>
 
+        <div class="section-header mt-2"><div class="t-h3">Daily Challenge</div></div>
+        ${(function() {
+          var ch = DailyChal.today();
+          var done = DailyChal.isDone();
+          return '<div class="challenge-card' + (done ? ' done' : '') + '"><div class="challenge-icon">' + ch.icon + '</div><div class="challenge-info"><div class="challenge-badge">Today</div><div class="challenge-text">' + ch.text + '</div><div class="challenge-xp">+' + ch.xp + ' XP reward</div></div>' + (done ? '<div class="challenge-done-badge">&#10003; Done!</div>' : '') + '</div>';
+        })()}
+
         <div class="section-header mt-3">
           <div class="t-h3">Today's Focus</div>
         </div>
@@ -4020,6 +4207,20 @@
             ).join('')}
           </div>
         </div>` : ''}
+
+        <div class="section-header mt-3"><div class="t-h3">Recovery Status</div></div>
+        <div class="card recovery-section">
+          ${(function() {
+            var rec = getMuscleRecovery();
+            var MUSCLES = ['chest','back','lats','shoulders','biceps','triceps','quads','hamstrings'];
+            var icons = {recovering:'&#128308;', partial:'&#128257;', ready:'&#128994;'};
+            var items = MUSCLES.map(function(m) {
+              var s = rec[m] || 'ready';
+              return '<div class="rec-item ' + s + '"><div class="rec-dot">' + icons[s] + '</div><div class="rec-item-name">' + m + '</div></div>';
+            });
+            return '<div class="recovery-grid">' + items.join('') + '</div>';
+          })()}
+        </div>
 
         <div class="quote-card card">
           <div class="quote-text">"${quote.text}"</div>
@@ -4546,6 +4747,30 @@
           </div>
         </div>
 
+        ${(function() {
+          var todayStr2 = todayStr;
+          var now2 = today.getTime();
+          var w7start  = new Date(now2 - 7*24*3600000).toISOString().slice(0,10);
+          var w14start = new Date(now2 - 14*24*3600000).toISOString().slice(0,10);
+          var week1 = hist.filter(function(w){ return w.date&&w.date.slice(0,10)>=w7start&&w.date.slice(0,10)<todayStr2; });
+          var week2 = hist.filter(function(w){ return w.date&&w.date.slice(0,10)>=w14start&&w.date.slice(0,10)<w7start; });
+          var s1=week1.reduce(function(s,w){return s+(w.sets||0);},0);
+          var s2=week2.reduce(function(s,w){return s+(w.sets||0);},0);
+          var v1=Math.round(week1.reduce(function(s,w){return s+Object.values(w.logs||{}).flat().reduce(function(a,l){return a+l.w*l.r;},0);},0)/1000);
+          var v2=Math.round(week2.reduce(function(s,w){return s+Object.values(w.logs||{}).flat().reduce(function(a,l){return a+l.w*l.r;},0);},0)/1000);
+          var p1=Object.values(prLog).reduce(function(t,arr){return t+(arr||[]).filter(function(e){return e&&e.date&&e.date.slice(0,10)>=w7start&&e.date.slice(0,10)<=todayStr2;}).length;},0);
+          function dCls(a,b){return !b?(a>0?'up':'eq'):(a>b?'up':a<b?'down':'eq');}
+          function dTxt(a,b){if(!b)return a>0?'+'+a:'&mdash;';var d=a-b;return(d>0?'+':'')+d;}
+          var r='<div class="report-card"><div class="report-header"><div><div class="t-h3" style="font-size:15px">&#128202; Weekly Report</div><div class="t-xs t-muted">Last 7 days vs previous 7</div></div></div>';
+          r+='<div class="report-grid">';
+          r+='<div class="report-stat"><div class="report-stat-num">'+week1.length+'</div><div class="report-stat-lbl">Workouts</div><div class="report-delta '+dCls(week1.length,week2.length)+'">'+dTxt(week1.length,week2.length)+'</div></div>';
+          r+='<div class="report-stat"><div class="report-stat-num">'+s1+'</div><div class="report-stat-lbl">Sets</div><div class="report-delta '+dCls(s1,s2)+'">'+dTxt(s1,s2)+'</div></div>';
+          r+='<div class="report-stat"><div class="report-stat-num">'+(v1>0?v1+'k':'&mdash;')+'</div><div class="report-stat-lbl">Vol kg</div><div class="report-delta '+dCls(v1,v2)+'">'+dTxt(v1,v2)+'k</div></div>';
+          r+='<div class="report-stat"><div class="report-stat-num">'+p1+'</div><div class="report-stat-lbl">PRs</div></div>';
+          r+='</div></div>';
+          return r;
+        })()}
+
         <!-- Weight goal -->
         <div class="weight-progress-card card" style="margin-top:12px">
           <div class="wp-header">
@@ -4938,6 +5163,23 @@
         </tr>`;
       }).join('');
 
+      const _lastSess = (function() {
+        var td = aw.date ? aw.date.slice(0,10) : '';
+        for (var i = S.history.length-1; i >= 0; i--) {
+          var wh = S.history[i];
+          if (!wh || !wh.logs || !wh.logs[ex.id]) continue;
+          if (wh.date && wh.date.slice(0,10) === td) continue;
+          return wh.logs[ex.id];
+        }
+        return null;
+      })();
+      var overloadHTML = '';
+      if (_lastSess && _lastSess.length) {
+        var _chips = _lastSess.map(function(s){ return '<div class="overload-set-chip">' + Utils.fmtW(s.w) + ' &times; ' + s.r + '</div>'; }).join('');
+        var _best  = Math.max.apply(null, _lastSess.map(function(s){ return s.w; }));
+        var _sug   = _best > 0 ? '<div class="overload-suggest">&#128161; Try ' + Utils.fmtW(_best + 2.5) + ' today (+2.5 kg)</div>' : '';
+        overloadHTML = '<div class="overload-banner"><div class="overload-banner-title">Last Session</div><div class="overload-sets">' + _chips + '</div>' + _sug + '</div>';
+      }
       const progress = `${aw.currExIdx+1} / ${aw.exList.length}`;
       const navHTML  = `
         ${aw.currExIdx > 0
@@ -4971,6 +5213,7 @@
               </div>
             </div>
           </div>
+          ${overloadHTML}
           <div class="set-table-wrap card">
             <table class="set-table" aria-label="Set tracker">
               <thead><tr>
@@ -5002,7 +5245,8 @@
       aw.loggedSets[ex.id] = aw.loggedSets[ex.id].filter(l => l.idx !== si);
       aw.loggedSets[ex.id].push({ idx:si, w, r });
       const isPR = S.updatePR(ex.id, w, r);
-      if (isPR) showConfetti();
+      if (isPR) { showConfetti(); XPSys.add(100, 'New PR!'); }
+      XPSys.add(5, 'Set done');
       _renderActiveWorkout();
       /* Auto-start rest timer */
       const allDone = aw.loggedSets[ex.id].length >= ex.sets;
@@ -5053,6 +5297,9 @@
         logs:      aw.loggedSets,
       });
       Utils.checkAchievements();
+      const _wkSets = Object.values(aw.loggedSets).flat().length;
+      XPSys.add(50 + Math.round(_wkSets * 0.5), 'Workout complete!');
+      DailyChal.check();
       const awSnap = { plan:aw.plan, loggedSets:{...aw.loggedSets} };
       State.activeWorkout = null;
       document.getElementById('overlay-workout').classList.remove('open');
