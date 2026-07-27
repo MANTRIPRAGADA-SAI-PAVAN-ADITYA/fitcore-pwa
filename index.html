@@ -2978,6 +2978,83 @@
     /* ═══════════════════════════════════════════════════════
        PHASE 3 — APPLICATION STATE
     ═══════════════════════════════════════════════════════ */
+    /* ── Auto-Backup Manager (Capacitor Filesystem) ─────────── */
+    const BackupManager = (() => {
+      const FILE = 'fitcore-backup.json';
+      const DIR  = 'EXTERNAL_STORAGE';
+
+      function _fs() {
+        return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Filesystem;
+      }
+
+      async function save() {
+        const fs = _fs(); if (!fs) return;
+        try {
+          const photos = await PhotoDB.getAll().catch(() => []);
+          const data = {
+            exportDate: new Date().toISOString(),
+            app: 'FitCore',
+            settings: S.settings,
+            measurements: S.measurements,
+            weightLog: S.weights,
+            workouts: S.history,
+            prs: S.prs,
+            prLog: S.prLog,
+            notes: S._g('fc_notes', {}),
+            customPlans: S.customPlans,
+            photos: photos.map(p => ({ date: p.date, note: p.note, image: p.base64 }))
+          };
+          await fs.requestPermissions();
+          await fs.writeFile({
+            path: 'FitCore/' + FILE,
+            data: JSON.stringify(data),
+            directory: DIR,
+            recursive: true,
+            encoding: 'utf8'
+          });
+        } catch(e) { console.warn('BackupManager.save failed:', e); }
+      }
+
+      async function checkRestore() {
+        const fs = _fs(); if (!fs) return;
+        // Only attempt restore if no local data exists
+        const hasData = (S.history || []).length > 0 || Object.keys(S.prs || {}).length > 0;
+        if (hasData) return;
+        try {
+          const result = await fs.readFile({
+            path: 'FitCore/' + FILE,
+            directory: DIR,
+            encoding: 'utf8'
+          });
+          if (!result || !result.data) return;
+          const data = JSON.parse(result.data);
+          if (!data || !data.app) return;
+          const confirmed = confirm(
+            'A FitCore backup was found on your device from ' +
+            (data.exportDate ? data.exportDate.slice(0,10) : 'a previous install') +
+            '. Restore it now?'
+          );
+          if (!confirmed) return;
+          if (data.history)      S._s('fc_history', data.history);
+          if (data.prs)          S._s('fc_prs', data.prs);
+          if (data.prLog)        S._s('fc_prlog', data.prLog);
+          if (data.weightLog)    S._s('fc_weights', data.weightLog);
+          if (data.measurements) S._s('fc_measurements', data.measurements);
+          if (data.settings)     S.saveSettings(data.settings);
+          if (data.customPlans)  S.saveCustomPlans(data.customPlans);
+          if (data.photos && Array.isArray(data.photos)) {
+            await Promise.all(data.photos.map(p => PhotoDB.add(p.image, p.date, p.note || '')));
+          }
+          alert('Backup restored! Reloading...');
+          location.reload();
+        } catch(e) {
+          // File not found or no permission = silent
+        }
+      }
+
+      return { save, checkRestore };
+    })();
+
     /* IndexedDB photo store */
     const PhotoDB = (() => {
       const DB_NAME = 'fitcore_photos', STORE = 'photos', VER = 1;
@@ -3055,6 +3132,7 @@
         const idx = ws.findIndex(x => x.date === today);
         if (idx >= 0) ws[idx].w = +w; else ws.push({ date: today, w: +w });
         this._s('fc_weights', ws);
+        BackupManager.save();
       },
 
       /* Workout history ───────────────────── */
@@ -4839,6 +4917,7 @@
         <button class="btn btn-primary btn-full mt-4" onclick="closeSummary()">Done — Back to Home</button>
       `;
       document.getElementById('workout-summary').classList.add('open');
+      BackupManager.save();
     }
 
     function closeSummary() {
@@ -5233,6 +5312,7 @@
       S.saveSettings(cfg);
       Render.profile();
       if (Nav.current === 'home') Render.home();
+      BackupManager.save();
     }
 
     function setUnit(u) {
@@ -5368,6 +5448,7 @@
     ═══════════════════════════════════════════════════════ */
     Nav.rendered['home'] = true;
     Render.home(); /* direct call — Nav.current is already 'home' from shell init */
+    BackupManager.checkRestore();
 
     /* ── Schedule swipe gestures (listeners persist across re-renders) ── */
     (function initScheduleSwipe() {
