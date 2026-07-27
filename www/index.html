@@ -75,6 +75,35 @@
     .analytics-label { font-size:12px; font-weight:600; min-width:110px; }
     .analytics-val { font-size:11px; color:var(--muted); min-width:28px; text-align:right; }
     .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 12px; }
+    /* ── Analytics screen ──────────────────────────────── */
+    .an-kpi-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 16px 12px; }
+    .an-kpi { background:var(--card2);border-radius:12px;padding:12px 8px;text-align:center; }
+    .an-kpi-num { font-size:20px;font-weight:800;color:var(--text); }
+    .an-kpi-label { font-size:10px;color:var(--muted);margin-top:2px; }
+    .an-section-title { font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;padding:14px 20px 6px; }
+    .an-bar-row { display:flex;align-items:center;gap:8px;padding:5px 20px; }
+    .an-bar-label { font-size:12px;color:var(--text);width:88px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .an-bar-wrap { flex:1;background:var(--card2);border-radius:4px;height:10px;overflow:hidden; }
+    .an-bar { height:100%;border-radius:4px;background:var(--accent);min-width:2px;transition:width .3s; }
+    .an-bar-val { font-size:11px;color:var(--muted);width:32px;text-align:right;flex-shrink:0; }
+    .an-week-chart { display:flex;gap:3px;align-items:flex-end;padding:0 20px 8px;height:90px;overflow-x:auto; }
+    .an-week-col { display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;width:22px; }
+    .an-week-bar { width:100%;border-radius:3px 3px 0 0;transition:height .3s; }
+    .an-week-label { font-size:8px;color:var(--muted);text-align:center; }
+    .an-meas-row { display:flex;align-items:center;gap:8px;padding:6px 20px; }
+    .an-meas-label { font-size:12px;color:var(--text);width:72px;flex-shrink:0; }
+    .an-meas-val { font-size:13px;font-weight:700;color:var(--text);width:52px;flex-shrink:0; }
+    .an-meas-delta { font-size:11px;width:56px;flex-shrink:0; }
+    .an-log-item { padding:10px 20px;border-bottom:1px solid var(--card2); }
+    .an-log-item:last-child { border-bottom:none; }
+    .an-log-date { font-size:11px;color:var(--muted); }
+    .an-log-title { font-size:13px;font-weight:600;color:var(--text); }
+    .an-log-detail { font-size:11px;color:var(--muted);margin-top:2px; }
+    .an-see-btn { display:flex;align-items:center;background:linear-gradient(135deg,var(--accent) 0%,var(--accent2,#6366f1) 100%);border-radius:14px;padding:14px 18px;margin:0 0 12px;border:none;cursor:pointer;width:100%;text-align:left;gap:14px; }
+    .an-see-icon { font-size:26px;flex-shrink:0; }
+    .an-see-text { font-size:15px;font-weight:700;color:#fff;display:block; }
+    .an-see-sub { font-size:11px;color:rgba(255,255,255,.75);margin-top:2px;display:block; }
+    .an-see-arrow { color:rgba(255,255,255,.8);font-size:22px;margin-left:auto;flex-shrink:0; }
     .analytics-kpi { background:var(--card); border-radius:var(--r); padding:12px; text-align:center; }
     .analytics-kpi-num { font-size:22px; font-weight:800; color:var(--accent); }
     .analytics-kpi-label { font-size:10px; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
@@ -473,9 +502,10 @@
     }
     .chip:active { opacity: .75; }
     .chip.active {
-      background: var(--accent-dim);
-      border-color: var(--accent);
-      color: var(--accent-l);
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(99,102,241,.4);
     }
     .chip-dot {
       width: 7px; height: 7px;
@@ -1503,6 +1533,7 @@
     <div id="screen-progress"  class="screen"        role="region" aria-label="Progress"></div>
     <div id="screen-builder"   class="screen"        role="region" aria-label="Builder"></div>
     <div id="screen-profile"   class="screen"        role="region" aria-label="Profile"></div>
+    <div id="screen-analytics" class="screen"        role="region" aria-label="Analytics"></div>
 
     <!-- ── OVERLAYS ─────────────────────────────────────────── -->
     <div id="overlay-detail"  class="overlay" role="dialog" aria-modal="true" aria-label="Exercise detail"></div>
@@ -4554,8 +4585,15 @@
 
         <!-- PR sparklines -->
         <div class="card" style="margin-top:12px">
-          ${an_analyticsHTML ? '<div class="t-h3" style="margin-top:4px">Analytics</div>' + an_analyticsHTML : ''}
-          <div class="t-h3" style="margin-top:${an_analyticsHTML?12:4}px">Strength Charts</div>
+          <button class="an-see-btn" onclick="openAnalytics()">
+            <span class="an-see-icon">&#128202;</span>
+            <span>
+              <span class="an-see-text">See Analytics</span>
+              <span class="an-see-sub">Trends &#183; Measurements &#183; Workout log</span>
+            </span>
+            <span class="an-see-arrow">&#8250;</span>
+          </button>
+          <div class="t-h3" style="margin-top:4px">Strength Charts</div>
           <div class="chart-filter-bar">${filterBtns}</div>
           ${chartsHTML}
           <div class="t-h3 mb-2" style="margin-top:12px">Personal Records</div>
@@ -5154,7 +5192,263 @@
     /* ═══════════════════════════════════════════════════════
        PHASE 4 — PROFILE SCREEN
     ═══════════════════════════════════════════════════════ */
-    Render.profile = function() {
+      function openAnalytics() {
+        Nav.rendered['analytics'] = false;
+        Nav.go('analytics');
+      }
+
+      Render.analytics = function() {
+        const el = document.getElementById('screen-analytics');
+        if (!el) return;
+        const hist     = S.history;
+        const weights  = S.weights;
+        const measLog  = S.measurements;
+
+        /* ── KPIs ──────────────────────────────────────── */
+        const an_total = hist.length;
+        let an_sets = 0, an_vol = 0;
+        hist.forEach(function(w) {
+          Object.values(w.exercises || {}).forEach(function(ss) {
+            (ss || []).forEach(function(s) { an_sets++; if (s.w && s.r) an_vol += s.w * s.r; });
+          });
+        });
+        const an_daySet = new Set(hist.map(function(w) { return w.date ? w.date.slice(0,10) : ''; }));
+        const an_today = new Date(); an_today.setHours(0,0,0,0);
+        var an_streak = 0, an_longest = 0, an_cur = 0;
+        for (var _i = 0; _i < 365; _i++) {
+          var _d = new Date(an_today); _d.setDate(_d.getDate() - _i);
+          var _k = _d.toISOString().slice(0,10);
+          if (an_daySet.has(_k)) {
+            if (_i === 0 || an_streak > 0) an_streak++;
+            an_cur++; an_longest = Math.max(an_longest, an_cur);
+          } else { if (_i === 0) an_streak = 0; an_cur = 0; }
+        }
+        const an_firstDate = hist.length ? new Date(hist[0].date) : an_today;
+        const an_weeks = Math.max(1, Math.ceil((an_today - an_firstDate) / (7 * 86400000)));
+        const an_avgW = (an_total / an_weeks).toFixed(1);
+
+        /* ── Week key helper ─────────────────────────── */
+        function _wk(dateStr) {
+          var dt = new Date(dateStr); dt.setHours(0,0,0,0);
+          dt.setDate(dt.getDate() - dt.getDay());
+          return dt.toISOString().slice(0,10);
+        }
+        var an_wMap = {}, an_vMap = {};
+        hist.forEach(function(w) {
+          if (!w.date) return;
+          var k = _wk(w.date);
+          an_wMap[k] = (an_wMap[k] || 0) + 1;
+          var wv = 0;
+          Object.values(w.exercises || {}).forEach(function(ss) {
+            (ss || []).forEach(function(s) { if (s.w && s.r) wv += s.w * s.r; });
+          });
+          an_vMap[k] = (an_vMap[k] || 0) + wv;
+        });
+        var an_wKeys = [];
+        for (var _wi = 15; _wi >= 0; _wi--) {
+          var _wd = new Date(an_today); _wd.setDate(_wd.getDate() - _wd.getDay() - _wi * 7);
+          an_wKeys.push(_wd.toISOString().slice(0,10));
+        }
+        var an_wCnts = an_wKeys.map(function(k) { return an_wMap[k] || 0; });
+        var an_vCnts = an_wKeys.map(function(k) { return an_vMap[k] || 0; });
+        var an_maxWC = Math.max.apply(null, an_wCnts.concat([1]));
+        var an_maxVC = Math.max.apply(null, an_vCnts.concat([1]));
+
+        function _weekBar(keys, vals, maxV, color) {
+          return '<div class="an-week-chart">' + keys.map(function(k, i) {
+            var cnt = vals[i], lbl = k.slice(5,10).replace('-','/');
+            var h = Math.round(cnt / maxV * 64) + (cnt ? 4 : 2);
+            return '<div class="an-week-col">' +
+              '<div class="an-week-bar" style="height:' + h + 'px;background:' + (cnt ? color : 'var(--card2)') + '"></div>' +
+              '<div class="an-week-label">' + lbl + '</div></div>';
+          }).join('') + '</div>';
+        }
+        var an_wBarHTML = _weekBar(an_wKeys, an_wCnts, an_maxWC, 'var(--accent)');
+        var an_vBarHTML = _weekBar(an_wKeys.slice(4), an_vCnts.slice(4), an_maxVC, '#6366f1');
+
+        /* ── Top exercises ─────────────────────────── */
+        var an_exFreq = {};
+        hist.forEach(function(w) {
+          Object.entries(w.exercises || {}).forEach(function(kv) {
+            if ((kv[1] || []).length) an_exFreq[kv[0]] = (an_exFreq[kv[0]] || 0) + 1;
+          });
+        });
+        var an_topEx = Object.entries(an_exFreq).sort(function(a,b){return b[1]-a[1];}).slice(0,10);
+        var an_maxEF = an_topEx[0] ? an_topEx[0][1] : 1;
+        var an_exHTML = an_topEx.map(function(kv) {
+          var ex = DB.exercises.find(function(e){return e.id===kv[0];});
+          return '<div class="an-bar-row">' +
+            '<div class="an-bar-label">' + (ex ? ex.name : kv[0]) + '</div>' +
+            '<div class="an-bar-wrap"><div class="an-bar" style="width:' + Math.round(kv[1]/an_maxEF*100) + '%"></div></div>' +
+            '<div class="an-bar-val">' + kv[1] + 'x</div></div>';
+        }).join('') || '<div style="padding:8px 20px"><span class="t-sm t-muted">No workouts yet</span></div>';
+
+        /* ── Muscle breakdown ──────────────────────── */
+        var AN_MC = {chest:'#f59e0b',back:'#22c55e',shoulders:'#6366f1',biceps:'#ec4899',triceps:'#a855f7',quads:'#06b6d4',hamstrings:'#f97316',glutes:'#14b8a6',lats:'#84cc16',calves:'#f43f5e',core:'#8b5cf6',forearms:'#78716c'};
+        var an_mFreq = {}, an_mVol = {};
+        hist.forEach(function(w) {
+          Object.entries(w.exercises || {}).forEach(function(kv) {
+            var ex = DB.exercises.find(function(e){return e.id===kv[0];});
+            if (!ex) return;
+            var freq = (kv[1] || []).length;
+            an_mFreq[ex.muscle] = (an_mFreq[ex.muscle] || 0) + freq;
+            var mv = 0; (kv[1] || []).forEach(function(s){if(s.w&&s.r)mv+=s.w*s.r;});
+            an_mVol[ex.muscle] = (an_mVol[ex.muscle] || 0) + mv;
+          });
+        });
+        var an_topMus = Object.entries(an_mFreq).sort(function(a,b){return b[1]-a[1];});
+        var an_maxMF = an_topMus[0] ? an_topMus[0][1] : 1;
+        var an_musHTML = an_topMus.map(function(kv) {
+          var col = AN_MC[kv[0]] || 'var(--accent)';
+          var vol = an_mVol[kv[0]] || 0;
+          return '<div class="an-bar-row">' +
+            '<div class="an-bar-label" style="text-transform:capitalize">' + kv[0] + '</div>' +
+            '<div class="an-bar-wrap"><div class="an-bar" style="width:' + Math.round(kv[1]/an_maxMF*100) + '%;background:' + col + '"></div></div>' +
+            '<div class="an-bar-val">' + kv[1] + 'x</div></div>';
+        }).join('') || '<div style="padding:8px 20px"><span class="t-sm t-muted">No data yet</span></div>';
+
+        /* ── Day of week ───────────────────────────── */
+        var an_dayF = [0,0,0,0,0,0,0];
+        var AN_DN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        hist.forEach(function(w){ if(w.date) an_dayF[new Date(w.date).getDay()]++; });
+        var an_maxDay = Math.max.apply(null, an_dayF.concat([1]));
+        var an_bestDay = an_dayF.indexOf(Math.max.apply(null, an_dayF));
+        var an_dayHTML = '<div style="padding:0 20px 8px">' + an_dayF.map(function(cnt,i) {
+          var isBest = i === an_bestDay && cnt > 0;
+          return '<div class="an-bar-row" style="padding:4px 0">' +
+            '<div class="an-bar-label" style="width:38px;font-weight:' + (isBest?'700':'400') + '">' + AN_DN[i] + '</div>' +
+            '<div class="an-bar-wrap"><div class="an-bar" style="width:' + Math.round(cnt/an_maxDay*100) + '%;background:' + (isBest?'var(--accent)':'var(--accent2,#6366f1)') + '"></div></div>' +
+            '<div class="an-bar-val">' + cnt + '</div></div>';
+        }).join('') + '</div>';
+
+        /* ── Weight chart ──────────────────────────── */
+        function _weightSVG(data, w, h) {
+          if (data.length < 2) return '<div style="padding:8px 20px"><span class="t-sm t-muted">Log more entries to see chart</span></div>';
+          var vals = data.map(function(d){return d.w;}), dates = data.map(function(d){return d.date;});
+          var mn = Math.min.apply(null,vals), mx = Math.max.apply(null,vals), rng = mx-mn||1;
+          var pad = 32, iw = w - pad*2, ih = h - 28;
+          var pts = vals.map(function(v,i){
+            return (pad + i/(vals.length-1)*iw).toFixed(1) + ',' + (8 + (1-(v-mn)/rng)*ih).toFixed(1);
+          });
+          var linePath = 'M' + pts.join(' L');
+          var areaPath = 'M' + pad + ',' + (8+ih) + ' L' + pts.join(' L') + ' L' + (pad+iw) + ',' + (8+ih) + ' Z';
+          var tickEvery = Math.max(1, Math.floor(vals.length/5));
+          var labels = vals.map(function(v,i){
+            if (i % tickEvery !== 0 && i !== vals.length-1) return '';
+            var x = pad + i/(vals.length-1)*iw;
+            var dt = new Date(dates[i]);
+            var lbl = (dt.getMonth()+1) + '/' + dt.getDate();
+            return '<text x="' + x.toFixed(0) + '" y="' + (8+ih+14) + '" text-anchor="middle" font-size="9" fill="var(--muted)">' + lbl + '</text>';
+          }).join('');
+          var dots = vals.map(function(v,i){
+            var x = (pad + i/(vals.length-1)*iw).toFixed(1);
+            var y = (8 + (1-(v-mn)/rng)*ih).toFixed(1);
+            return '<circle cx="' + x + '" cy="' + y + '" r="2.5" fill="var(--accent)"/>';
+          }).join('');
+          return '<div style="padding:0 16px 8px"><svg viewBox="0 0 ' + w + ' ' + h + '" style="width:100%;display:block">' +
+            '<defs><linearGradient id="wgrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--accent)" stop-opacity=".3"/><stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/></linearGradient></defs>' +
+            '<path d="' + areaPath + '" fill="url(#wgrd)"/>' +
+            '<path d="' + linePath + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>' +
+            dots + labels +
+            '<text x="' + pad + '" y="18" font-size="9" fill="var(--muted)">' + mx.toFixed(1) + '</text>' +
+            '<text x="' + pad + '" y="' + (8+ih-2) + '" font-size="9" fill="var(--muted)">' + mn.toFixed(1) + '</text>' +
+            '</svg></div>';
+        }
+        var an_wgHTML = weights.length >= 2
+          ? _weightSVG(weights.slice(-30), 320, 110)
+          : '<div style="padding:8px 20px"><span class="t-sm t-muted">Log weight to see trend</span></div>';
+
+        /* ── Body measurements ──────────────────────── */
+        var AN_MF = [{key:'waist',label:'Waist'},{key:'chest',label:'Chest'},{key:'hips',label:'Hips'},{key:'lArm',label:'Arm'},{key:'lThigh',label:'Thigh'},{key:'neck',label:'Neck'}];
+        var an_measHTML = AN_MF.map(function(f) {
+          var vals = measLog.filter(function(m){return m[f.key];}).map(function(m){return {date:m.date,w:+m[f.key]};});
+          if (!vals.length) return '';
+          var first = vals[0].w, last = vals[vals.length-1].w, delta = last - first;
+          var dStr = delta===0 ? '—' : (delta>0?'+':'') + delta.toFixed(1)+' cm';
+          var dCol = delta===0 ? 'var(--muted)' : (delta<0 ? 'var(--success)' : 'var(--danger)');
+          var mini = '';
+          if (vals.length > 1) {
+            var mn2=Math.min.apply(null,vals.map(function(v){return v.w;})), mx2=Math.max.apply(null,vals.map(function(v){return v.w;})), rng2=mx2-mn2||1;
+            var pts2 = vals.map(function(v,i){return (i/(vals.length-1)*78).toFixed(1)+','+(18-(v.w-mn2)/rng2*14).toFixed(1);}).join(' ');
+            mini = '<svg viewBox="0 -2 80 22" style="width:72px;height:22px;flex-shrink:0"><polyline points="' + pts2 + '" fill="none" stroke="var(--accent2,#6366f1)" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+          }
+          return '<div class="an-meas-row">' +
+            '<div class="an-meas-label">' + f.label + '</div>' +
+            '<div class="an-meas-val">' + last.toFixed(1) + ' cm</div>' +
+            '<div class="an-meas-delta" style="color:' + dCol + '">' + dStr + '</div>' +
+            mini + '</div>';
+        }).filter(Boolean).join('');
+        if (!an_measHTML) an_measHTML = '<div style="padding:8px 20px"><span class="t-sm t-muted">Log measurements in Profile to see trends</span></div>';
+
+        /* ── Recent workout log ─────────────────────── */
+        var an_logHTML = hist.slice(-30).reverse().map(function(w) {
+          var exIds = Object.keys(w.exercises || {});
+          var sets2 = 0, vol2 = 0;
+          Object.values(w.exercises || {}).forEach(function(ss){(ss||[]).forEach(function(s){sets2++;if(s.w&&s.r)vol2+=s.w*s.r;});});
+          var names = exIds.slice(0,3).map(function(id){var ex=DB.exercises.find(function(e){return e.id===id;});return ex?ex.name:id;});
+          var dt = w.date ? Utils.formatDate(w.date) : '';
+          return '<div class="an-log-item">' +
+            '<div style="display:flex;justify-content:space-between;align-items:baseline">' +
+              '<div class="an-log-title">' + (w.type || 'Workout') + '</div>' +
+              '<div class="an-log-date">' + dt + '</div></div>' +
+            '<div class="an-log-detail">' + exIds.length + ' exercises &middot; ' + sets2 + ' sets' + (vol2>0?' &middot; '+vol2.toFixed(0)+' kg vol':'') + '</div>' +
+            (names.length ? '<div class="an-log-detail" style="margin-top:2px">' + names.join(', ') + (exIds.length>3?' +more':'') + '</div>' : '') +
+            '</div>';
+        }).join('') || '<div style="padding:12px 20px"><span class="t-sm t-muted">No workouts logged yet</span></div>';
+
+        /* ── Build page ─────────────────────────────── */
+        el.innerHTML = '<div style="padding-bottom:100px">' +
+          /* header */
+          '<div style="display:flex;align-items:center;padding:16px 20px 4px">' +
+            '<button onclick="Nav.go(\'progress\')" style="background:none;border:none;color:var(--accent);font-size:28px;cursor:pointer;padding:0 10px 0 0;line-height:1;margin-left:-8px">&#8249;</button>' +
+            '<div class="t-h2">Analytics</div></div>' +
+
+          /* KPIs */
+          '<div class="an-kpi-grid">' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + an_total + '</div><div class="an-kpi-label">Workouts</div></div>' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + an_sets + '</div><div class="an-kpi-label">Sets Logged</div></div>' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + (an_vol>0?(an_vol/1000).toFixed(1)+'k':'—') + '</div><div class="an-kpi-label">Volume kg</div></div>' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + an_avgW + '</div><div class="an-kpi-label">Avg/Week</div></div>' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + an_streak + '</div><div class="an-kpi-label">Streak</div></div>' +
+            '<div class="an-kpi"><div class="an-kpi-num">' + an_longest + '</div><div class="an-kpi-label">Best Streak</div></div>' +
+          '</div>' +
+
+          /* Weekly workouts */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Workouts per Week</div>' + an_wBarHTML + '</div>' +
+
+          /* Volume per week */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Total Volume per Week (kg)</div>' + an_vBarHTML + '</div>' +
+
+          /* Top exercises */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Top Exercises by Frequency</div>' + an_exHTML + '</div>' +
+
+          /* Muscle breakdown */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Muscle Group Breakdown</div>' + an_musHTML + '</div>' +
+
+          /* Day preference */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Training Day Preference</div>' + an_dayHTML + '</div>' +
+
+          /* Weight history */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Weight History (last 30 entries)</div>' + an_wgHTML + '</div>' +
+
+          /* Measurements */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Body Measurements Over Time</div>' + an_measHTML + '</div>' +
+
+          /* Workout log */
+          '<div class="card" style="margin:0 0 12px">' +
+            '<div class="an-section-title">Recent Workouts</div>' + an_logHTML + '</div>' +
+
+        '</div>';
+      };
+
+          Render.profile = function() {
       const el = document.getElementById('screen-profile');
       if (!el) return;
       const cfg  = S.settings;
