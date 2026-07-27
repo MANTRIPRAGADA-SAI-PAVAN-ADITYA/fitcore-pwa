@@ -538,7 +538,10 @@
        SECTION HEADERS
     ============================================================ */
     .screen-header {
-      padding: 20px 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px 8px;
     }
 
     .section-row {
@@ -1083,8 +1086,8 @@
     /* ── Phase 4 new component styles ────────────────── */
 
     /* Shared */
-    .screen-header { padding: 20px 20px 8px; }
-    .section-header { display:flex; justify-content:space-between; align-items:center; padding: 16px 20px 4px; }
+    /* screen-header defined above with flex layout */
+    .section-header { display:flex; justify-content:space-between; align-items:center; padding: 10px 20px 2px; }
     .mt-1 { margin-top:4px; } .mt-2 { margin-top:8px; } .mt-3 { margin-top:16px; }
     .mb-2 { margin-bottom:8px; } .flex-1 { flex:1; min-width:0; }
     .t-h2  { font-size:20px; font-weight:700; color:var(--text); }
@@ -1104,12 +1107,12 @@
     .hero-divider { color:var(--border2); }
     .hero-weight-btn { width:38px; height:38px; border-radius:50%; background:var(--card);
       border:1px solid var(--border); color:var(--accent); }
-    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 4px; }
+    .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 20px 2px; }
     .stat-card  { background:var(--card); border:1px solid var(--border); border-radius:var(--r);
-      padding:14px; display:flex; align-items:center; gap:12px; }
+      padding:10px 12px; display:flex; align-items:center; gap:10px; }
     .stat-num   { font-size:22px; font-weight:700; color:var(--accent); }
     .stat-icon  { flex-shrink:0; }
-    .today-card { padding:16px; margin:0 20px; cursor:pointer; transition:transform .15s; }
+    .today-card { padding:12px 14px; margin:0 20px; cursor:pointer; transition:transform .15s; }
     .today-card:active { transform:scale(.98); }
     .today-card.done { border-color:var(--success)44; }
     .rest-card  { display:flex; align-items:center; gap:16px; }
@@ -1119,7 +1122,7 @@
     .done-banner { display:flex; align-items:center; gap:8px; color:var(--success);
       font-size:13px; font-weight:600; margin-top:8px; }
     .start-cta  { display:flex; align-items:center; justify-content:space-between; margin-top:10px; }
-    .streak-card { padding:16px; margin:12px 20px 0; }
+    .streak-card { padding:12px 14px; margin:8px 20px 0; }
     .streak-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
     .week-dot   { width:32px; height:32px; border-radius:50%; border:2px solid var(--border2);
       display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700;
@@ -1419,7 +1422,7 @@
     @keyframes bcPulse { 0%,100%{opacity:1} 50%{opacity:.55} }
 
     /* ── Progress dashboard ──────────────────────────── */
-    .kpi-strip { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+    .kpi-strip { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; padding:0 20px; margin-bottom:10px; }
     .kpi-card  { background:var(--card); border:1px solid var(--border); border-radius:var(--r);
       padding:14px 12px; text-align:center; }
     .kpi-num   { font-size:28px; font-weight:700; letter-spacing:-.04em; line-height:1; }
@@ -1523,7 +1526,7 @@
     .btn-export:active { opacity:.8; }
 
     /* ── XP & Gamification ─────────────────────────────────────────── */
-    .xp-bar-wrap { padding:6px 0 8px; }
+    .xp-bar-wrap { padding:3px 0 5px; }
     .xp-bar-track { height:6px;border-radius:4px;background:var(--card2);overflow:hidden;margin-top:4px; }
     .xp-bar-fill { height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6,#f97316);transition:width .5s ease; }
     .xp-level-row { display:flex;align-items:center;justify-content:space-between; }
@@ -1536,7 +1539,7 @@
       box-shadow:0 4px 16px rgba(99,102,241,.4); }
     .xp-toast.show { opacity:1;transform:translateX(-50%) translateY(0); }
     /* ── Daily Challenge ─────────────────────────────────────────────── */
-    .challenge-card { display:flex;align-items:center;gap:14px;padding:14px 16px;
+    .challenge-card { display:flex;align-items:center;gap:10px;padding:10px 14px;
       border-radius:var(--r);
       background:linear-gradient(135deg,var(--card) 0%,#1a1a2e 100%);
       border:1px solid rgba(99,102,241,.25);margin-top:10px; }
@@ -1552,8 +1555,8 @@
       background:rgba(34,197,94,.12);border-radius:12px;padding:4px 10px;flex-shrink:0; }
     /* ── Recovery tracker ───────────────────────────────────────────── */
     .recovery-section { margin-top:10px; }
-    .recovery-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px; }
-    .rec-item { border-radius:10px;padding:9px 4px;text-align:center;border:1px solid transparent; }
+    .recovery-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px; }
+    .rec-item { border-radius:8px;padding:6px 3px;text-align:center;border:1px solid transparent; }
     .rec-item.ready { background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:#22c55e; }
     .rec-item.partial { background:rgba(234,179,8,.1);border-color:rgba(234,179,8,.3);color:#eab308; }
     .rec-item.recovering { background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#ef4444; }
@@ -1561,7 +1564,7 @@
     .rec-item-name { font-size:9px;font-weight:600;text-transform:capitalize;margin-top:2px;opacity:.9;word-break:break-word; }
     /* ── Weekly report card ─────────────────────────────────────────── */
     .report-card { border-radius:var(--r);background:linear-gradient(135deg,var(--card),#1a1a2e);
-      border:1px solid rgba(99,102,241,.25);margin-bottom:14px;overflow:hidden; }
+      border:1px solid rgba(99,102,241,.25);margin:0 20px 12px;overflow:hidden; }
     .report-header { padding:11px 16px 8px;border-bottom:1px solid rgba(255,255,255,.06);
       display:flex;align-items:center;justify-content:space-between; }
     .report-grid { display:grid;grid-template-columns:repeat(4,1fr); }
@@ -1583,6 +1586,51 @@
     .overload-set-chip { background:var(--card);border:1px solid var(--border);
       border-radius:6px;padding:2px 8px;font-size:12px;font-weight:600; }
     .overload-suggest { margin-top:6px;font-size:12px;color:var(--success);font-weight:600; }
+
+    /* ── Progress screen card margins ───────────────────────────────── */
+    #screen-progress > .card,
+    #screen-progress > .weight-progress-card { margin-left:20px; margin-right:20px; }
+
+    /* ── Build / Plan Builder ────────────────────────────────────────── */
+    .bld-plan-card { background:var(--card);border:1px solid var(--border2);border-radius:var(--r);
+      padding:14px 16px;margin-bottom:12px; }
+    .bld-plan-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:6px; }
+    .bld-plan-name { font-size:15px;font-weight:700; }
+    .bld-plan-count { font-size:11px;color:var(--muted); }
+    .bld-plan-muscles { display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px; }
+    .bld-muscle-chip { font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;
+      background:var(--accent-dim);color:var(--accent-l); }
+    .bld-plan-btns { display:flex;gap:8px; }
+    .bld-empty { padding:56px 0;text-align:center; }
+    .bld-empty-icon { font-size:44px;line-height:1; }
+    .bld-name-input { font-size:17px;font-weight:700;background:none;border:none;
+      border-bottom:2px solid var(--accent);color:var(--text);padding:8px 0;width:100%;
+      margin-bottom:6px;font-family:inherit; }
+    .bld-name-input:focus { outline:none; }
+    .bld-section-lbl { font-size:11px;font-weight:700;text-transform:uppercase;
+      letter-spacing:.07em;color:var(--muted);padding:12px 0 6px; }
+    .bld-ex-row { display:flex;align-items:center;gap:10px;padding:9px 0;
+      border-bottom:1px solid var(--border)33; }
+    .bld-ex-info { flex:1;min-width:0; }
+    .bld-ex-name { font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .bld-ex-del { color:var(--danger);font-size:18px;background:none;border:none;
+      cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1; }
+    .bld-search-row { display:flex;align-items:center;gap:8px;background:var(--card2);
+      border-radius:10px;padding:8px 14px;border:1px solid var(--border2);margin-bottom:8px; }
+    .bld-search { flex:1;background:none;border:none;color:var(--text);font-size:14px;font-family:inherit; }
+    .bld-search:focus { outline:none; }
+    .bld-chips { display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px; }
+    .bld-chip { font-size:11px;font-weight:600;padding:4px 10px;border-radius:10px;
+      background:var(--card2);border:1px solid var(--border);color:var(--text2);
+      cursor:pointer;text-transform:capitalize; }
+    .bld-chip.active { background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent; }
+    .bld-browse-row { display:flex;align-items:center;gap:10px;padding:9px 0;
+      border-bottom:1px solid var(--border)22;cursor:pointer; }
+    .bld-browse-row.added { opacity:.4;cursor:default;pointer-events:none; }
+    .bld-add-icon { width:28px;height:28px;border-radius:50%;background:var(--accent-dim);
+      display:flex;align-items:center;justify-content:center;color:var(--accent);
+      font-size:18px;font-weight:700;flex-shrink:0;line-height:1; }
+    .bld-browse-row.added .bld-add-icon { background:rgba(34,197,94,.12);color:var(--success);font-size:13px; }
 
   </style>
 </head>
@@ -5364,70 +5412,127 @@
     Render.builder = function() {
       const el = document.getElementById('screen-builder');
       if (!el) return;
+
+      /* ─── EDIT VIEW ─────────────────────────────────────────────── */
       if (State.builderView === 'edit') {
         const draft = State.builderDraft || { name: 'My Workout', exercises: [] };
-        const exRows = draft.exercises.map((id, i) => {
-          const ex = DB.exercises.find(e => e.id === id);
+        const mf = State.builderMuscleFilter || '';
+        const q  = (State.exerciseSearch || '').toLowerCase();
+
+        // Current plan exercises
+        const exRows = draft.exercises.map(function(id, i) {
+          var ex = DB.exercises.find(function(e){ return e.id === id; });
           if (!ex) return '';
-          return '<div class="builder-ex-item">' +
-            Utils.bodyCard(ex.muscle, ex.secondary||[], 36) +
-            '<div class="builder-ex-name">' + ex.name + '</div>' +
-            '<button class="builder-ex-remove" onclick="builderRemoveEx(' + i + ')">&#x2715;</button></div>';
+          return '<div class="bld-ex-row">' +
+            Utils.bodyCard(ex.muscle, ex.secondary||[], 34) +
+            '<div class="bld-ex-info"><div class="bld-ex-name">' + ex.name + '</div>' +
+            '<div class="t-xs t-muted">' + ex.muscle + '</div></div>' +
+            '<button class="bld-ex-del" onclick="builderRemoveEx(' + i + ')">&#x2715;</button>' +
+          '</div>';
         }).join('');
-        const q = (State.exerciseSearch||'').toLowerCase();
-        const searchRows = q ? DB.exercises.filter(e =>
-          e.name.toLowerCase().includes(q) || e.muscle.toLowerCase().includes(q)
-        ).slice(0,8).map(e =>
-          '<div class="ex-progress-row" onclick="builderAddEx(\'' + e.id + '\')" style="cursor:pointer;padding:8px 12px">' +
-          Utils.bodyCard(e.muscle, e.secondary||[], 32) +
-          '<div><div class="ex-progress-name">' + e.name + '</div>' +
-          '<div class="t-xs t-muted">' + e.muscle + '</div></div></div>'
-        ).join('') : '';
+
+        // Muscle filter chips
+        var BLDMUSCLES = ['chest','back','shoulders','biceps','triceps','lats','quads','hamstrings','glutes','core','calves'];
+        var chipRow = BLDMUSCLES.map(function(m) {
+          return '<button class="bld-chip' + (mf===m?' active':'') + '" onclick="State.builderMuscleFilter=\'' + (mf===m?'':m) + '\';Render.builder()">' + m + '</button>';
+        }).join('');
+
+        // Exercise browser (filter + search)
+        var browsed = DB.exercises.slice();
+        if (mf) browsed = browsed.filter(function(e){ return e.muscle===mf||(e.secondary||[]).includes(mf); });
+        if (q)  browsed = browsed.filter(function(e){ return e.name.toLowerCase().includes(q)||e.muscle.toLowerCase().includes(q); });
+        browsed = browsed.slice(0, 40);
+
+        var browseRows = browsed.map(function(e) {
+          var added = draft.exercises.includes(e.id);
+          return '<div class="bld-browse-row' + (added?' added':'') + '"' + (added?'':' onclick="builderAddEx(\'' + e.id + '\')"') + '>' +
+            Utils.bodyCard(e.muscle, e.secondary||[], 32) +
+            '<div class="bld-ex-info"><div class="bld-ex-name">' + e.name + '</div>' +
+            '<div class="t-xs t-muted">' + e.muscle + '</div></div>' +
+            '<div class="bld-add-icon">' + (added ? '&#x2713;' : '+') + '</div>' +
+          '</div>';
+        }).join('');
+
         el.innerHTML =
           '<div class="screen-header">' +
-            '<button class="btn btn-ghost btn-sm" onclick="State.builderView=\'list\';State.exerciseSearch=\'\';Render.builder()">&#x2190; Plans</button>' +
-            '<div class="t-h2" style="flex:1;text-align:center">Edit Plan</div>' +
+            '<button class="btn btn-ghost btn-sm" onclick="builderCancelEdit()">&#x2190; Plans</button>' +
+            '<div class="t-h2" style="flex:1;text-align:center;font-size:17px">Edit Plan</div>' +
             '<button class="btn btn-primary btn-sm" onclick="builderSave()">Save</button>' +
           '</div>' +
-          '<div style="padding:12px 20px 0">' +
-            '<input class="builder-name-input" id="builder-name" value="' + draft.name + '" placeholder="Plan name..." oninput="State.builderDraft.name=this.value">' +
-            '<div class="t-h3 mb-2">Exercises (' + draft.exercises.length + ')</div>' +
-            (exRows || '<div class="t-sm t-muted">No exercises yet</div>') +
-            '<div class="builder-search-box">' +
-              '<input class="search-input" style="background:none;border:none;padding:0;flex:1" type="search" placeholder="Search exercises..." value="' + (State.exerciseSearch||'') + '" oninput="State.exerciseSearch=this.value;Render.builder()">' +
-            '</div>' + searchRows +
-          '</div><div style="height:var(--nav-h)"></div>';
+          '<div style="padding:0 20px">' +
+            '<input class="bld-name-input" id="builder-name" value="' + draft.name + '" placeholder="Plan name..." oninput="State.builderDraft.name=this.value">' +
+
+            '<div class="bld-section-lbl">Plan (' + draft.exercises.length + ' exercise' + (draft.exercises.length===1?'':'s') + ')</div>' +
+            (draft.exercises.length
+              ? exRows
+              : '<div class="t-sm t-muted" style="padding:8px 0 4px">Tap an exercise below to add it to your plan</div>') +
+
+            '<div class="bld-section-lbl" style="margin-top:6px">Add Exercises</div>' +
+            '<div class="bld-search-row">' +
+              '<span style="color:var(--muted);font-size:16px">&#x2315;</span>' +
+              '<input class="bld-search" type="search" placeholder="Search by name or muscle..." value="' + (State.exerciseSearch||'') + '" oninput="State.exerciseSearch=this.value;Render.builder()">' +
+            '</div>' +
+            '<div class="bld-chips">' + chipRow + '</div>' +
+            '<div class="bld-browse">' + (browseRows || '<div class="t-sm t-muted" style="padding:12px 0">No exercises found</div>') + '</div>' +
+          '</div>' +
+          '<div style="height:calc(var(--nav-h) + 16px)"></div>';
         return;
       }
+
+      /* ─── LIST VIEW ─────────────────────────────────────────────── */
       const plans = S.customPlans;
-      const cards = plans.length
-        ? plans.map((p, i) =>
-            '<div class="builder-plan-card">' +
-              '<div class="builder-plan-name">' + p.name + '</div>' +
-              '<div class="builder-plan-meta">' + p.exercises.length + ' exercises</div>' +
-              '<div class="builder-plan-btns">' +
-                '<button class="btn btn-primary btn-sm" onclick="startCustomPlan(' + i + ')">&#x25B6; Start</button>' +
-                '<button class="btn btn-ghost btn-sm" onclick="builderEdit(' + i + ')">Edit</button>' +
-                '<button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="builderDelete(' + i + ')">Delete</button>' +
-              '</div></div>'
-          ).join('')
-        : '<div style="padding:40px 20px;text-align:center"><div style="font-size:36px">&#x1F3D7;</div><div class="t-body t-muted mt-2">No custom workouts yet</div></div>';
-      el.innerHTML = '<div class="screen-header"><div class="t-h2">My Plans</div>' +
+      var cards;
+      if (plans.length) {
+        cards = plans.map(function(p, i) {
+          var muscles = [];
+          var seen = {};
+          p.exercises.forEach(function(id) {
+            var ex = DB.exercises.find(function(e){ return e.id===id; });
+            if (ex && !seen[ex.muscle]) { seen[ex.muscle]=1; muscles.push(ex.muscle); }
+          });
+          muscles = muscles.slice(0, 5);
+          var muscleChips = muscles.map(function(m){ return '<span class="bld-muscle-chip">' + m + '</span>'; }).join('');
+          return '<div class="bld-plan-card">' +
+            '<div class="bld-plan-top">' +
+              '<div class="bld-plan-name">' + p.name + '</div>' +
+              '<div class="bld-plan-count">' + p.exercises.length + ' exercise' + (p.exercises.length===1?'':'s') + '</div>' +
+            '</div>' +
+            (muscles.length ? '<div class="bld-plan-muscles">' + muscleChips + '</div>' : '') +
+            '<div class="bld-plan-btns">' +
+              '<button class="btn btn-primary btn-sm" onclick="startCustomPlan(' + i + ')">&#x25B6; Start</button>' +
+              '<button class="btn btn-ghost btn-sm" onclick="builderEdit(' + i + ')">Edit</button>' +
+              '<button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="builderDelete(' + i + ')">Delete</button>' +
+            '</div>' +
+          '</div>';
+        }).join('');
+      } else {
+        cards = '<div class="bld-empty">' +
+          '<div class="bld-empty-icon">&#x1F3CB;</div>' +
+          '<div class="t-body t-muted mt-2">No custom plans yet</div>' +
+          '<div class="t-sm t-muted" style="margin-top:6px">Tap + New Plan to build one</div>' +
+        '</div>';
+      }
+
+      el.innerHTML =
+        '<div class="screen-header"><div class="t-h2">My Plans</div>' +
         '<button class="btn btn-primary btn-sm" onclick="builderNew()">+ New Plan</button></div>' +
-        cards + '<div style="height:var(--nav-h)"></div>';
+        '<div style="padding:0 20px">' + cards + '</div>' +
+        '<div style="height:var(--nav-h)"></div>';
     };
-    function builderNew() { State.builderDraft={name:'My Workout',exercises:[]}; State.builderView='edit'; State.exerciseSearch=''; Render.builder(); }
-    function builderEdit(idx) { const p=S.customPlans[idx]; State.builderDraft={name:p.name,exercises:[...p.exercises],idx}; State.builderView='edit'; State.exerciseSearch=''; Render.builder(); }
-    function builderDelete(idx) { if(!confirm('Delete this plan?'))return; const plans=S.customPlans; plans.splice(idx,1); S.saveCustomPlans(plans); Render.builder(); }
-    function builderAddEx(id) { if(!State.builderDraft)return; if(!State.builderDraft.exercises.includes(id))State.builderDraft.exercises.push(id); State.exerciseSearch=''; Render.builder(); }
+
+    function builderCancelEdit() { State.builderView='list'; State.exerciseSearch=''; State.builderMuscleFilter=''; Render.builder(); }
+    function builderNew()  { State.builderDraft={name:'My Workout',exercises:[]}; State.builderView='edit'; State.exerciseSearch=''; State.builderMuscleFilter=''; Render.builder(); }
+    function builderEdit(idx) { var p=S.customPlans[idx]; State.builderDraft={name:p.name,exercises:p.exercises.slice(),idx:idx}; State.builderView='edit'; State.exerciseSearch=''; State.builderMuscleFilter=''; Render.builder(); }
+    function builderDelete(idx) { if(!confirm('Delete this plan?'))return; var plans=S.customPlans; plans.splice(idx,1); S.saveCustomPlans(plans); Render.builder(); }
+    function builderAddEx(id) { if(!State.builderDraft)return; if(!State.builderDraft.exercises.includes(id))State.builderDraft.exercises.push(id); Render.builder(); }
     function builderRemoveEx(idx) { if(!State.builderDraft)return; State.builderDraft.exercises.splice(idx,1); Render.builder(); }
     function builderSave() {
-      const draft=State.builderDraft; if(!draft)return;
-      const nameEl=document.getElementById('builder-name'); if(nameEl)draft.name=nameEl.value.trim()||'My Workout';
-      const plans=S.customPlans;
+      var draft=State.builderDraft; if(!draft)return;
+      var nameEl=document.getElementById('builder-name'); if(nameEl)draft.name=nameEl.value.trim()||'My Workout';
+      var plans=S.customPlans;
       if(typeof draft.idx==='number') plans[draft.idx]={name:draft.name,exercises:draft.exercises};
       else plans.push({name:draft.name,exercises:draft.exercises});
-      S.saveCustomPlans(plans); State.builderView='list'; State.builderDraft=null; Render.builder();
+      S.saveCustomPlans(plans); State.builderView='list'; State.builderDraft=null; State.builderMuscleFilter=''; Render.builder();
     }
     function startCustomPlan(idx) {
       const p=S.customPlans[idx]; if(!p||!p.exercises.length){alert('Add at least one exercise first.');return;}
