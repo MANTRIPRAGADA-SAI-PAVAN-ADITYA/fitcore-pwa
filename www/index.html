@@ -54,6 +54,30 @@
       --safe-r:       env(safe-area-inset-right, 0px);
     }
 
+    /* Notifications */
+    .notif-toggle { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border)22; }
+    .notif-toggle-label { font-size:13px; font-weight:600; }
+    .notif-toggle-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+    .toggle-switch { position:relative; width:44px; height:24px; flex-shrink:0; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; inset:0; background:var(--card2); border-radius:12px; cursor:pointer; transition:.2s; border:1px solid var(--border); }
+    .toggle-slider:before { content:""; position:absolute; width:18px; height:18px; left:2px; top:2px; background:var(--muted); border-radius:50%; transition:.2s; }
+    .toggle-switch input:checked + .toggle-slider { background:var(--accent); border-color:var(--accent); }
+    .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); background:#fff; }
+    .time-picker { background:var(--card2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; color:var(--text); font-size:13px; margin-top:8px; width:100%; }
+    .day-chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .day-chip { padding:4px 10px; border-radius:12px; font-size:11px; font-weight:700; cursor:pointer; border:1px solid var(--border); background:var(--card2); color:var(--muted); }
+    .day-chip.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+    /* Analytics */
+    .analytics-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border)22; }
+    .analytics-bar-wrap { flex:1; height:6px; background:var(--card2); border-radius:3px; overflow:hidden; }
+    .analytics-bar { height:100%; border-radius:3px; background:var(--accent); transition:width .4s; }
+    .analytics-label { font-size:12px; font-weight:600; min-width:110px; }
+    .analytics-val { font-size:11px; color:var(--muted); min-width:28px; text-align:right; }
+    .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 20px 12px; }
+    .analytics-kpi { background:var(--card); border-radius:var(--r); padding:12px; text-align:center; }
+    .analytics-kpi-num { font-size:22px; font-weight:800; color:var(--accent); }
+    .analytics-kpi-label { font-size:10px; color:var(--muted); margin-top:2px; text-transform:uppercase; letter-spacing:.5px; }
     /* Charts */
     .chart-wrap { background:var(--card); border-radius:var(--r); padding:16px; margin:0 20px 14px; }
     .chart-title { font-size:13px; font-weight:700; margin-bottom:6px; }
@@ -2978,6 +3002,43 @@
     /* ═══════════════════════════════════════════════════════
        PHASE 3 — APPLICATION STATE
     ═══════════════════════════════════════════════════════ */
+    /* ── Notification Manager ────────────────────────────────── */
+    const NotifManager = (() => {
+      function _lc() { return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications; }
+
+      function _cfg() { return S._g('fc_notif', { enabled: false, time: '08:00', days: [1,2,3,4,5] }); }
+
+      async function schedule() {
+        const lc = _lc(); if (!lc) return;
+        const cfg = _cfg(); if (!cfg.enabled) { await lc.cancel({ notifications: [{ id: 99 }] }).catch(()=>{}); return; }
+        const perm = await lc.requestPermissions();
+        if (perm.display !== 'granted') return;
+        await lc.cancel({ notifications: [{ id: 99 }] }).catch(()=>{});
+        const [h, m] = cfg.time.split(':').map(Number);
+        const msgs = [
+          "Time to lift. Your future self will thank you.",
+          "No excuses. The barbell is waiting.",
+          "Consistency beats perfection. Let\'s go.",
+          "One workout away from a better mood.",
+          "Champions train on days they don\'t feel like it."
+        ];
+        const body = msgs[new Date().getDay() % msgs.length];
+        await lc.schedule({ notifications: [{
+          id: 99, title: "FitCore", body,
+          schedule: { on: { hour: h, minute: m }, allowWhileIdle: true, repeats: true },
+          channelId: 'fitcore-reminders',
+          actionTypeId: '', extra: null
+        }]}).catch(e => console.warn('schedule error', e));
+      }
+
+      async function createChannel() {
+        const lc = _lc(); if (!lc || !lc.createChannel) return;
+        await lc.createChannel({ id: 'fitcore-reminders', name: 'Workout Reminders', importance: 4 }).catch(()=>{});
+      }
+
+      return { schedule, createChannel, cfg: _cfg };
+    })();
+
     /* ── Auto-Backup Manager (Capacitor Filesystem) ─────────── */
     const BackupManager = (() => {
       const FILE = 'fitcore-backup.json';
@@ -4295,6 +4356,87 @@
           <circle cx="${lx}" cy="${ly}" r="2.5" fill="var(--accent)"/>
         </svg>`;
       };
+      /* ── Analytics ────────────────────────────── */
+      const aHist = S.history || [];
+      const an_totalWorkouts = aHist.length;
+      const an_totalSets = aHist.reduce((s, w) => s + Object.values(w.sets||w.loggedSets||{}).reduce((a,sets)=>a+(sets||[]).length,0), 0);
+      const an_totalVolumeAll = aHist.reduce((s,w) => {
+        const sets = w.sets || w.loggedSets || {};
+        return s + Object.values(sets).reduce((a, arr) => a + (arr||[]).reduce((b,set)=>b+(set.w||0)*(set.r||0),0), 0);
+      }, 0);
+      const an_avgPerWeek = (() => {
+        if (aHist.length < 2) return 0;
+        const dates = aHist.map(w=>w.date).sort();
+        const daySpan = (new Date(dates[dates.length-1]) - new Date(dates[0])) / 86400000 + 1;
+        return (aHist.length / (daySpan / 7)).toFixed(1);
+      })();
+
+      // Top exercises by frequency
+      const an_exFreq = {};
+      aHist.forEach(w => {
+        const sets = w.sets || w.loggedSets || {};
+        Object.keys(sets).forEach(id => {
+          if ((sets[id]||[]).length) an_exFreq[id] = (an_exFreq[id]||0) + 1;
+        });
+      });
+      const an_topEx = Object.entries(an_exFreq).sort((a,b)=>b[1]-a[1]).slice(0,6);
+      const an_maxExFreq = an_topEx[0] ? an_topEx[0][1] : 1;
+
+      // Top muscles
+      const an_musFreq = {};
+      aHist.forEach(w => {
+        const sets = w.sets || w.loggedSets || {};
+        Object.keys(sets).forEach(id => {
+          const ex = DB.exercises.find(e=>e.id===id);
+          if (ex && (sets[id]||[]).length) an_musFreq[ex.muscle] = (an_musFreq[ex.muscle]||0) + 1;
+        });
+      });
+      const an_topMus = Object.entries(an_musFreq).sort((a,b)=>b[1]-a[1]).slice(0,5);
+      const an_maxMusFreq = an_topMus[0] ? an_topMus[0][1] : 1;
+
+      // Day of week heat
+      const an_dayFreq = [0,0,0,0,0,0,0];
+      aHist.forEach(w => { if(w.date) an_dayFreq[new Date(w.date).getDay()]++; });
+      const an_dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const an_maxDay = Math.max(...an_dayFreq, 1);
+
+      const an_analyticsHTML = aHist.length < 2 ? '' : (() => {
+        const an_kpis = '<div class="analytics-grid">' +
+          '<div class="analytics-kpi"><div class="analytics-kpi-num">' + an_totalWorkouts + '</div><div class="analytics-kpi-label">Total Workouts</div></div>' +
+          '<div class="analytics-kpi"><div class="analytics-kpi-num">' + an_totalSets + '</div><div class="analytics-kpi-label">Sets Logged</div></div>' +
+          '<div class="analytics-kpi"><div class="analytics-kpi-num">' + an_avgPerWeek + '</div><div class="analytics-kpi-label">Avg / Week</div></div>' +
+          '<div class="analytics-kpi"><div class="analytics-kpi-num">' + (an_totalVolumeAll>0?(an_totalVolumeAll/1000).toFixed(0)+'k':'—') + '</div><div class="analytics-kpi-label">Total Volume kg</div></div>' +
+        '</div>';
+
+        const an_exRows = an_topEx.map(([id,cnt]) => {
+          const ex = DB.exercises.find(e=>e.id===id);
+          return '<div class="analytics-row" style="padding:8px 20px">' +
+            '<div class="analytics-label">' + (ex?ex.name:id) + '</div>' +
+            '<div class="analytics-bar-wrap"><div class="analytics-bar" style="width:' + Math.round(cnt/an_maxExFreq*100) + '%"></div></div>' +
+            '<div class="analytics-val">' + cnt + 'x</div></div>';
+        }).join('');
+
+        const an_musRows = an_topMus.map(([mus,cnt]) => {
+          const colors = {chest:'#f59e0b',back:'#22c55e',shoulders:'#6366f1',biceps:'#ec4899',triceps:'#a855f7',quads:'#06b6d4',hamstrings:'#f97316',glutes:'#14b8a6',lats:'#84cc16'};
+          const col = colors[mus] || 'var(--accent)';
+          return '<div class="analytics-row" style="padding:8px 20px">' +
+            '<div class="analytics-label" style="text-transform:capitalize">' + mus + '</div>' +
+            '<div class="analytics-bar-wrap"><div class="analytics-bar" style="width:' + Math.round(cnt/an_maxMusFreq*100) + '%;background:' + col + '"></div></div>' +
+            '<div class="analytics-val">' + cnt + 'x</div></div>';
+        }).join('');
+
+        const an_dayBars = '<div style="display:flex;gap:4px;align-items:flex-end;padding:0 20px;height:48px">' +
+          an_dayFreq.map((cnt,i)=>'<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">' +
+            '<div style="width:100%;border-radius:3px 3px 0 0;background:' + (cnt?'var(--accent)':'var(--card2)') + ';height:' + Math.round(cnt/an_maxDay*36+4) + 'px"></div>' +
+            '<div class="t-xs" style="color:var(--muted);font-size:9px">' + an_dayNames[i] + '</div></div>'
+          ).join('') + '</div>';
+
+        return an_kpis +
+          '<div class="t-h3" style="padding:8px 20px 4px">Top Exercises</div>' + an_exRows +
+          '<div class="t-h3" style="padding:12px 20px 4px">By Muscle</div>' + an_musRows +
+          '<div class="t-h3" style="padding:12px 20px 4px">Best Training Day</div>' + an_dayBars;
+      })();
+
       /* Strength Charts */
       const chartMuscles = ['all','chest','back','lats','shoulders','biceps','triceps','quads','hamstrings','glutes'];
       const cm = State.chartMuscle || 'all';
@@ -4412,7 +4554,8 @@
 
         <!-- PR sparklines -->
         <div class="card" style="margin-top:12px">
-          <div class="t-h3">Strength Charts</div>
+          ${an_analyticsHTML ? '<div class="t-h3" style="margin-top:4px">Analytics</div>' + an_analyticsHTML : ''}
+          <div class="t-h3" style="margin-top:${an_analyticsHTML?12:4}px">Strength Charts</div>
           <div class="chart-filter-bar">${filterBtns}</div>
           ${chartsHTML}
           <div class="t-h3 mb-2" style="margin-top:12px">Personal Records</div>
@@ -5122,6 +5265,8 @@
               }).join('')}
             </div>
           </div>
+          <div class="t-h3 mb-2" style="margin-top:16px">Workout Reminder</div>
+          <div id="notif-settings-panel"></div>
           <button class="btn btn-primary btn-full" onclick="saveSettings()">Save Settings</button>
           <div style="height:10px"></div>
           <div style="display:flex;gap:8px">
@@ -5175,9 +5320,55 @@
       `;
     };
 
+    const _DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    function renderNotifPanel() {
+      const panel = document.getElementById('notif-settings-panel');
+      if (!panel) return;
+      const cfg = NotifManager.cfg();
+      const dayChips = _DAYS.map((d,i) =>
+        '<span class="day-chip' + (cfg.days.includes(i) ? ' on' : '') + '" onclick="toggleNotifDay(' + i + ')">' + d + '</span>'
+      ).join('');
+      panel.innerHTML =
+        '<div class="notif-toggle">' +
+          '<div><div class="notif-toggle-label">Daily reminder</div>' +
+            '<div class="notif-toggle-sub">Reminds you to work out each day</div></div>' +
+          '<label class="toggle-switch"><input type="checkbox" id="notif-enabled"' + (cfg.enabled ? ' checked' : '') + ' onchange="saveNotifSettings()">' +
+            '<span class="toggle-slider"></span></label>' +
+        '</div>' +
+        '<div style="margin-top:10px">' +
+          '<div class="t-xs t-muted" style="margin-bottom:4px">Reminder time</div>' +
+          '<input type="time" class="time-picker" id="notif-time" value="' + cfg.time + '" onchange="saveNotifSettings()">' +
+        '</div>' +
+        '<div style="margin-top:10px">' +
+          '<div class="t-xs t-muted" style="margin-bottom:4px">Active days</div>' +
+          '<div class="day-chips">' + dayChips + '</div>' +
+        '</div>';
+    }
+
+    function toggleNotifDay(i) {
+      const cfg = NotifManager.cfg();
+      const idx = cfg.days.indexOf(i);
+      if (idx >= 0) cfg.days.splice(idx, 1); else cfg.days.push(i);
+      S._s('fc_notif', cfg);
+      renderNotifPanel();
+      NotifManager.schedule();
+    }
+
+    function saveNotifSettings() {
+      const cfg = NotifManager.cfg();
+      const en = document.getElementById('notif-enabled');
+      const tm = document.getElementById('notif-time');
+      if (en) cfg.enabled = en.checked;
+      if (tm) cfg.time = tm.value;
+      S._s('fc_notif', cfg);
+      NotifManager.schedule();
+    }
+
     function switchProfileTab(tab) {
       State.profileTab = tab; Render.profile();
       if (tab === 'photos') renderPhotosPanel();
+      if (tab === 'settings') renderNotifPanel();
     }
     function renderPhotosPanel() {
       PhotoDB.getAll().then(photos => {
@@ -5449,6 +5640,7 @@
     Nav.rendered['home'] = true;
     Render.home(); /* direct call — Nav.current is already 'home' from shell init */
     BackupManager.checkRestore();
+    NotifManager.createChannel();
 
     /* ── Schedule swipe gestures (listeners persist across re-renders) ── */
     (function initScheduleSwipe() {

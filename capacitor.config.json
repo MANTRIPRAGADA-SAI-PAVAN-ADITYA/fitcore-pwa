@@ -1,0 +1,19 @@
+{
+  "appId": "com.fitcore.app",
+  "appName": "FitCore",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1000,
+      "backgroundColor": "#0a0a0f",
+      "androidSplashResourceName": "splash",
+      "showSpinner": false
+    }
+  }
+}
