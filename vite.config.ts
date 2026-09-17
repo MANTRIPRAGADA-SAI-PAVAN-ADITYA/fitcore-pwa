@@ -6,7 +6,14 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vite'
 
+// GitHub Pages serves project sites from /<repo-name>/, so every asset URL,
+// the SW scope, and the manifest need that prefix when building for Pages.
+// Local dev and `vite preview` stay at '/' so nothing else has to change.
+const isPagesBuild = process.env.BUILD_TARGET === 'pages'
+const base = isPagesBuild ? '/fitcore-pwa/' : '/'
+
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
@@ -22,8 +29,8 @@ export default defineConfig({
         background_color: '#f8fafc',
         display: 'standalone',
         orientation: 'portrait',
-        start_url: '/',
-        scope: '/',
+        start_url: base,
+        scope: base,
         icons: [
           { src: 'icons/icon-192.svg', sizes: '192x192', type: 'image/svg+xml', purpose: 'any' },
           { src: 'icons/icon-512.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'any' },
@@ -31,9 +38,9 @@ export default defineConfig({
         ],
         categories: ['health', 'lifestyle', 'medical'],
         shortcuts: [
-          { name: 'Log weight', url: '/weight', description: 'Record today’s weight' },
-          { name: 'Daily check-in', url: '/check-in', description: '30-second daily check-in' },
-          { name: 'Medication', url: '/medication', description: 'Log medication & view schedule' },
+          { name: 'Log weight', url: `${base}weight`, description: 'Record today’s weight' },
+          { name: 'Daily check-in', url: `${base}check-in`, description: '30-second daily check-in' },
+          { name: 'Medication', url: `${base}medication`, description: 'Log medication & view schedule' },
         ],
       },
       workbox: {
