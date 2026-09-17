@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1f5f9;
+  --color-border: #e2e8f0;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  --color-brand: #0f766e;
+  --color-brand-fg: #ffffff;
+  --color-brand-soft: #ccfbf1;
+
+  --color-positive: #16a34a;
+  --color-positive-soft: #dcfce7;
+  --color-attention: #d97706;
+  --color-attention-soft: #fef3c7;
+  --color-urgent: #dc2626;
+  --color-urgent-soft: #fee2e2;
+  --color-info: #2563eb;
+  --color-info-soft: #dbeafe;
+}
+
+.dark {
+  --color-bg: #0b1120;
+  --color-surface: #131c2e;
+  --color-surface-muted: #1a2436;
+  --color-border: #263349;
+  --color-text: #f1f5f9;
+  --color-text-muted: #94a3b8;
+
+  --color-brand: #2dd4bf;
+  --color-brand-fg: #06231f;
+  --color-brand-soft: #0f3f3a;
+
+  --color-positive: #4ade80;
+  --color-positive-soft: #14311f;
+  --color-attention: #fbbf24;
+  --color-attention-soft: #3a2c0d;
+  --color-urgent: #f87171;
+  --color-urgent-soft: #3b1414;
+  --color-info: #60a5fa;
+  --color-info-soft: #122a4d;
+}
+
+@theme inline {
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-surface-muted: var(--color-surface-muted);
+  --color-border: var(--color-border);
+  --color-text: var(--color-text);
+  --color-text-muted: var(--color-text-muted);
+  --color-brand: var(--color-brand);
+  --color-brand-fg: var(--color-brand-fg);
+  --color-brand-soft: var(--color-brand-soft);
+  --color-positive: var(--color-positive);
+  --color-positive-soft: var(--color-positive-soft);
+  --color-attention: var(--color-attention);
+  --color-attention-soft: var(--color-attention-soft);
+  --color-urgent: var(--color-urgent);
+  --color-urgent-soft: var(--color-urgent-soft);
+  --color-info: var(--color-info);
+  --color-info-soft: var(--color-info-soft);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--color-brand-soft);
+}
+
+.focus-ring {
+  outline: none;
+}
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
