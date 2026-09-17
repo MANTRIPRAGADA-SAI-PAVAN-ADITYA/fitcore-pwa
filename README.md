@@ -55,14 +55,33 @@ npm run lint         # oxlint
 ## Production build
 
 ```bash
-npm run build         # tsc -b && vite build -> dist/
+npm run build         # tsc -b && vite build -> dist/ (base path "/")
+npm run build:pages   # same, but base path "/fitcore-pwa/" for a GitHub Pages project site
 npm run preview       # serve the production build locally to sanity-check the PWA
 ```
 
+## Deployment (GitHub Pages)
+
+`.github/workflows/deploy-pages.yml` builds, tests, and deploys `master` to GitHub Pages
+automatically (and can be run manually from the Actions tab). Two one-time, manual steps are
+required first, since they change repo/account settings that CI can't touch:
+
+1. **Make the repository public** (Settings → General → Danger Zone → Change visibility).
+   GitHub Pages isn't available for private repos on the free plan.
+2. **Enable Pages**: Settings → Pages → Build and deployment → Source: **GitHub Actions**.
+
+After that, every push to `master` publishes to `https://<your-username>.github.io/fitcore-pwa/`.
+The workflow accounts for the `/fitcore-pwa/` subpath throughout: the Vite `base`, the PWA
+manifest's `start_url`/`scope`/shortcut URLs, and `BrowserRouter`'s `basename` are all derived
+from the same value (see `vite.config.ts` and `src/App.tsx`), and the built `index.html` is
+also copied to `404.html` in the deploy artifact — the standard workaround for GitHub Pages
+having no server-side rewrites, so a hard refresh or a direct link to e.g. `/weight` doesn't
+404 for a client-side-routed SPA.
+
 ## Installing as a PWA
 
-1. Build and serve the app over HTTPS (or `npm run preview` locally over HTTP for testing —
-   installability requires a secure context in real deployments).
+1. Open the deployed site (see Deployment above) or `npm run preview` locally for testing —
+   installability requires a secure context (HTTPS, or localhost) in real deployments.
 2. **Android/Chrome**: open the site, then use the browser's "Install app" / "Add to Home
    Screen" prompt (or the install icon in the address bar). The app installs with its own
    icon, splash screen, and runs standalone (no browser chrome).
