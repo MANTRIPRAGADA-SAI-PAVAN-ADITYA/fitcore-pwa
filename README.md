@@ -1,52 +1,162 @@
-# FitCore — Your Personal Cut & Strength Trainer
+# FitJourney
 
-## Why This App Was Built
+FitJourney is a private, offline-first Progressive Web App for tracking weight, nutrition,
+exercise, hydration, sleep, and adherence to a doctor-prescribed semaglutide plan. It is a
+tracking and coaching tool — it never recommends, changes, or infers medication dosing.
 
-FitCore was built out of a simple frustration: every fitness app out there either locks the good stuff behind a paywall, drowns you in ads, or requires an internet connection just to see your workout. When you're mid-session and your data disappears because the server hiccuped — that's not acceptable.
+> Your medication plan should always follow your doctor's prescription. This app tracks
+> information and reminders; it does not prescribe, diagnose, or modify treatment.
 
-The app was built specifically for a **cutting phase** (losing fat while preserving muscle mass). Most apps treat weight loss and strength training as separate goals. FitCore treats them as one: you track your lifts to protect your muscle, and you track your weight to stay on course with your cut. Everything in one place, offline, always fast.
+## Tech stack
 
-There's also a deeper reason: understanding *why* you're doing each exercise matters. Generic stick figures don't teach you anything. FitCore shows you exactly which muscles you're targeting — in colour, on a body silhouette — so you can feel the right muscles working instead of guessing.
+- React 19 + TypeScript (strict) + Vite 8
+- Tailwind CSS v4 for styling, Radix UI primitives (Dialog/Tabs/Switch) for accessible components
+- Dexie.js over IndexedDB for local-first storage (`src/db/db.ts`)
+- Recharts for charts, `date-fns` for date handling
+- `vite-plugin-pwa` (Workbox) for the service worker, app manifest, and offline caching
+- Browser Notifications API for reminders (foreground-only — see Known limitations)
+- Vitest + fake-indexeddb for unit tests
 
----
+No backend is required or used. All data lives in the browser's IndexedDB on the user's device.
 
-## What FitCore Does
+## Project structure
 
-**FitCore is a zero-dependency, offline-first Progressive Web App (PWA)** for people who want to cut body fat and build strength simultaneously. Install it on any phone like a native app — no App Store required.
+```
+src/
+  components/     Shared UI (components/ui = design-system primitives)
+  layouts/        AppLayout (sidebar + bottom nav), nav config
+  pages/          One file per route/screen
+  hooks/          useOnlineStatus, useTheme
+  db/             Dexie database definition (single source of schema truth)
+  services/       All read/write business logic against Dexie (no React here)
+  analytics/      Rule-based insights engine (no LLM — pure functions over local data)
+  utils/          Pure calculation helpers (rolling averages, streaks, BMI, CSV, backup, ids)
+  types/          Shared TypeScript interfaces for every entity
+```
 
-### Core Features
+Business logic lives in `services/` and `utils/`, not in components — this is what makes the
+calculation and backup logic unit-testable without a browser.
 
-- **Smart Workout Planner** — A weekly Push / Pull / Legs / Full Body schedule with 69 pre-loaded exercises covering every muscle group from calves to traps to rear delts.
+## Setup
 
-- **Muscle-Highlight Body Cards** — Every exercise card shows a geometric body silhouette with the targeted muscles lit up in colour. Primary muscles glow at full brightness; secondary muscles at half. Back-side muscles are labelled so you always know which view you're looking at.
+```bash
+npm install
+```
 
-- **Active Workout Mode** — Step-by-step set tracking with weight & rep logging, a rest timer, skip-exercise control, and a full workout summary sheet at the end (total minutes, sets completed, exercises done, PRs hit, muscles worked).
+## Development
 
-- **Progress Dashboard** — A clean KPI strip (current weight, streak, workouts, PRs), a 6-week weight bar chart, a full-month workout calendar colour-coded by type, a body heat map showing which muscles got the most volume this month, and per-exercise PR sparklines showing your weight progression over time.
+```bash
+npm run dev          # start Vite dev server with HMR
+npm run test         # run the vitest suite once
+npm run test:watch   # watch mode
+npm run lint         # oxlint
+```
 
-- **Exercise Detail** — Four-tab deep-dive per exercise: Guide (instructions, form cues, common mistakes, breathing pattern, similar exercises), Stats (sets/reps/rest, PR with weight progression chart), History (last 5 sessions logged for that exercise), and Notes.
+## Production build
 
-- **Personal Records** — Automatically tracked per exercise. Every new PR is logged with date and weight, so sparklines show your actual progression curve over time.
+```bash
+npm run build         # tsc -b && vite build -> dist/
+npm run preview       # serve the production build locally to sanity-check the PWA
+```
 
-- **Fully Offline (PWA)** — Registered service worker caches all assets on first load. Works with zero internet after that. Installable on iOS and Android from the browser.
+## Installing as a PWA
 
-- **100% Local Storage** — No accounts, no servers, no tracking. All your data stays on your device.
+1. Build and serve the app over HTTPS (or `npm run preview` locally over HTTP for testing —
+   installability requires a secure context in real deployments).
+2. **Android/Chrome**: open the site, then use the browser's "Install app" / "Add to Home
+   Screen" prompt (or the install icon in the address bar). The app installs with its own
+   icon, splash screen, and runs standalone (no browser chrome).
+3. **iOS/Safari**: Share → "Add to Home Screen".
+4. **Desktop (Chrome/Edge)**: an install icon appears in the address bar.
 
-### Muscle Groups Covered
+Once installed, the app shell, all routes, and previously-visited pages work fully offline —
+Workbox precaches the built assets and IndexedDB holds all user data locally.
 
-Chest · Back · Lats · Shoulders · Rear Delts · Traps · Neck · Biceps · Triceps · Forearms · Core · Glutes · Quads · Hamstrings · Calves
+## Database / storage architecture
 
----
+Everything is stored in a single IndexedDB database (`fitjourney`) managed by Dexie, with one
+object store per entity: `users`, `weightEntries`, `foods`, `meals`, `nutritionEntries`,
+`waterEntries`, `exerciseEntries`, `sleepEntries`, `medications`, `medicationLogs`,
+`symptomEntries`, `measurements`, `progressPhotos` (blobs), `dailyCheckins`, `habits`,
+`habitLogs`, `reminderSettings`, `appSettings`. Every record carries `createdAt`/`updatedAt`.
+See `src/types/models.ts` for the full schema and `src/db/db.ts` for the Dexie definition.
 
-## Tech Stack
+The app is single-profile-per-device (profile id `"me"`) but every service function is
+written against a plain Dexie table, so adding multi-profile or a sync backend later mainly
+means changing how records are keyed and adding a sync layer — not rewriting the UI.
 
-- Vanilla JS + CSS — zero frameworks, zero build steps
-- Single HTML file (`index.html`) — the entire app
-- PWA: `manifest.json` + `sw.js` (cache-first service worker)
-- `localStorage` for all persistence
+## Testing
 
-## Install as PWA
+```bash
+npm run test
+```
 
-1. Open `index.html` in Chrome or Safari on your phone
-2. Tap **Share → Add to Home Screen** (iOS) or the install prompt (Android/Chrome)
-3. Done — it runs like a native app, offline, forever
+55 tests cover: BMI/rolling-average/progress-percent/streak calculations and their edge cases
+(no history, multiple same-day entries, all-zero targets), nutrition total aggregation and
+serving-size scaling, medication schedule generation and dose-status logic (including that a
+missed dose never changes future schedule dates), habit streak accumulation and resets, and
+full backup export → wipe → import round-tripping plus corrupt-file rejection. Dexie is
+backed by `fake-indexeddb` in tests so they run in Node without a real browser.
+
+## Implemented features
+
+- Onboarding (profile, goals, units, activity level, diet, allergies) + editable Profile page
+- Dashboard: weight + 7-/30-day trend, progress %, nutrition/water/medication/exercise/sleep
+  summary, best active habit streak
+- Weight: multiple entries/day, daily/7-day/30-day average charts, start-vs-current-vs-target
+  chart, CSV export
+- Nutrition: reusable foods, meals, quick-add, per-macro progress bars, configurable targets,
+  gentle low-calorie-target nudge (never auto-adjusted)
+- Water: quick-add buttons, custom amount, configurable goal, animated bottle visual
+- Exercise: categorized logging, weekly summary (sessions/minutes/active days/strength vs
+  cardio)
+- Sleep: bedtime/wake/quality logging, plain-language pattern summaries vs weight/exercise/
+  nutrition (explicitly correlation-worded, never causal)
+- Medication: user-entered prescription details, visual schedule (taken/upcoming/missed),
+  dose logging (site/actual dose/notes), configurable reminders, persistent safety disclaimer
+- Symptoms: severity-scored log, optional link to a medication entry with "recorded after"
+  (not "caused by") wording
+- Safety & medical help: emergency-care guidance, configurable emergency/doctor/clinic/
+  hospital contacts
+- Measurements (waist/chest/hips/neck/arms/thighs/body-fat/custom) with trend charts
+- Progress: weight lost/percent lost, start→target bar, latest measurements, local-only
+  progress photos
+- Daily check-in (fast 10-question form), Habits (streaks, "start again today" framing, not
+  punitive), Weekly review (auto-computed 7-day summary across every domain), Insights
+  (rule-based, no LLM, explicitly non-diagnostic)
+- Settings: full JSON backup export/import (validated, confirmation required before
+  overwrite), weight CSV export, delete-all-data, per-reminder-type notification toggles
+- Dark mode, responsive sidebar (desktop) / bottom nav (mobile), online/offline indicator
+
+## Known limitations
+
+- **Reminders are foreground-only.** There is no push server, so notifications only fire
+  while the installed app/tab is open in the browser; there is no way to wake a fully closed
+  app on a schedule without a backend and the Push API. This is disclosed in-app (Settings).
+- **Single profile per device**, by design for the MVP — no accounts, no cloud sync.
+- **CSV export** is provided for weight history from the Weight and Settings pages; other
+  domains export via the full JSON backup rather than per-table CSVs.
+- **No automated end-to-end/UI test suite** — the 55 Vitest tests cover calculation and
+  service-layer logic; page components were manually smoke-tested in a real Chromium browser
+  (onboarding → dashboard → logging flows → dark mode) rather than covered by automated
+  component tests, given the scope of this MVP.
+- Body-fat percentage and custom measurements are user-entered values, not measured by the
+  app.
+
+## Future backend/cloud-sync architecture
+
+The service layer (`src/services/*.ts`) is the seam for this. Each function currently talks
+directly to Dexie; introducing sync would mean:
+
+1. Add a `syncStatus`/`remoteId` field to each entity (types already carry `updatedAt` for
+   last-write-wins or vector-clock style conflict resolution).
+2. Introduce an authentication step (the app already assumes no auth exists yet — see
+   `src/services/profile.ts`'s single `PROFILE_ID` — this would become the multi-user key).
+3. Add a sync service that reads/writes the same Dexie tables and pushes/pulls deltas to a
+   backend (REST or a sync engine), keeping IndexedDB as the local cache/offline queue so the
+   app keeps working offline exactly as it does today.
+4. Swap the foreground reminder scheduler for real Web Push, registered through the existing
+   service worker (`vite-plugin-pwa` already manages the SW lifecycle).
+
+None of the UI or business logic in `pages/` would need to change for this — they only ever
+call into `services/`.

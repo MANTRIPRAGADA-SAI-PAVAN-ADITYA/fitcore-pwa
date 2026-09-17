@@ -1,7 +1,0 @@
-{
-  "buildCommand": "npx expo export -p web && cp -r public/. dist/ && node scripts/inject-pwa-html.js",
-  "outputDirectory": "dist",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
-}
