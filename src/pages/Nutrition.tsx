@@ -7,7 +7,10 @@ import { PROFILE_ID } from "@/services/profile";
 import { getSettings, updateNutritionTargets, dismissLowCaloriePrompt } from "@/services/settings";
 import {
   addFood,
+  addMeal,
   logFoodEntry,
+  logMealEntry,
+  deleteMeal,
   quickLogNutrition,
   deleteNutritionEntry,
   listNutritionEntriesForDate,
@@ -18,7 +21,7 @@ import { Button } from "@/components/ui/Button";
 import { Input, Label, Select, HelpText } from "@/components/ui/Input";
 import { ProgressBar } from "@/components/ui/Progress";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/Dialog";
-import type { MealType } from "@/types/models";
+import type { Food, MealFoodItem, MealType } from "@/types/models";
 
 const MEAL_TYPES: { value: MealType; label: string }[] = [
   { value: "breakfast", label: "Breakfast" },
@@ -48,20 +51,23 @@ export function Nutrition() {
   const profile = useLiveQuery(() => db.users.get(PROFILE_ID), []);
   const settings = useLiveQuery(() => getSettings(), []);
   const foods = useLiveQuery(() => db.foods.orderBy("name").toArray(), []) ?? [];
+  const meals = useLiveQuery(() => db.meals.orderBy("name").toArray(), []) ?? [];
   const entries = useLiveQuery(() => listNutritionEntriesForDate(today), [today]) ?? [];
 
   const [mealType, setMealType] = useState<MealType>("breakfast");
   const [selectedFoodId, setSelectedFoodId] = useState("");
   const [servings, setServings] = useState("1");
+  const [selectedMealId, setSelectedMealId] = useState("");
   const [quickDesc, setQuickDesc] = useState("");
   const [quickCals, setQuickCals] = useState("");
   const [quickProtein, setQuickProtein] = useState("");
   const [quickCarbs, setQuickCarbs] = useState("");
   const [quickFat, setQuickFat] = useState("");
   const [quickFiber, setQuickFiber] = useState("");
-  const [mode, setMode] = useState<"food" | "quick">("food");
+  const [mode, setMode] = useState<"food" | "meal" | "quick">("food");
 
   const [newFoodOpen, setNewFoodOpen] = useState(false);
+  const [newMealOpen, setNewMealOpen] = useState(false);
 
   if (!settings || !profile) return null;
 
@@ -75,6 +81,10 @@ export function Nutrition() {
       await logFoodEntry({ date: today, time, mealType, foodId: selectedFoodId, servings: Number(servings) || 1 });
       setSelectedFoodId("");
       setServings("1");
+    } else if (mode === "meal") {
+      if (!selectedMealId) return;
+      await logMealEntry({ date: today, time, mealType, mealId: selectedMealId });
+      setSelectedMealId("");
     } else {
       if (!quickDesc.trim()) return;
       await quickLogNutrition({
@@ -131,23 +141,38 @@ export function Nutrition() {
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="flex flex-row items-center justify-between gap-2">
           <CardTitle>Log food</CardTitle>
-          <Dialog open={newFoodOpen} onOpenChange={setNewFoodOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                <Plus className="h-4 w-4" /> New food
-              </Button>
-            </DialogTrigger>
-            <DialogContent title="Create a reusable food">
-              <NewFoodForm onDone={() => setNewFoodOpen(false)} />
-            </DialogContent>
-          </Dialog>
+          <div className="flex gap-2">
+            <Dialog open={newFoodOpen} onOpenChange={setNewFoodOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline">
+                  <Plus className="h-4 w-4" /> New food
+                </Button>
+              </DialogTrigger>
+              <DialogContent title="Create a reusable food">
+                <NewFoodForm onDone={() => setNewFoodOpen(false)} />
+              </DialogContent>
+            </Dialog>
+            <Dialog open={newMealOpen} onOpenChange={setNewMealOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" variant="outline" disabled={foods.length === 0}>
+                  <Plus className="h-4 w-4" /> New meal
+                </Button>
+              </DialogTrigger>
+              <DialogContent title="Create a reusable meal" description="Combine foods from your library into a meal you can log in one tap.">
+                <NewMealForm foods={foods} onDone={() => setNewMealOpen(false)} />
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="mb-3 flex gap-2">
+          <div className="mb-3 flex flex-wrap gap-2">
             <Button type="button" size="sm" variant={mode === "food" ? "primary" : "outline"} onClick={() => setMode("food")}>
               From food library
+            </Button>
+            <Button type="button" size="sm" variant={mode === "meal" ? "primary" : "outline"} onClick={() => setMode("meal")}>
+              Saved meals
             </Button>
             <Button type="button" size="sm" variant={mode === "quick" ? "primary" : "outline"} onClick={() => setMode("quick")}>
               Quick add
@@ -183,6 +208,33 @@ export function Nutrition() {
                   <Label htmlFor="servings">Servings</Label>
                   <Input id="servings" type="number" step="0.5" min={0.5} value={servings} onChange={(e) => setServings(e.target.value)} />
                 </div>
+              </div>
+            ) : mode === "meal" ? (
+              <div>
+                <Label htmlFor="meal-select">Saved meal</Label>
+                <Select id="meal-select" value={selectedMealId} onChange={(e) => setSelectedMealId(e.target.value)}>
+                  <option value="">Select a saved meal…</option>
+                  {meals.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.items.length} item{m.items.length === 1 ? "" : "s"})
+                    </option>
+                  ))}
+                </Select>
+                {meals.length === 0 && (
+                  <HelpText>Create a meal first using &ldquo;New meal&rdquo; above (needs at least one food).</HelpText>
+                )}
+                {selectedMealId && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await deleteMeal(selectedMealId);
+                      setSelectedMealId("");
+                    }}
+                    className="mt-1.5 text-xs font-medium text-urgent hover:underline"
+                  >
+                    Delete this saved meal
+                  </button>
+                )}
               </div>
             ) : (
               <div className="space-y-3">
@@ -386,6 +438,84 @@ function NewFoodForm({ onDone }: { onDone: () => void }) {
       </div>
       <Button type="submit" className="w-full">
         Save food
+      </Button>
+    </form>
+  );
+}
+
+function NewMealForm({ foods, onDone }: { foods: Food[]; onDone: () => void }) {
+  const [name, setName] = useState("");
+  const [items, setItems] = useState<MealFoodItem[]>([{ foodId: foods[0]?.id ?? "", servings: 1 }]);
+
+  function updateItem(index: number, patch: Partial<MealFoodItem>) {
+    setItems((prev) => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)));
+  }
+
+  function removeItem(index: number) {
+    setItems((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const validItems = items.filter((i) => i.foodId && i.servings > 0);
+    if (!name.trim() || validItems.length === 0) return;
+    await addMeal({ name: name.trim(), items: validItems });
+    onDone();
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div>
+        <Label htmlFor="nm-name">Meal name</Label>
+        <Input id="nm-name" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Overnight oats bowl" required />
+      </div>
+      <div className="space-y-2">
+        <Label>Foods in this meal</Label>
+        {items.map((item, index) => (
+          <div key={index} className="flex items-center gap-2">
+            <Select
+              className="flex-1"
+              value={item.foodId}
+              onChange={(e) => updateItem(index, { foodId: e.target.value })}
+            >
+              <option value="">Select a food…</option>
+              {foods.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.name} ({f.servingSize})
+                </option>
+              ))}
+            </Select>
+            <Input
+              type="number"
+              step="0.5"
+              min={0.5}
+              value={item.servings}
+              onChange={(e) => updateItem(index, { servings: Number(e.target.value) || 0 })}
+              className="w-20"
+              aria-label="Servings"
+            />
+            <button
+              type="button"
+              onClick={() => removeItem(index)}
+              disabled={items.length === 1}
+              className="focus-ring shrink-0 rounded-lg p-2 text-text-muted hover:bg-urgent-soft hover:text-urgent disabled:opacity-30"
+              aria-label="Remove food from meal"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ))}
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => setItems((prev) => [...prev, { foodId: foods[0]?.id ?? "", servings: 1 }])}
+        >
+          <Plus className="h-4 w-4" /> Add another food
+        </Button>
+      </div>
+      <Button type="submit" className="w-full">
+        Save meal
       </Button>
     </form>
   );
